@@ -1,0 +1,58 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Getting started/Overview" />
+
+# ERA
+
+A multi-brand design system. Three brands and two modes come out of one set of components, and no component knows which brand or mode it is in.
+
+The whole system runs on three layers of tokens. That is the part worth reading before anything else, because every other decision here follows from it.
+
+## The three layers
+
+**Primitives** are raw values with no opinion about where they get used: 11-step colour ramps, a 4px spacing scale, type sizes, radius steps, stroke weights. Nothing in the product reads these directly.
+
+**Brand** re-points primitives per brand. `--brand-primary-scale-700` is Iris in Brand 1, Cyan in Brand 2, Jade in Brand 3. This layer is also where radius roles live, so one brand can make buttons pill-shaped and another square them off without a component changing.
+
+**Semantics** re-point the brand layer per mode. `--sem-status-error-bg` is a dark red on light and a lighter red on dark. This is the only layer a component is allowed to read.
+
+```
+primitives          brand                      semantics
+--colors-iris-700   --brand-primary-scale-700  --sem-primary-bg
+#5b5bd6        ->   var(--colors-iris-700)  -> var(--brand-primary-roles-action)
+```
+
+Switching brand or mode is two attributes on `<html>`:
+
+```html
+<html data-brand="brand-2" data-theme="dark">
+```
+
+The toolbar at the top of this Storybook sets exactly those two attributes and nothing else. **Getting started → One system, three brands** puts all six combinations on one screen, which is the fastest way to check whether the claim holds.
+
+## Where the tokens come from
+
+The tokens are not written by hand. They are exported from the ERA Figma library and built into CSS custom properties and W3C design-token JSON:
+
+```
+npm run tokens   # tokens/src/*.txt -> tokens/generated/era.css + tokens.json
+```
+
+The build fails if any token points at something that does not exist, so Figma and code cannot quietly drift apart. 1,493 custom properties come out of 758 Figma variables across the three collections.
+
+## Rules the components follow
+
+- **Semantic tokens only.** No component contains a hex value, a pixel radius or a raw spacing number.
+- **Nothing below 12px.** The type scale stops at 12px because anything smaller is text nobody reads.
+- **4px and 8px grid, with 2px as one deliberate exception.** Some gaps really are smaller than 4px. Naming that exception is better than leaving people to hardcode it.
+- **One focus treatment.** Keyboard only, drawn outside the element so it never changes layout, offset against the surface behind it.
+- **Colour is never the only signal.** Status components carry an icon shape and a label as well as a fill.
+- **Every state is a token, not an opacity trick.** Hover, pressed, selected, disabled, read-only, error and success each resolve through the semantic layer, so they stay correct on dark and across brands.
+
+## What is here
+
+**Foundations** are generated from the live tokens, so these pages cannot go stale: colour ramps and every semantic colour, the type scale, the spacing scale, radius scale and radius roles, and stroke weights.
+
+**Components** are the ported slice: Button, Input, Badge, Switch, Alert and Table. They were picked to cover the hard parts rather than the easy ones, which is why the set includes a form field with seven states and a table with its own token group instead of six simple blocks.
+
+The accessibility addon runs on every story, so contrast and labelling problems surface in the panel rather than in review.

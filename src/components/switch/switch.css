@@ -1,0 +1,81 @@
+/* Switch
+ *
+ * A switch takes effect the moment it moves, which is what separates it from a
+ * checkbox. The track is always visible against the surface, including when it
+ * is off, so the control never disappears on a light background.
+ */
+.era-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  cursor: pointer;
+}
+.era-switch--disabled { cursor: not-allowed; }
+
+.era-switch__input {
+  position: absolute;
+  opacity: 0;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+}
+
+.era-switch__track {
+  position: relative;
+  flex: none;
+  background: var(--sem-bg-track);
+  border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  border-radius: var(--radius-radius-full);
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+.era-switch__track--sm { inline-size: var(--spacing-space-32); block-size: var(--spacing-space-20); }
+.era-switch__track--md { inline-size: var(--spacing-space-44); block-size: var(--spacing-space-24); }
+
+.era-switch__thumb {
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  background: var(--sem-bg-surface);
+  border-radius: var(--radius-radius-full);
+  box-shadow: 0 1px 2px var(--colors-alpha-black-16);
+  transition: inset-inline-start 140ms ease;
+}
+.era-switch__track--sm .era-switch__thumb {
+  inline-size: var(--spacing-space-12);
+  block-size: var(--spacing-space-12);
+  inset-inline-start: var(--spacing-space-2);
+}
+.era-switch__track--md .era-switch__thumb {
+  inline-size: var(--spacing-space-16);
+  block-size: var(--spacing-space-16);
+  inset-inline-start: var(--spacing-space-2);
+}
+
+.era-switch__input:checked + .era-switch__track {
+  background: var(--sem-primary-bg);
+  border-color: var(--sem-primary-bg);
+}
+.era-switch__input:checked + .era-switch__track--sm .era-switch__thumb {
+  inset-inline-start: calc(100% - var(--spacing-space-12) - var(--spacing-space-4));
+}
+.era-switch__input:checked + .era-switch__track--md .era-switch__thumb {
+  inset-inline-start: calc(100% - var(--spacing-space-16) - var(--spacing-space-4));
+}
+
+.era-switch__input:focus-visible + .era-switch__track {
+  outline: var(--brand-focus-ring-width) solid var(--sem-state-focus-ring);
+  outline-offset: var(--brand-focus-ring-offset);
+}
+
+.era-switch__input:disabled + .era-switch__track {
+  background: var(--sem-bg-disabled);
+  border-color: var(--sem-border-disabled);
+}
+.era-switch__input:disabled + .era-switch__track .era-switch__thumb { box-shadow: none; }
+
+.era-switch__label {
+  font-size: var(--typography-text-sm-size);
+  line-height: var(--typography-text-sm-line-height);
+  color: var(--sem-fg-primary);
+}
+.era-switch--disabled .era-switch__label { color: var(--sem-fg-disabled); }

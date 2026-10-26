@@ -1,0 +1,66 @@
+/* Badge
+ *
+ * Three fills across six tones. Solid is for a count or a hard status, subtle
+ * for a label you will see many of in a list, outline for when the surface
+ * underneath already carries colour and another filled block would fight it.
+ *
+ * Tone is never the only carrier of meaning: the label says what the state is,
+ * the colour only speeds up finding it.
+ */
+.era-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  letter-spacing: var(--brand-tracking-others);
+  white-space: nowrap;
+  border: var(--brand-stroke-default) solid transparent;
+}
+
+.era-badge--sm {
+  min-height: var(--spacing-space-20);
+  padding-inline: var(--spacing-space-8);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  border-radius: var(--brand-radius-roles-tags-chips-sm);
+}
+.era-badge--md {
+  min-height: var(--spacing-space-24);
+  padding-inline: var(--spacing-space-8);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  border-radius: var(--brand-radius-roles-tags-chips-md);
+}
+
+.era-badge__dot {
+  inline-size: var(--spacing-space-8);
+  block-size: var(--spacing-space-8);
+  flex: none;
+  border-radius: var(--radius-radius-full);
+  background: currentColor;
+}
+
+/* solid */
+.era-badge--solid.era-badge--primary { background: var(--sem-primary-bg); color: var(--sem-primary-fg-on-bg); }
+.era-badge--solid.era-badge--neutral { background: var(--sem-status-neutral-bg); color: var(--sem-status-neutral-fg-on-bg); }
+.era-badge--solid.era-badge--info    { background: var(--sem-status-info-bg); color: var(--sem-status-info-fg-on-bg); }
+.era-badge--solid.era-badge--success { background: var(--sem-status-success-bg); color: var(--sem-status-success-fg-on-bg); }
+.era-badge--solid.era-badge--warning { background: var(--sem-status-warning-bg); color: var(--sem-status-warning-fg-on-bg); }
+.era-badge--solid.era-badge--error   { background: var(--sem-status-error-bg); color: var(--sem-status-error-fg-on-bg); }
+
+/* subtle */
+.era-badge--subtle.era-badge--primary { background: var(--sem-primary-bg-subtle); color: var(--sem-primary-fg); }
+.era-badge--subtle.era-badge--neutral { background: var(--sem-status-neutral-bg-subtle); color: var(--sem-status-neutral-fg); }
+.era-badge--subtle.era-badge--info    { background: var(--sem-status-info-bg-subtle); color: var(--sem-status-info-fg); }
+.era-badge--subtle.era-badge--success { background: var(--sem-status-success-bg-subtle); color: var(--sem-status-success-fg); }
+.era-badge--subtle.era-badge--warning { background: var(--sem-status-warning-bg-subtle); color: var(--sem-status-warning-fg); }
+.era-badge--subtle.era-badge--error   { background: var(--sem-status-error-bg-subtle); color: var(--sem-status-error-fg); }
+
+/* outline */
+.era-badge--outline { background: transparent; }
+.era-badge--outline.era-badge--primary { border-color: var(--sem-primary-border); color: var(--sem-primary-fg); }
+.era-badge--outline.era-badge--neutral { border-color: var(--sem-status-neutral-border); color: var(--sem-status-neutral-fg); }
+.era-badge--outline.era-badge--info    { border-color: var(--sem-status-info-border); color: var(--sem-status-info-fg); }
+.era-badge--outline.era-badge--success { border-color: var(--sem-status-success-border); color: var(--sem-status-success-fg); }
+.era-badge--outline.era-badge--warning { border-color: var(--sem-status-warning-border); color: var(--sem-status-warning-fg); }
+.era-badge--outline.era-badge--error   { border-color: var(--sem-status-error-border); color: var(--sem-status-error-fg); }

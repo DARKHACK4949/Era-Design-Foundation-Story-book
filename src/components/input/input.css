@@ -1,0 +1,113 @@
+/* Input
+ *
+ * The field is one of the few places where a design system earns or loses
+ * trust, so the states are all explicit: hover, focus, error, success,
+ * read-only and disabled each have their own border and background token.
+ * Read-only is deliberately not styled like disabled; the value still matters
+ * and is still selectable, it just cannot be edited.
+ */
+.era-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.era-field__label {
+  font-size: var(--typography-text-sm-size);
+  line-height: var(--typography-text-sm-line-height);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  color: var(--sem-form-label-fg);
+}
+.era-field:focus-within .era-field__label { color: var(--sem-form-label-fg-focus); }
+.era-field--disabled .era-field__label { color: var(--sem-form-label-fg-disabled); }
+
+.era-field__required {
+  color: var(--sem-form-required-fg);
+  margin-inline-start: var(--spacing-space-2);
+}
+
+.era-field__box {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  background: var(--sem-form-input-bg);
+  border: var(--brand-stroke-default) solid var(--sem-form-input-border);
+  color: var(--sem-form-input-fg);
+  transition: border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+.era-field__box:hover:not([data-state='disabled']):not([data-state='readonly']) {
+  background: var(--sem-form-input-bg-hover);
+  border-color: var(--sem-form-input-border-hover);
+}
+
+/* The soft ring doubles the focus signal without relying on the border colour
+ * alone, which matters when the field is also in an error state. */
+.era-field__box:focus-within {
+  border-color: var(--sem-form-input-border-focus);
+  box-shadow: 0 0 0 3px var(--sem-state-focus-ring-soft);
+}
+.era-field__box[data-state='error'] { border-color: var(--sem-form-input-border-error); }
+.era-field__box[data-state='error']:focus-within { box-shadow: 0 0 0 3px var(--sem-state-error-ring-soft); }
+.era-field__box[data-state='success'] { border-color: var(--sem-form-input-border-success); }
+.era-field__box[data-state='success']:focus-within { box-shadow: 0 0 0 3px var(--sem-state-success-ring-soft); }
+.era-field__box[data-state='disabled'] {
+  background: var(--sem-form-input-bg-disabled);
+  border-color: var(--sem-form-input-border-disabled);
+  color: var(--sem-form-input-fg-disabled);
+}
+.era-field__box[data-state='readonly'] {
+  background: var(--sem-form-input-bg-readonly);
+  border-color: var(--sem-form-input-border-readonly);
+  color: var(--sem-form-input-fg-readonly);
+}
+
+.era-field__box--sm {
+  min-height: var(--spacing-space-32);
+  padding-inline: var(--spacing-space-8);
+  border-radius: var(--brand-radius-roles-input-field-sm);
+  font-size: var(--typography-text-sm-size);
+}
+.era-field__box--md {
+  min-height: var(--spacing-space-40);
+  padding-inline: var(--spacing-space-12);
+  border-radius: var(--brand-radius-roles-input-field-md);
+  font-size: var(--typography-text-sm-size);
+}
+.era-field__box--lg {
+  min-height: var(--spacing-space-48);
+  padding-inline: var(--spacing-space-16);
+  border-radius: var(--brand-radius-roles-input-field-lg);
+  font-size: var(--typography-text-base-size);
+}
+
+.era-field__input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.era-field__input:focus { outline: none; }
+.era-field__input::placeholder { color: var(--sem-form-input-placeholder); }
+.era-field__input:disabled { cursor: not-allowed; }
+
+.era-field__adornment {
+  display: inline-flex;
+  flex: none;
+  color: var(--sem-fg-tertiary);
+}
+
+.era-field__message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  color: var(--sem-form-helper-fg);
+}
+.era-field__message--error { color: var(--sem-form-error-fg); }
+.era-field__message--success { color: var(--sem-form-success-fg); }

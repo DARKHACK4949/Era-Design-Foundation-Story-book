@@ -1,0 +1,76 @@
+/* ERA base layer.
+ *
+ * Everything here reads the semantic layer. There is not a single raw colour,
+ * radius or stroke value in this file, which is the point: swap the brand or
+ * the mode and this file keeps working untouched.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--sem-bg-canvas);
+  color: var(--sem-fg-primary);
+}
+
+body,
+[data-era-canvas] {
+  font-family: var(--brand-typography-theme-font-family-font);
+  font-size: var(--typography-text-base-size);
+  line-height: var(--typography-text-base-line-height);
+  font-weight: var(--brand-typography-theme-font-weight-body);
+  letter-spacing: var(--brand-tracking-others);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One focus treatment for the whole system. Keyboard only, drawn outside the
+ * element so it never changes layout, and offset against the surface behind it
+ * so it stays visible on tinted and solid backgrounds alike. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--brand-focus-ring-width) solid var(--sem-state-focus-ring);
+  outline-offset: var(--brand-focus-ring-offset);
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  font-weight: var(--brand-typography-theme-font-weight-heading);
+  letter-spacing: var(--brand-tracking-display);
+}
+
+:where(p) {
+  margin: 0;
+}
+
+:where(code, kbd, samp) {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--typography-text-sm-size);
+}
+
+::selection {
+  background: var(--sem-state-selected);
+  color: var(--sem-fg-primary);
+}
+
+/* Respect the OS setting. Anything that moves does so because it helps the
+ * person follow a change, so when they have asked for less motion we remove it
+ * rather than shortening it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

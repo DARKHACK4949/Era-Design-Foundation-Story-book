@@ -1,0 +1,83 @@
+/* Table
+ *
+ * ERA has its own table token group rather than reusing the generic surface and
+ * border tokens, because a table needs decisions the rest of the system does
+ * not: a header that stays readable when sticky, a zebra stripe that survives
+ * on top of a row hover, and a selected row that still shows its hover state.
+ *
+ * Numeric columns are right-aligned and use tabular figures, so the digits line
+ * up column-wise and a long list can be scanned down rather than read across.
+ */
+.era-table-wrap {
+  overflow: auto;
+  background: var(--sem-bg-surface);
+  border: var(--brand-stroke-default) solid var(--sem-table-border-row);
+  border-radius: var(--brand-radius-roles-card-md);
+}
+
+.era-table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--typography-text-sm-size);
+  line-height: var(--typography-text-sm-line-height);
+}
+
+.era-table__th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  text-align: start;
+  background: var(--sem-table-header-bg);
+  color: var(--sem-table-header-fg);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  padding: var(--spacing-space-8) var(--spacing-space-12);
+  border-block-end: var(--brand-stroke-default) solid var(--sem-table-border-row);
+  white-space: nowrap;
+}
+.era-table__th--numeric { text-align: end; }
+.era-table__th--sorted { color: var(--sem-table-header-fg-sorted); }
+
+.era-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--brand-radius-roles-menu-items-sm);
+}
+.era-table__sort:hover { color: var(--sem-fg-primary); }
+
+/* Reserve the arrow's space at all times so the header does not jump by a few
+ * pixels the first time you sort it. */
+.era-table__sort-icon { opacity: 0; transition: opacity 120ms ease, rotate 120ms ease; }
+.era-table__sort:hover .era-table__sort-icon { opacity: 0.5; }
+.era-table__th--sorted .era-table__sort-icon { opacity: 1; }
+.era-table__th--sorted-desc .era-table__sort-icon { rotate: 180deg; }
+
+.era-table__td {
+  padding: var(--spacing-space-12);
+  color: var(--sem-table-cell-fg);
+  border-block-end: var(--brand-stroke-default) solid var(--sem-table-border-row);
+  vertical-align: middle;
+}
+.era-table__td--numeric {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+.era-table__td--muted { color: var(--sem-table-cell-fg-muted); }
+
+.era-table__tr:last-child .era-table__td { border-block-end: 0; }
+
+.era-table__tr { background: var(--sem-table-row-bg); }
+.era-table--zebra .era-table__tr:nth-child(even) { background: var(--sem-table-row-bg-alt); }
+.era-table__tr:hover { background: var(--sem-table-row-bg-hover); }
+.era-table__tr[aria-selected='true'] { background: var(--sem-table-row-bg-selected); }
+.era-table__tr[aria-selected='true']:hover { background: var(--sem-table-row-bg-selected-hover); }
