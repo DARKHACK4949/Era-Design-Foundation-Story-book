@@ -1,0 +1,81 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import Playground from '../../playground/Playground';
+import { REGISTRY } from '../../playground/registry';
+import { COMPONENTS, slugify } from '../../components.data';
+
+export function getStaticPaths() {
+  return COMPONENTS.map((c) => ({ params: { slug: slugify(c.name) }, props: { doc: c } }));
+}
+
+const { doc } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const slug = slugify(doc.name);
+const hasPlayground = Object.prototype.hasOwnProperty.call(REGISTRY, slug);
+const story = `${base}/storybook/?path=/story/${doc.story}`;
+---
+
+<Shell title={doc.name} section="components" prose={false} description={doc.purpose}>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={`${base}/components`}>Components</a>
+    <span aria-hidden="true">/</span>
+    <span>{doc.group}</span>
+  </nav>
+
+  <h1 class="display">{doc.name}</h1>
+  <p class="lede">{doc.purpose}</p>
+
+  {hasPlayground ? (
+    <Playground slug={slug} client:load />
+  ) : (
+    <p class="fallback">
+      This one has no playground yet, because its interesting states need more than a prop toggle.
+      <a href={story}>Open it in the Storybook</a> to see every state.
+    </p>
+  )}
+
+  <div class="cols">
+    <section class="col col--use">
+      <h2>Use it</h2>
+      <ul>{doc.use.map((u: string) => <li>{u}</li>)}</ul>
+    </section>
+    <section class="col col--avoid">
+      <h2>Do not</h2>
+      <ul>{doc.avoid.map((a: string) => <li>{a}</li>)}</ul>
+    </section>
+  </div>
+
+  <p class="more">
+    <a href={story}>Every state in the Storybook</a>
+    <span aria-hidden="true">·</span>
+    <a href={`${base}/accessibility`}>How this is tested</a>
+  </p>
+</Shell>
+
+<style>
+  .crumbs { display: flex; align-items: center; gap: var(--spacing-space-8); font-size: var(--typography-text-sm-size); color: var(--sem-fg-tertiary); margin-block-end: var(--spacing-space-12); }
+  .crumbs a { color: var(--sem-fg-secondary); text-decoration: none; }
+  .crumbs a:hover { color: var(--sem-fg-primary); }
+
+  .fallback {
+    padding: var(--spacing-space-16);
+    background: var(--sem-bg-surface-sunken);
+    border-radius: var(--brand-radius-roles-card-sm);
+    color: var(--sem-fg-secondary);
+    font-size: var(--typography-text-sm-size);
+    margin-block-end: var(--spacing-space-24);
+  }
+  .fallback a { margin-inline-start: var(--spacing-space-4); }
+
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--spacing-space-16); }
+  .col { padding: var(--spacing-space-16); border-radius: var(--brand-radius-roles-card-sm); border-inline-start: var(--stroke-stroke-4) solid transparent; }
+  .col--use { background: var(--sem-status-success-bg-subtle); border-inline-start-color: var(--sem-status-success-border-strong); }
+  .col--avoid { background: var(--sem-status-error-bg-subtle); border-inline-start-color: var(--sem-status-error-border-strong); }
+  .col h2 { margin: 0 0 var(--spacing-space-8); font-size: var(--typography-text-sm-size); letter-spacing: 0; }
+  .col--use h2 { color: var(--sem-status-success-fg); }
+  .col--avoid h2 { color: var(--sem-status-error-fg); }
+  .col ul { margin: 0; padding-inline-start: var(--spacing-space-16); font-size: var(--typography-text-sm-size); line-height: var(--typography-text-sm-line-height); }
+  .col li { margin-block-end: var(--spacing-space-8); color: var(--sem-fg-secondary); }
+
+  .more { display: flex; gap: var(--spacing-space-8); margin-block-start: var(--spacing-space-24); font-size: var(--typography-text-sm-size); color: var(--sem-fg-tertiary); }
+</style>

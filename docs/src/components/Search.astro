@@ -1,5 +1,5 @@
 ---
-import { COMPONENTS } from '../components.data';
+import { COMPONENTS, slugify } from '../components.data';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 /** A real index, built at compile time. No service, no network call. */
@@ -13,7 +13,7 @@ const INDEX = [
   { label: 'Typography', kind: 'Foundation', href: `${base}/foundations/typography` },
   { label: 'Spacing', kind: 'Foundation', href: `${base}/foundations/spacing` },
   { label: 'Radius and stroke', kind: 'Foundation', href: `${base}/foundations/shape` },
-  ...COMPONENTS.map((c) => ({ label: c.name, kind: 'Component', href: `${base}/components#${c.name.toLowerCase().replace(/\s+/g, '-')}` })),
+  ...COMPONENTS.map((c) => ({ label: c.name, kind: 'Component', href: `${base}/components/${slugify(c.name)}` })),
 ];
 ---
 

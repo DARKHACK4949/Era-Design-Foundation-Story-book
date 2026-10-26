@@ -1,3 +1,5 @@
+export const slugify = (n: string) => n.toLowerCase().replace(/\s+/g, '-');
+
 export interface ComponentDoc {
   name: string;
   story: string;

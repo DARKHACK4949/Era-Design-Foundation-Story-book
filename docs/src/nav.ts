@@ -1,3 +1,5 @@
+import { COMPONENTS, slugify } from './components.data';
+
 export interface NavLink { href: string; label: string }
 export interface NavGroup { title: string; links: NavLink[] }
 
@@ -27,7 +29,13 @@ export const SECTIONS: Record<string, NavGroup[]> = {
   ],
   components: [
     { title: 'Components', links: [{ href: '/components', label: 'All components' }] },
-    { title: 'Related', links: [{ href: '/accessibility', label: 'Accessibility' }, { href: '/using-era', label: 'Adopting ERA' }] },
+    ...[...new Set(COMPONENTS.map((c) => c.group))].map((group) => ({
+      title: group,
+      links: COMPONENTS.filter((c) => c.group === group).map((c) => ({
+        href: `/components/${slugify(c.name)}`,
+        label: c.name,
+      })),
+    })),
   ],
   about: [
     {
