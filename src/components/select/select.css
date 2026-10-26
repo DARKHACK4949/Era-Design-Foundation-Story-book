@@ -1,37 +1,39 @@
 /* Select
  *
- * A native <select> wearing ERA's field chrome. Native is deliberate: it gets
- * keyboard handling, type-ahead, mobile pickers and screen reader support for
- * free, and none of those are things worth rebuilding for a list of options.
+ * A listbox on the shared popup surface, so a dropdown looks the same whether
+ * it came from a Select or a Menu.
  *
- * A custom listbox only earns its keep when options need icons, descriptions
- * or grouping that native cannot render. That is the Combobox, not this.
+ * The roles are not shared. A menu holds commands and uses role="menu"; a
+ * select holds values, one of which is always current, and uses a combobox
+ * trigger over role="listbox". Same paint, different semantics, because
+ * assistive tech announces the two differently and should.
+ *
+ * The trade-off against a native <select>: we give up the iOS and Android
+ * wheel picker and have to carry type-ahead ourselves. We get a control that
+ * looks identical in every browser and can hold a second line under an option,
+ * which native cannot render at all.
  */
 .era-select {
-  flex: 1 1 auto;
-  min-inline-size: 0;
-  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  inline-size: 100%;
   background: none;
   border: 0;
   padding: 0;
-  padding-inline-end: var(--spacing-space-20);
   margin: 0;
-  color: inherit;
   font: inherit;
+  color: inherit;
+  text-align: start;
   cursor: pointer;
 }
 .era-select:focus { outline: none; }
 .era-select:disabled { cursor: not-allowed; }
-/* An unselected placeholder option is hint text, so it gets hint colour. */
-.era-select:invalid { color: var(--sem-form-input-placeholder); }
+
+.era-select__value { flex: 1 1 auto; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.era-select__value--placeholder { color: var(--sem-form-input-placeholder); }
+
+.era-select__chevron { flex: none; color: var(--sem-fg-tertiary); transition: rotate 140ms ease; }
+.era-select[aria-expanded='true'] .era-select__chevron { rotate: 180deg; }
 
 .era-field__box--select { position: relative; }
-
-.era-select__chevron {
-  position: absolute;
-  inset-inline-end: var(--spacing-space-12);
-  inset-block-start: 50%;
-  translate: 0 -50%;
-  pointer-events: none;
-  color: var(--sem-fg-tertiary);
-}

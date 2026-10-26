@@ -1,0 +1,113 @@
+/* Popup surface
+ *
+ * One surface shared by Menu and Select, so a dropdown looks the same wherever
+ * it opens from. The roles inside differ: a menu holds commands and a select
+ * holds choices, and those are different ARIA patterns with different keyboard
+ * rules. Sharing the paint and not the semantics is the point.
+ */
+.era-surface {
+  position: absolute;
+  z-index: 40;
+  /* Sized by its own contents, not by whatever opened it. A menu hanging off a
+   * small icon button still needs room for "Release payment"; the cap keeps a
+   * long label wrapping instead of running across the screen. */
+  inline-size: max-content;
+  min-inline-size: 200px;
+  max-inline-size: 320px;
+  max-block-size: 280px;
+  overflow-y: auto;
+  padding: var(--spacing-space-4);
+  margin: 0;
+  list-style: none;
+  background: var(--sem-bg-surface-overlay);
+  border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  border-radius: var(--brand-radius-roles-surface-popover);
+  box-shadow: 0 8px 24px var(--colors-alpha-black-16), 0 1px 2px var(--colors-alpha-black-8);
+}
+/* A select is the exception: its list is the field's own values, so it lines up
+ * with the field rather than sizing itself. */
+.era-surface--match-trigger { inline-size: 100%; min-inline-size: 100%; max-inline-size: none; }
+
+.era-surface--below { inset-block-start: calc(100% + var(--spacing-space-4)); }
+.era-surface--above { inset-block-end: calc(100% + var(--spacing-space-4)); }
+.era-surface--start { inset-inline-start: 0; }
+.era-surface--end { inset-inline-end: 0; }
+
+.era-surface__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  inline-size: 100%;
+  padding: var(--spacing-space-8);
+  background: none;
+  border: 0;
+  border-radius: var(--brand-radius-roles-menu-items-md);
+  font: inherit;
+  font-size: var(--typography-text-sm-size);
+  line-height: var(--typography-text-sm-line-height);
+  color: var(--sem-fg-primary);
+  text-align: start;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Highlight follows the keyboard as well as the pointer, and both use the same
+ * token, so there is never a second "which one is active" story to keep in sync. */
+.era-surface__item[data-active='true'] { background: var(--sem-state-hover-strong); }
+.era-surface__item[aria-selected='true'],
+.era-surface__item[aria-checked='true'] { background: var(--sem-state-selected); color: var(--sem-primary-fg); }
+.era-surface__item[aria-selected='true'][data-active='true'],
+.era-surface__item[aria-checked='true'][data-active='true'] { background: var(--sem-state-selected-hover); }
+
+.era-surface__item[aria-disabled='true'],
+.era-surface__item:disabled { color: var(--sem-fg-disabled); cursor: not-allowed; background: none; }
+/* The hint dims with its item rather than staying at full strength under a
+ * greyed-out label. */
+.era-surface__item[aria-disabled='true'] .era-surface__hint,
+.era-surface__item[aria-disabled='true'] .era-surface__icon { color: inherit; }
+
+.era-surface__item--danger { color: var(--sem-status-error-fg); }
+.era-surface__item--danger[data-active='true'] { background: var(--sem-status-error-bg-subtle); }
+
+.era-surface__icon { flex: none; display: inline-flex; color: var(--sem-fg-tertiary); }
+.era-surface__item--danger .era-surface__icon { color: var(--sem-status-error-icon); }
+.era-surface__text { flex: 1 1 auto; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--spacing-space-2); }
+.era-surface__hint { font-size: var(--typography-text-xs-size); line-height: var(--typography-text-xs-line-height); color: var(--sem-fg-tertiary); }
+
+/* Reserved whether or not the item is the selected one, so nothing shifts
+ * sideways as the selection moves. */
+.era-surface__tick { flex: none; inline-size: var(--spacing-space-16); display: inline-flex; justify-content: center; color: var(--sem-primary-fg); }
+
+.era-surface__shortcut {
+  flex: none;
+  font-size: var(--typography-text-xs-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--sem-fg-tertiary);
+  padding: 0 var(--spacing-space-4);
+  border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  border-radius: var(--brand-radius-scale-sm-4);
+}
+
+.era-surface__group-label {
+  padding: var(--spacing-space-8) var(--spacing-space-8) var(--spacing-space-4);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  color: var(--sem-fg-tertiary);
+}
+
+.era-surface__separator {
+  block-size: var(--brand-stroke-default);
+  margin: var(--spacing-space-4) 0;
+  background: var(--sem-border-divider);
+  border: 0;
+}
+
+.era-surface__empty {
+  padding: var(--spacing-space-12) var(--spacing-space-8);
+  font-size: var(--typography-text-sm-size);
+  color: var(--sem-fg-tertiary);
+  text-align: center;
+}
+
+.era-anchor { position: relative; display: inline-block; }

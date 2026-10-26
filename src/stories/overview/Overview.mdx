@@ -54,14 +54,16 @@ The build fails if any token points at something that does not exist, so Figma a
 
 **Foundations** are generated from the live tokens, so these pages cannot go stale: colour ramps and every semantic colour, the type scale, the spacing scale, radius scale and radius roles, and stroke weights.
 
-**Components** are twenty-two of them, grouped by job:
+**Components** are twenty-three of them, grouped by job:
 
-- **Actions**: Button
+- **Actions**: Button, Menu
 - **Forms**: Input, Text area, Select, Checkbox, Radio, Switch
 - **Data display**: Table, Card, Badge, Avatar
 - **Navigation**: Tabs, Breadcrumb, Pagination, Accordion
 - **Feedback**: Alert, Modal, Toast, Tooltip, Progress, Skeleton, Empty state
 
-Several of them lean on a native element on purpose. Modal is a real `<dialog>`, so focus trapping, Escape and page inertness come from the browser. Select is a real `<select>`, so type-ahead and the mobile picker come free. Accordion is `<details>`, so in-page find can open a closed section. Those are the four things hand-rolled versions usually get wrong.
+Some lean on a native element on purpose. Modal is a real `<dialog>`, so focus trapping, Escape and page inertness come from the browser. Accordion is `<details>`, so in-page find can open a closed section. Those are two of the things hand-rolled versions most often get wrong.
+
+Menu and Select go the other way and are built by hand, for a reason worth stating. They share one popup surface so every dropdown in the system looks the same, and they deliberately do not share roles: a menu holds commands and uses `role="menu"`, a select holds values with one always current and uses a combobox trigger over `role="listbox"`. Assistive tech announces those two differently, and it should. The cost of hand-building the Select is the native mobile picker and type-ahead, which we now carry ourselves; what it buys is a control that looks identical in every browser and can put a second line under an option, which a native `<select>` cannot render at all.
 
 The accessibility addon runs on every story, so contrast and labelling problems surface in the panel rather than in review.
