@@ -1,10 +1,10 @@
 ---
-import Base from '../layouts/Base.astro';
+import Shell from '../layouts/Shell.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<Base title="Using ERA" description="What you can take from ERA today, and what is not ready.">
-  <h1>Using ERA</h1>
+<Shell section="about" title="Using ERA" description="What you can take from ERA today, and what is not ready.">
+  <h1 class="display">Using ERA</h1>
   <p class="lede">
     There are three levels of using a design system, and being honest about which ones work matters more than claiming all
     three. Two of them work today. The third does not yet, and the reason is worth reading before you plan around it.
@@ -99,4 +99,4 @@ cp src/lib/cn.ts your-project/src/lib/`}</code></pre>
     MIT. Use it, change it, ship it commercially, no attribution required beyond keeping the licence notice. If you do build
     something on it, an issue saying so would be nice but is not owed.
   </p>
-</Base>
+</Shell>

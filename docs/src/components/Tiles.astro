@@ -1,0 +1,127 @@
+---
+/**
+ * Foundation tiles. LINE's equivalents are static illustrations; these are live
+ * previews of the real tokens, so they re-render when you switch brand and
+ * there is nothing to keep in sync.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const STEPS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+---
+
+<div class="tiles">
+  <a class="tile tile--wide lift" href={`${base}/foundations/colour`}>
+    <div class="tile__art">
+      <div class="ramp">
+        {STEPS.map((s) => <span style={`background: var(--brand-primary-scale-${s})`}></span>)}
+      </div>
+      <div class="ramp ramp--thin">
+        {STEPS.map((s) => <span style={`background: var(--brand-neutral-${s})`}></span>)}
+      </div>
+    </div>
+    <div class="tile__text">
+      <h3>Colour</h3>
+      <p>Eleven steps, each with a job. Two of them carry text, and that is on purpose.</p>
+    </div>
+  </a>
+
+  <a class="tile lift" href={`${base}/foundations/typography`}>
+    <div class="tile__art tile__art--center">
+      <span class="aa">Aa</span>
+    </div>
+    <div class="tile__text">
+      <h3>Typography</h3>
+      <p>One scale, thirteen steps, nothing below 12px.</p>
+    </div>
+  </a>
+
+  <a class="tile lift" href={`${base}/foundations/spacing`}>
+    <div class="tile__art tile__art--center">
+      <div class="bars">
+        <span style="inline-size: var(--spacing-space-8)"></span>
+        <span style="inline-size: var(--spacing-space-16)"></span>
+        <span style="inline-size: var(--spacing-space-32)"></span>
+        <span style="inline-size: var(--spacing-space-64)"></span>
+      </div>
+    </div>
+    <div class="tile__text">
+      <h3>Spacing</h3>
+      <p>A 4px grid with 2px as one named exception.</p>
+    </div>
+  </a>
+
+  <a class="tile lift" href={`${base}/foundations/shape`}>
+    <div class="tile__art tile__art--center">
+      <div class="shapes">
+        <span style="border-radius: var(--brand-radius-roles-buttons-button-md)"></span>
+        <span style="border-radius: var(--brand-radius-roles-card-md)"></span>
+        <span style="border-radius: var(--brand-radius-roles-buttons-button-icon)"></span>
+      </div>
+    </div>
+    <div class="tile__text">
+      <h3>Radius and stroke</h3>
+      <p>Where the three brands diverge most.</p>
+    </div>
+  </a>
+</div>
+
+<style>
+  .tiles {
+    display: grid;
+    /* Not three equal cards: one wide tile sets the rhythm, three follow. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-space-24);
+  }
+  .tile--wide { grid-column: span 3; }
+  @media (min-width: 900px) { .tile--wide { grid-column: span 3; } }
+  @media (max-width: 760px) { .tiles { grid-template-columns: minmax(0, 1fr); } .tile--wide { grid-column: span 1; } }
+
+  .tile { display: block; text-decoration: none; color: inherit; }
+
+  .tile__art {
+    block-size: 148px;
+    padding: var(--spacing-space-20);
+    margin-block-end: var(--spacing-space-12);
+    border-radius: var(--brand-radius-roles-card-md);
+    background: var(--sem-bg-surface);
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-space-8);
+    overflow: hidden;
+    transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tile:hover .tile__art { border-color: var(--sem-border-default); }
+  .tile__art--center { align-items: center; justify-content: center; }
+
+  .ramp { display: flex; block-size: var(--spacing-space-40); border-radius: var(--brand-radius-scale-sm-4); overflow: hidden; }
+  .ramp--thin { block-size: var(--spacing-space-12); opacity: 0.8; }
+  .ramp span { flex: 1 1 0; }
+
+  .aa {
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-weight: var(--brand-typography-theme-font-weight-display);
+    color: var(--sem-fg-primary);
+  }
+
+  .bars { display: flex; flex-direction: column; gap: var(--spacing-space-8); align-items: flex-start; inline-size: var(--spacing-space-64); }
+  .bars span { block-size: var(--spacing-space-8); background: var(--sem-primary-bg); border-radius: var(--radius-radius-full); }
+
+  .shapes { display: flex; gap: var(--spacing-space-12); }
+  .shapes span {
+    inline-size: var(--spacing-space-48);
+    block-size: var(--spacing-space-48);
+    background: var(--sem-primary-bg-subtle);
+    border: var(--brand-stroke-default) solid var(--sem-primary-border);
+  }
+
+  .tile__text h3 {
+    margin: 0 0 var(--spacing-space-4);
+    font-size: var(--typography-text-base-size);
+    font-weight: var(--brand-typography-theme-font-weight-label);
+    letter-spacing: -0.01em;
+  }
+  .tile__text p { margin: 0; font-size: var(--typography-text-sm-size); line-height: var(--typography-text-sm-line-height); color: var(--sem-fg-tertiary); }
+</style>

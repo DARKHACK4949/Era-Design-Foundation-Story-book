@@ -1,5 +1,5 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Shell from '../../layouts/Shell.astro';
 import Demo from '../../components/Demo.astro';
 const SCALE = ['none', 'xs-2', 'sm-4', 'md-8', 'lg-12', 'xl-16', '2xl-24', '3xl-32', 'radius-full'];
 const ROLES: Array<[string, string]> = [
@@ -14,8 +14,8 @@ const ROLES: Array<[string, string]> = [
 ];
 ---
 
-<Base title="Radius and stroke" description="Radius roles are how three brands get different shapes from one component set.">
-  <h1>Radius and stroke</h1>
+<Shell section="foundations" title="Radius and stroke" description="Radius roles are how three brands get different shapes from one component set.">
+  <h1 class="display">Radius and stroke</h1>
   <p class="lede">
     Radius is where the three brands diverge most, and it is the clearest example of why ERA has a role layer at all.
   </p>
@@ -78,4 +78,4 @@ const ROLES: Array<[string, string]> = [
     <li><strong>Round means round.</strong> Icon buttons and avatars use <code>radius-full</code> in every brand, because a round icon button is the shape, not a style.</li>
     <li><strong>Nested radii step down.</strong> Something inside a card uses a smaller radius than the card, otherwise the inner corner looks wrong against the outer one.</li>
   </ul>
-</Base>
+</Shell>

@@ -1,0 +1,70 @@
+---
+// The three brand typefaces, self-hosted. Without these the brand font tokens
+// fall back to the system stack and all three brands look identical.
+import '@fontsource-variable/ibm-plex-sans';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/source-sans-3';
+import '../../../tokens/generated/era.css';
+import '../styles/docs.css';
+import Chrome from '../components/Chrome.astro';
+import Search from '../components/Search.astro';
+import { SECTIONS } from '../nav';
+
+interface Props { title: string; description?: string; section?: keyof typeof SECTIONS | null; prose?: boolean }
+const { title, description = 'ERA, a multi-brand design system.', section = null, prose = Boolean(Astro.props.section) } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const here = Astro.url.pathname.replace(base, '').replace(/\/$/, '') || '/';
+const groups = section ? SECTIONS[section] : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · ERA</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%235b5bd6'/><circle cx='16' cy='16' r='5' fill='white'/></svg>" />
+  </head>
+  <body>
+    <Chrome />
+
+    <div class={groups ? 'layout' : 'layout layout--wide'}>
+      {groups && (
+        <nav class="side" aria-label="In this section">
+          {groups.map((group) => (
+            <div class="side__group">
+              <div class="side__title">{group.title}</div>
+              <ul class="side__list">
+                {group.links.map((link) => (
+                  <li>
+                    <a class="side__link" href={`${base}${link.href}`} aria-current={here === link.href ? 'page' : undefined}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      )}
+
+      <main class={prose ? 'prose' : undefined}>
+        <slot />
+      </main>
+    </div>
+
+    <footer class="foot">
+      <span>ERA, a personal design system by Sanyam Sharma.</span>
+      <span class="chrome__spacer"></span>
+      <a href={`${base}/using-era`}>Adopt</a>
+      <a href={`${base}/storybook/`}>Storybook</a>
+      <a href="https://github.com/DARKHACK4949/Era-Design-Foundation-Story-book">Source</a>
+      <span>MIT</span>
+    </footer>
+
+    <Search />
+  </body>
+</html>

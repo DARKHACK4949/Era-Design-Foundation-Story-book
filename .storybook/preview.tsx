@@ -1,5 +1,10 @@
 import type { Decorator, Preview } from '@storybook/react';
 import React, { useEffect } from 'react';
+// The three brand typefaces, self-hosted. Without these the brand font tokens
+// silently fall back to the system stack and all three brands look identical.
+import '@fontsource-variable/ibm-plex-sans';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/source-sans-3';
 import '../tokens/generated/era.css';
 import '../src/styles/base.css';
 

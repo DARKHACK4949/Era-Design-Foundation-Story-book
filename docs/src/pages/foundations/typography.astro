@@ -1,5 +1,5 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Shell from '../../layouts/Shell.astro';
 import Demo from '../../components/Demo.astro';
 const STEPS = [
   ['4xl', 36, 40, 'Page titles, one per screen'],
@@ -13,8 +13,8 @@ const STEPS = [
 ];
 ---
 
-<Base title="Typography" description="One type scale, thirteen steps, nothing below 12px.">
-  <h1>Typography</h1>
+<Shell section="foundations" title="Typography" description="One type scale, thirteen steps, nothing below 12px.">
+  <h1 class="display">Typography</h1>
   <p class="lede">
     One scale, thirteen steps, nothing below 12px. Each step pairs a size with a line height that lands on the 4px grid, so
     type never breaks the spacing system it sits inside.
@@ -70,4 +70,4 @@ const STEPS = [
     <li><strong>Tracking is a correction for size, not a style choice.</strong> Two tokens: large type is tightened by 1px, everything else sits at zero. Per-component tracking is a smell.</li>
     <li><strong>Line height belongs to the step.</strong> Taking a size without its line height is how vertical rhythm breaks.</li>
   </ul>
-</Base>
+</Shell>

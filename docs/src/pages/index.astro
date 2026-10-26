@@ -1,123 +1,171 @@
 ---
-import Base from '../layouts/Base.astro';
-import Demo from '../components/Demo.astro';
+import Shell from '../layouts/Shell.astro';
+import Chain from '../components/Chain.astro';
+import Tiles from '../components/Tiles.astro';
 import { Button } from '@era/components/button/Button';
-import { Badge } from '@era/components/badge/Badge';
 import { Input } from '@era/components/input/Input';
 import { Select } from '@era/components/select/Select';
-import { Alert } from '@era/components/alert/Alert';
+import { Switch } from '@era/components/switch/Switch';
+import { Badge } from '@era/components/badge/Badge';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-
 const VENDORS = [
   { value: 'northwind', label: 'Northwind Supply', hint: '4 invoices this quarter' },
   { value: 'calder', label: 'Calder Logistics', hint: '2 invoices this quarter' },
-  { value: 'brightwell', label: 'Brightwell Print', hint: 'New vendor, first payment held' },
+];
+const BRANDS = [
+  ['brand-1', 'Brand 1', 'IBM Plex Sans'],
+  ['brand-2', 'Brand 2', 'Geist'],
+  ['brand-3', 'Brand 3', 'Source Sans 3'],
 ];
 ---
 
-<Base title="Overview" description="ERA is a multi-brand design system: three brands and two modes from one set of components.">
-  <h1>ERA</h1>
-  <p class="lede">
-    A multi-brand design system. Three brands and two modes come out of one set of components, and no component knows which
-    brand or mode it is in.
-  </p>
-
-  <p>
-    Use the swatches at the top of this page to change brand, and the Light and Dark button to change mode. Everything on
-    every page here follows, including this site's own chrome, because the docs are built with the system they document.
-  </p>
-
-  <Demo label="The same components, whichever brand and mode you have selected">
-    <Button client:load>Release payment</Button>
-    <Button intent="outline" client:load>Hold for review</Button>
-    <Button intent="danger" client:load>Reject</Button>
-    <Badge tone="success" fill="subtle" dot>Released</Badge>
-    <Badge tone="warning" fill="subtle" dot>Held</Badge>
-  </Demo>
-
-  <h2>What it actually is</h2>
-
-  <p>
-    ERA started as an answer to a problem that shows up in every company running more than one product: three products, three
-    sets of buttons, three definitions of "error red", and a redesign that has to be done three times. The usual fix is to
-    make one component library and let each product override it, which lasts about a quarter before the overrides become the
-    real system.
-  </p>
-
-  <p>
-    The approach here is to put the variation in the tokens rather than in the components. There are three layers, and each
-    one is allowed to know about exactly one thing below it.
-  </p>
-
-  <table>
-    <thead>
-      <tr><th>Layer</th><th>What it holds</th><th>What changes it</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Primitives</strong></td>
-        <td>Raw values with no opinion: 11-step ramps, a 4px spacing scale, type sizes, radius steps, stroke weights.</td>
-        <td>Nothing. These are constants.</td>
-      </tr>
-      <tr>
-        <td><strong>Brand</strong></td>
-        <td>Which primitive each brand reaches for, plus radius roles so a brand can shape buttons differently from cards.</td>
-        <td><code>data-brand</code></td>
-      </tr>
-      <tr>
-        <td><strong>Semantics</strong></td>
-        <td>Names for jobs, not for colours: <code>--sem-status-error-bg</code> rather than <code>--red-700</code></td>
-        <td><code>data-theme</code></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p>
-    Components read the semantic layer and nothing else. That is the rule the whole thing rests on, and it is what lets a
-    brand swap be two attributes:
-  </p>
-
-  <pre><code>&lt;html data-brand="brand-2" data-theme="dark"&gt;</code></pre>
-
-  <h2>What that buys</h2>
-
-  <p>
-    A form is the honest test, because forms are where systems usually leak. Nothing below is brand-aware or mode-aware.
-    Change either one at the top of this page and read it again.
-  </p>
-
-  <Demo label="One form, three brands, two modes, no overrides">
-    <div style="display: grid; gap: var(--spacing-space-16); max-width: 380px; width: 100%;">
-      <Input label="Invoice number" defaultValue="INV-2301" client:load />
-      <Select label="Vendor" options={VENDORS} defaultValue="calder" client:load />
-      <Alert
-        tone="warning"
-        title="This invoice is a near-duplicate."
-        description="INV-2301 from the same vendor was paid on 11 Oct for the same amount."
-        client:load
-      />
-      <div style="display: flex; gap: var(--spacing-space-8);">
-        <Button client:load>Release</Button>
-        <Button intent="ghost" client:load>Cancel</Button>
+<Shell title="Overview" description="ERA is a multi-brand design system: three brands and two modes from one set of components.">
+  <section class="hero">
+    <div class="hero__copy">
+      <h1 class="display">Three brands.<br />One set of components.</h1>
+      <p class="lede">The variation lives in the tokens, not in the components. Switching brand or mode is two attributes on the page.</p>
+      <div class="hero__cta">
+        <a class="btn btn--solid lift" href={`${base}/foundations`}>Explore foundations</a>
+        <a class="btn btn--quiet lift" href={`${base}/storybook/`}>Open Storybook</a>
       </div>
     </div>
-  </Demo>
+    <div class="hero__art"><Chain /></div>
+  </section>
 
-  <h2>Where to go next</h2>
+  <section class="band">
+    <p class="band__code mono">&lt;html data-brand="brand-2" data-theme="dark"&gt;</p>
+    <p class="band__note">Change either attribute at the top of this page. Nothing below is aware of it.</p>
+  </section>
 
-  <ul>
-    <li><a href={`${base}/using-era`}>Using ERA</a> is the honest answer to "can I use this in my project", including what does not work yet.</li>
-    <li><a href={`${base}/tokens`}>How tokens work</a> goes through the three layers properly, with the naming rules.</li>
-    <li><a href={`${base}/accessibility`}>Accessibility</a> covers the contrast audit, what it caught, and the one exemption.</li>
-    <li><a href={`${base}/storybook/`}>The Storybook</a> has every component, every state, and a live contrast audit you can run per brand.</li>
-  </ul>
+  <section class="slab">
+    <h2 class="slab__title">Foundations</h2>
+    <Tiles />
+  </section>
 
-  <h2>Built by</h2>
+  <section class="slab">
+    <h2 class="slab__title">The same panel, three brands</h2>
+    <p class="slab__lede">Identical markup in each column. Typeface, accent and corner treatment are brand decisions; everything else is shared.</p>
+    <div class="trio">
+      {BRANDS.map(([id, name, face]) => (
+        <div class="trio__col" data-brand={id}>
+          <div class="trio__label">
+            <strong>{name}</strong>
+            <span>{face}</span>
+          </div>
+          <div class="panel">
+            <div class="panel__head">
+              <strong>Release rules</strong>
+              <Badge tone="success" fill="subtle" dot>Active</Badge>
+            </div>
+            <Input label="Auto-release ceiling" defaultValue="500.00" client:load />
+            <Select label="Vendor" options={VENDORS} defaultValue="calder" client:load />
+            <Switch label="Hold first payment" defaultChecked client:load />
+            <div class="panel__foot">
+              <Button size="sm" client:load>Save rules</Button>
+              <Button size="sm" intent="ghost" client:load>Cancel</Button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
 
-  <p>
-    Sanyam Sharma, a product designer who works on design systems. ERA is a personal project, not a company system, and the
-    code and the Figma library are both open. If something here is wrong or unclear,
-    <a href="https://github.com/DARKHACK4949/Era-Design-Foundation-Story-book/issues">open an issue</a>.
-  </p>
-</Base>
+  <section class="split">
+    <div>
+      <h2 class="slab__title">Take the tokens</h2>
+      <p class="slab__lede">
+        1,505 custom properties, no dependencies, no build step. Works under React, Vue, plain HTML, or as the theme layer
+        beneath Tailwind.
+      </p>
+      <p><a href={`${base}/using-era`}>What you can and cannot use yet</a></p>
+    </div>
+    <pre class="code"><code>{`<link rel="stylesheet" href="era.css">
+
+.my-button {
+  background: var(--sem-primary-bg);
+  color: var(--sem-primary-fg-on-bg);
+  border-radius: var(--brand-radius-roles-buttons-button-md);
+}`}</code></pre>
+  </section>
+</Shell>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--spacing-space-64);
+    align-items: center;
+    padding-block: var(--spacing-space-32) var(--spacing-space-64);
+  }
+  @media (max-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-space-32); } }
+
+  .hero__copy .display { margin-block-end: var(--spacing-space-20); }
+  .hero__cta { display: flex; gap: var(--spacing-space-12); flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--spacing-space-40);
+    padding-inline: var(--spacing-space-16);
+    border-radius: var(--brand-radius-roles-buttons-button-md);
+    font-size: var(--typography-text-sm-size);
+    font-weight: var(--brand-typography-theme-font-weight-label);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn--solid { background: var(--sem-primary-bg); color: var(--sem-primary-fg-on-bg); }
+  .btn--solid:hover { background: var(--sem-primary-bg-hover); }
+  .btn--quiet { color: var(--sem-fg-primary); border: var(--brand-stroke-default) solid var(--sem-border-default); }
+  .btn--quiet:hover { background: var(--sem-bg-surface-hover); }
+
+  .band {
+    padding: var(--spacing-space-24) 0;
+    border-block: var(--brand-stroke-default) solid var(--sem-border-subtle);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--spacing-space-16);
+  }
+  .band__code { font-size: var(--typography-text-sm-size); color: var(--sem-primary-fg); }
+  .band__note { margin: 0; font-size: var(--typography-text-sm-size); color: var(--sem-fg-tertiary); }
+
+  .slab { padding-block: var(--spacing-space-64) 0; }
+  .slab__title {
+    font-size: var(--typography-text-2xl-size);
+    line-height: var(--typography-text-2xl-line-height);
+    letter-spacing: -0.022em;
+    font-weight: var(--brand-typography-theme-font-weight-heading);
+    margin: 0 0 var(--spacing-space-8);
+  }
+  .slab__lede { margin: 0 0 var(--spacing-space-24); color: var(--sem-fg-secondary); max-inline-size: 60ch; }
+
+  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-space-20); align-items: start; }
+  @media (max-width: 900px) { .trio { grid-template-columns: minmax(0, 1fr); } }
+
+  .trio__col { color: var(--sem-fg-primary); font-family: var(--brand-typography-theme-font-family-font); }
+  .trio__label { display: flex; flex-direction: column; margin-block-end: var(--spacing-space-8); font-size: var(--typography-text-sm-size); }
+  .trio__label span { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-16);
+    padding: var(--spacing-space-16);
+    border-radius: var(--brand-radius-roles-card-md);
+    background: var(--sem-bg-surface);
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  .panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-space-8); }
+  .panel__foot { display: flex; gap: var(--spacing-space-8); }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--spacing-space-48);
+    align-items: center;
+    padding-block: var(--spacing-space-64) 0;
+  }
+  @media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-space-24); } }
+  .split .code { margin: 0; }
+</style>

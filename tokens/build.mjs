@@ -51,7 +51,9 @@ function cssValue(name, type, raw) {
   if (ref) return ref;
   if (type === 'F') return isUnitless(name) ? raw : `${raw}px`;
   if (type === 'S') {
-    if (/font-family/.test(name)) return `"${raw}"${FONT_STACK}`;
+    // The self-hosted variable builds register under "<Family> Variable", so
+    // both names are listed: whichever is present wins before the fallbacks.
+    if (/font-family/.test(name)) return `"${raw}", "${raw} Variable"${FONT_STACK}`;
     if (/font-weight/.test(name)) return String(WEIGHTS[raw] ?? raw);
     return raw;
   }

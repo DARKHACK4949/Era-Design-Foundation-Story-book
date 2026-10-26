@@ -1,0 +1,67 @@
+---
+import { Button } from '@era/components/button/Button';
+
+/**
+ * The hero visual. Not a mock-up of a product: the real resolution chain,
+ * rendered live. Every swatch is the token it names, so switching brand or
+ * mode moves this panel exactly as much as it moves a real component.
+ */
+const ROWS = [
+  { layer: 'Primitives', token: '--brand-primary-scale-700', swatch: 'var(--brand-primary-scale-700)', note: 'the raw ramp step this brand points at' },
+  { layer: 'Brand', token: '--brand-primary-roles-action', swatch: 'var(--brand-primary-roles-action)', note: 'which ramp this brand uses' },
+  { layer: 'Semantics', token: '--sem-primary-bg', swatch: 'var(--sem-primary-bg)', note: 'what the colour is for' },
+];
+---
+
+<div class="chain">
+  {ROWS.map((r) => (
+    <div class="chain__row">
+      <span class="chain__swatch" style={`background: ${r.swatch}`}></span>
+      <span class="chain__body">
+        <code class="chain__token">{r.token}</code>
+        <span class="chain__note">{r.layer}, {r.note}</span>
+      </span>
+    </div>
+  ))}
+  <div class="chain__out">
+    <Button client:load>Release payment</Button>
+    <span class="chain__note">The only layer a component reads</span>
+  </div>
+</div>
+
+<style>
+  .chain {
+    padding: var(--spacing-space-20);
+    border-radius: var(--brand-radius-roles-card-lg);
+    background: var(--sem-bg-surface);
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-4);
+  }
+  .chain__row { display: flex; align-items: center; gap: var(--spacing-space-12); padding: var(--spacing-space-8) 0; }
+  .chain__swatch {
+    inline-size: var(--spacing-space-32);
+    block-size: var(--spacing-space-32);
+    flex: none;
+    border-radius: var(--brand-radius-scale-sm-4);
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  .chain__body { display: flex; flex-direction: column; min-inline-size: 0; }
+  .chain__token {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: var(--typography-text-xs-size);
+    color: var(--sem-fg-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chain__note { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); }
+  .chain__out {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-12);
+    margin-block-start: var(--spacing-space-8);
+    padding-block-start: var(--spacing-space-16);
+    border-block-start: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+</style>

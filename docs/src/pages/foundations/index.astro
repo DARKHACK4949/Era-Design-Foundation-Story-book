@@ -1,0 +1,31 @@
+---
+import Shell from '../../layouts/Shell.astro';
+import Tiles from '../../components/Tiles.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Shell title="Foundations" section="foundations" prose={false} description="The decisions everything else in ERA is built on.">
+  <h1 class="display">Foundations</h1>
+  <p class="lede">
+    The decisions everything else rests on. Each page here is rendered from the live tokens, so none of it can quietly
+    go out of date.
+  </p>
+
+  <Tiles />
+
+  <hr class="rule" />
+
+  <div class="prose">
+    <h2>How they fit together</h2>
+    <p>
+      Colour, type, spacing and shape are not four separate systems. They share one structure: a raw scale that never
+      changes, a brand layer that picks from it, and a semantic layer that says what each choice is for. The
+      <a href={`${base}/tokens`}>token page</a> walks that chain end to end.
+    </p>
+    <p>
+      Two of these change per brand and two do not. Typeface and corner treatment are brand decisions. The spacing grid
+      and the type scale are the same everywhere, because a brand that needs its own spacing scale is really a second
+      design system.
+    </p>
+  </div>
+</Shell>

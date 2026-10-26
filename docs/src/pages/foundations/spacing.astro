@@ -1,11 +1,11 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Shell from '../../layouts/Shell.astro';
 import Demo from '../../components/Demo.astro';
 const SPACE = [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
 ---
 
-<Base title="Spacing" description="A 4px and 8px grid, with 2px as one named exception.">
-  <h1>Spacing</h1>
+<Shell section="foundations" title="Spacing" description="A 4px and 8px grid, with 2px as one named exception.">
+  <h1 class="display">Spacing</h1>
   <p class="lede">
     A 4px and 8px grid, with 2px kept as one deliberate exception. Naming that exception is better than pretending it does
     not exist and leaving people to hardcode it.
@@ -59,4 +59,4 @@ const SPACE = [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
     The payoff is that a component can be dropped into any layout without bringing its own spacing opinions, and two
     components side by side never produce a gap neither of them intended.
   </p>
-</Base>
+</Shell>

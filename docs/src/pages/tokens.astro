@@ -1,11 +1,11 @@
 ---
-import Base from '../layouts/Base.astro';
+import Shell from '../layouts/Shell.astro';
 import Demo from '../components/Demo.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<Base title="How tokens work" description="The three token layers in ERA, and the rules that keep them honest.">
-  <h1>How tokens work</h1>
+<Shell section="about" title="How tokens work" description="The three token layers in ERA, and the rules that keep them honest.">
+  <h1 class="display">How tokens work</h1>
   <p class="lede">
     Three layers, and each one is allowed to know about exactly one thing below it. Everything else in ERA follows from
     that, including the parts that look like component decisions.
@@ -119,4 +119,4 @@ Component    background: var(--sem-primary-bg);
   </table>
 
   <p><a href={`${base}/using-era`}>Using ERA</a> covers how to pull these into your own project.</p>
-</Base>
+</Shell>

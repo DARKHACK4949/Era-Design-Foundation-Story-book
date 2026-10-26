@@ -502,7 +502,7 @@
   --brand-success-dark-800: var(--colors-green-dark-800);
   --brand-success-dark-900: var(--colors-green-dark-900);
   --brand-success-dark-950: var(--colors-green-dark-950);
-  --brand-typography-theme-font-family-font: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --brand-typography-theme-font-family-font: "IBM Plex Sans", "IBM Plex Sans Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --brand-typography-theme-font-weight-display: 500;
   --brand-typography-theme-font-weight-heading: 600;
   --brand-typography-theme-font-weight-label: 500;
@@ -799,7 +799,7 @@
   --brand-success-dark-800: var(--colors-green-dark-800);
   --brand-success-dark-900: var(--colors-green-dark-900);
   --brand-success-dark-950: var(--colors-green-dark-950);
-  --brand-typography-theme-font-family-font: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --brand-typography-theme-font-family-font: "Geist", "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --brand-typography-theme-font-weight-display: 600;
   --brand-typography-theme-font-weight-heading: 600;
   --brand-typography-theme-font-weight-label: 500;
@@ -1096,7 +1096,7 @@
   --brand-success-dark-800: var(--colors-green-dark-800);
   --brand-success-dark-900: var(--colors-green-dark-900);
   --brand-success-dark-950: var(--colors-green-dark-950);
-  --brand-typography-theme-font-family-font: "Source Sans 3", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --brand-typography-theme-font-family-font: "Source Sans 3", "Source Sans 3 Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --brand-typography-theme-font-weight-display: 500;
   --brand-typography-theme-font-weight-heading: 500;
   --brand-typography-theme-font-weight-label: 500;
