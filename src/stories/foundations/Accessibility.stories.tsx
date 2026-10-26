@@ -157,14 +157,29 @@ export const ContrastAudit: Story = {
       </Section>
 
       <Section
-        title="Known gaps"
+        title="What this page caught"
         note={
           <>
-            Two groups fail today and both come from the same root cause. The first is the low end of the neutral ramp:
-            placeholder, helper text and field labels sit on steps built to be borders, not text. The second is the solid
-            brand fill: Radix splits its step 9 colours into those that take white text and those that need dark text, and
-            Cyan and Jade are in the second group, so a white label on the Brand 2 and Brand 3 action colour lands around
-            2.3:1 and 3.2:1. The fix for that one is a per-brand foreground token rather than a global white.
+            An earlier run of this audit failed 10 of these 23 pairs, from two root causes. The first was the low end of the
+            neutral ramp being used for text: placeholder sat at 1.57:1, helper text at 1.92:1 and field labels at 3.32:1,
+            all on steps that exist to draw borders. Only steps 900 and 950 carry body text, which is what Radix intends,
+            since it guarantees exactly two text steps per ramp. The second was the solid brand fill carrying one global
+            white foreground: Radix splits its step 9 colours into those that take white text and those that need dark
+            text, and Cyan and Jade are in the second group, so a white label landed at 2.32:1 on Brand 2 and 3.15:1 on
+            Brand 3. That is now a per-brand role token, so each brand answers for its own fill.
+          </>
+        }
+      >
+        <div />
+      </Section>
+
+      <Section
+        title="The one exemption"
+        note={
+          <>
+            The label on a disabled control is deliberately below 4.5:1. WCAG 1.4.3 exempts inactive controls, and a
+            disabled button rendered at full contrast stops reading as disabled. It moved from 1.68:1 to 3.33:1, which is
+            legible without pretending to be active.
           </>
         }
       >

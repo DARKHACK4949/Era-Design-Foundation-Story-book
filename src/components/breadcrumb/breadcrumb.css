@@ -1,0 +1,39 @@
+/* Breadcrumb
+ *
+ * Says where you are in a hierarchy. The separator is a decorative character
+ * in CSS rather than a text node, so a screen reader reads "Invoices,
+ * Northwind Supply" instead of "Invoices slash Northwind Supply".
+ *
+ * The last crumb is the current page and is not a link, because linking to
+ * where you already are is a dead end.
+ */
+.era-crumbs { font-size: var(--typography-text-sm-size); line-height: var(--typography-text-sm-line-height); }
+.era-crumbs__list { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-space-4); list-style: none; margin: 0; padding: 0; }
+.era-crumbs__item { display: flex; align-items: center; gap: var(--spacing-space-4); min-inline-size: 0; }
+
+.era-crumbs__item + .era-crumbs__item::before {
+  content: '/';
+  color: var(--sem-fg-tertiary);
+  margin-inline-end: var(--spacing-space-4);
+}
+
+.era-crumbs__link {
+  color: var(--sem-fg-secondary);
+  text-decoration: none;
+  padding: var(--spacing-space-2) var(--spacing-space-4);
+  border-radius: var(--brand-radius-roles-menu-items-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.era-crumbs__link:hover { color: var(--sem-fg-primary); background: var(--sem-state-hover); text-decoration: underline; }
+
+.era-crumbs__current {
+  color: var(--sem-fg-primary);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  padding: var(--spacing-space-2) var(--spacing-space-4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.era-crumbs__ellipsis { color: var(--sem-fg-tertiary); padding-inline: var(--spacing-space-4); }

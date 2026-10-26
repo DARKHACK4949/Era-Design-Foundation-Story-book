@@ -1,0 +1,54 @@
+/* Tabs
+ *
+ * Follows the WAI-ARIA tabs pattern: arrow keys move between tabs, Home and
+ * End jump to the ends, and only the selected tab is in the tab order, so Tab
+ * takes you out of the strip and into the panel rather than through every tab.
+ */
+.era-tabs__list {
+  display: flex;
+  gap: var(--spacing-space-4);
+  border-block-end: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  overflow-x: auto;
+}
+
+.era-tabs__tab {
+  position: relative;
+  flex: none;
+  background: none;
+  border: 0;
+  padding: var(--spacing-space-8) var(--spacing-space-12);
+  font: inherit;
+  font-size: var(--typography-text-sm-size);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  color: var(--sem-fg-tertiary);
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: var(--brand-radius-roles-menu-items-md) var(--brand-radius-roles-menu-items-md) 0 0;
+}
+.era-tabs__tab:hover:not([disabled]) { color: var(--sem-fg-primary); background: var(--sem-state-hover); }
+.era-tabs__tab[aria-selected='true'] { color: var(--sem-primary-fg); }
+.era-tabs__tab[disabled] { color: var(--sem-fg-disabled); cursor: not-allowed; }
+
+/* The indicator sits on the list's own border line, so the two read as one
+ * rule rather than two stacked edges. */
+.era-tabs__tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  inset-inline: var(--spacing-space-8);
+  inset-block-end: calc(var(--brand-stroke-default) * -1);
+  block-size: var(--stroke-stroke-2);
+  background: var(--sem-primary-bg);
+  border-radius: var(--radius-radius-full);
+}
+
+.era-tabs__count {
+  margin-inline-start: var(--spacing-space-4);
+  font-variant-numeric: tabular-nums;
+  color: var(--sem-fg-tertiary);
+}
+
+.era-tabs__panel { padding-block-start: var(--spacing-space-16); }
+.era-tabs__panel:focus-visible {
+  outline: var(--brand-focus-ring-width) solid var(--sem-state-focus-ring);
+  outline-offset: var(--brand-focus-ring-offset);
+}

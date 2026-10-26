@@ -1,0 +1,37 @@
+/* Select
+ *
+ * A native <select> wearing ERA's field chrome. Native is deliberate: it gets
+ * keyboard handling, type-ahead, mobile pickers and screen reader support for
+ * free, and none of those are things worth rebuilding for a list of options.
+ *
+ * A custom listbox only earns its keep when options need icons, descriptions
+ * or grouping that native cannot render. That is the Combobox, not this.
+ */
+.era-select {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  padding-inline-end: var(--spacing-space-20);
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.era-select:focus { outline: none; }
+.era-select:disabled { cursor: not-allowed; }
+/* An unselected placeholder option is hint text, so it gets hint colour. */
+.era-select:invalid { color: var(--sem-form-input-placeholder); }
+
+.era-field__box--select { position: relative; }
+
+.era-select__chevron {
+  position: absolute;
+  inset-inline-end: var(--spacing-space-12);
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+  color: var(--sem-fg-tertiary);
+}

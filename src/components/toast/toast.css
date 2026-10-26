@@ -1,0 +1,64 @@
+/* Toast
+ *
+ * A short confirmation that something happened, stacked bottom-right and
+ * dismissed on its own. Anything the person has to act on is not a toast,
+ * because a toast disappears and an action does not wait.
+ *
+ * The timer pauses on hover and on focus, so a toast cannot vanish while it is
+ * being read or while its action is being reached for.
+ */
+.era-toast-region {
+  position: fixed;
+  inset-block-end: var(--spacing-space-20);
+  inset-inline-end: var(--spacing-space-20);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  inline-size: min(380px, calc(100vw - var(--spacing-space-40)));
+}
+
+.era-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-12);
+  padding: var(--spacing-space-12) var(--spacing-space-16);
+  background: var(--sem-bg-surface-overlay);
+  border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  border-inline-start-width: var(--stroke-stroke-4);
+  border-radius: var(--brand-radius-roles-surface-popover);
+  box-shadow: 0 8px 24px var(--colors-alpha-black-16);
+  font-size: var(--typography-text-sm-size);
+  line-height: var(--typography-text-sm-line-height);
+  animation: era-toast-in 180ms ease-out;
+}
+@keyframes era-toast-in {
+  from { opacity: 0; translate: 0 var(--spacing-space-8); }
+}
+
+.era-toast--success { border-inline-start-color: var(--sem-status-success-border-strong); }
+.era-toast--error   { border-inline-start-color: var(--sem-status-error-border-strong); }
+.era-toast--warning { border-inline-start-color: var(--sem-status-warning-border-strong); }
+.era-toast--info    { border-inline-start-color: var(--sem-status-info-border-strong); }
+
+.era-toast__icon { flex: none; margin-block-start: var(--spacing-space-2); }
+.era-toast--success .era-toast__icon { color: var(--sem-status-success-icon); }
+.era-toast--error   .era-toast__icon { color: var(--sem-status-error-icon); }
+.era-toast--warning .era-toast__icon { color: var(--sem-status-warning-icon); }
+.era-toast--info    .era-toast__icon { color: var(--sem-status-info-icon); }
+
+.era-toast__body { flex: 1 1 auto; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--spacing-space-2); }
+.era-toast__title { font-weight: var(--brand-typography-theme-font-weight-label); color: var(--sem-fg-primary); }
+.era-toast__description { color: var(--sem-fg-secondary); font-size: var(--typography-text-xs-size); line-height: var(--typography-text-xs-line-height); }
+
+.era-toast__dismiss {
+  flex: none;
+  background: none;
+  border: 0;
+  padding: var(--spacing-space-2);
+  border-radius: var(--brand-radius-roles-buttons-button-icon);
+  color: var(--sem-fg-tertiary);
+  cursor: pointer;
+  line-height: 0;
+}
+.era-toast__dismiss:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }

@@ -616,6 +616,10 @@
   --brand-tertiary-dark-roles-tint-pressed: var(--brand-tertiary-dark-scale-200);
   --brand-tertiary-dark-roles-border: var(--brand-tertiary-dark-scale-700);
   --brand-tertiary-dark-roles-border-subtle: var(--brand-tertiary-dark-scale-200);
+  --brand-primary-roles-on-action: var(--colors-color-base-white);
+  --brand-primary-dark-roles-on-action: var(--colors-color-base-white);
+  --brand-secondary-roles-on-action: var(--brand-neutral-950);
+  --brand-secondary-dark-roles-on-action: var(--brand-neutral-dark-50);
 }
 
 [data-brand='brand-2'] {
@@ -909,6 +913,10 @@
   --brand-tertiary-dark-roles-tint-pressed: var(--brand-tertiary-dark-scale-200);
   --brand-tertiary-dark-roles-border: var(--brand-tertiary-dark-scale-700);
   --brand-tertiary-dark-roles-border-subtle: var(--brand-tertiary-dark-scale-200);
+  --brand-primary-roles-on-action: var(--brand-neutral-950);
+  --brand-primary-dark-roles-on-action: var(--colors-color-base-white);
+  --brand-secondary-roles-on-action: var(--brand-neutral-950);
+  --brand-secondary-dark-roles-on-action: var(--brand-neutral-dark-50);
 }
 
 [data-brand='brand-3'] {
@@ -1202,6 +1210,10 @@
   --brand-tertiary-dark-roles-tint-pressed: var(--brand-tertiary-dark-scale-200);
   --brand-tertiary-dark-roles-border: var(--brand-tertiary-dark-scale-700);
   --brand-tertiary-dark-roles-border-subtle: var(--brand-tertiary-dark-scale-200);
+  --brand-primary-roles-on-action: var(--brand-neutral-950);
+  --brand-primary-dark-roles-on-action: var(--brand-neutral-dark-50);
+  --brand-secondary-roles-on-action: var(--brand-neutral-950);
+  --brand-secondary-dark-roles-on-action: var(--brand-neutral-dark-50);
 }
 
 [data-theme='light'] {
@@ -1212,9 +1224,9 @@
   --sem-primary-bg-subtle: var(--brand-primary-roles-tint);
   --sem-primary-bg-subtle-hover: var(--brand-primary-roles-tint-hover);
   --sem-primary-bg-subtle-pressed: var(--brand-primary-roles-tint-pressed);
-  --sem-primary-fg: var(--brand-primary-roles-text);
-  --sem-primary-fg-on-bg: var(--colors-color-base-white);
-  --sem-primary-fg-on-disabled-bg: var(--colors-color-base-white);
+  --sem-primary-fg: var(--brand-primary-scale-950);
+  --sem-primary-fg-on-bg: var(--brand-primary-roles-on-action);
+  --sem-primary-fg-on-disabled-bg: var(--brand-neutral-800);
   --sem-primary-border: var(--brand-primary-roles-border);
   --sem-primary-border-subtle: var(--brand-primary-roles-border-subtle);
   --sem-secondary-bg: var(--brand-secondary-roles-action);
@@ -1225,7 +1237,7 @@
   --sem-secondary-bg-subtle-hover: var(--brand-secondary-roles-tint-hover);
   --sem-secondary-bg-subtle-pressed: var(--brand-secondary-roles-tint-pressed);
   --sem-secondary-fg: var(--brand-secondary-roles-text);
-  --sem-secondary-fg-on-bg: var(--colors-color-base-white);
+  --sem-secondary-fg-on-bg: var(--brand-secondary-roles-on-action);
   --sem-secondary-border: var(--brand-secondary-roles-border);
   --sem-secondary-border-subtle: var(--brand-secondary-roles-border-subtle);
   --sem-neutral-bg: var(--colors-color-base-white);
@@ -1260,9 +1272,9 @@
   --sem-bg-backdrop-blur: var(--colors-alpha-white-80);
   --sem-fg-primary: var(--brand-neutral-950);
   --sem-fg-secondary: var(--brand-neutral-900);
-  --sem-fg-tertiary: var(--brand-neutral-800);
-  --sem-fg-placeholder: var(--brand-neutral-500);
-  --sem-fg-disabled: var(--brand-neutral-600);
+  --sem-fg-tertiary: var(--brand-neutral-900);
+  --sem-fg-placeholder: var(--brand-neutral-900);
+  --sem-fg-disabled: var(--brand-neutral-800);
   --sem-fg-on-inverse: var(--brand-neutral-50);
   --sem-fg-on-dark: var(--colors-color-base-white);
   --sem-fg-link: var(--brand-primary-scale-900);
@@ -1296,7 +1308,7 @@
   --sem-status-warning-bg: var(--brand-warning-900);
   --sem-status-warning-bg-hover: var(--brand-warning-400);
   --sem-status-warning-bg-subtle: var(--brand-warning-50);
-  --sem-status-warning-fg: var(--brand-warning-900);
+  --sem-status-warning-fg: var(--brand-warning-950);
   --sem-status-warning-fg-on-bg: var(--colors-color-base-white);
   --sem-status-warning-border: var(--brand-warning-500);
   --sem-status-warning-border-strong: var(--brand-warning-700);
@@ -1304,7 +1316,7 @@
   --sem-status-success-bg: var(--brand-success-900);
   --sem-status-success-bg-hover: var(--brand-success-700);
   --sem-status-success-bg-subtle: var(--brand-success-50);
-  --sem-status-success-fg: var(--brand-success-900);
+  --sem-status-success-fg: var(--brand-success-950);
   --sem-status-success-fg-on-bg: var(--colors-color-base-white);
   --sem-status-success-border: var(--brand-success-500);
   --sem-status-success-border-strong: var(--brand-success-700);
@@ -1336,7 +1348,7 @@
   --sem-form-input-bg-hover: var(--brand-neutral-50);
   --sem-form-input-bg-disabled: var(--brand-neutral-100);
   --sem-form-input-bg-readonly: var(--brand-neutral-50);
-  --sem-form-input-fg: var(--brand-neutral-900);
+  --sem-form-input-fg: var(--brand-neutral-950);
   --sem-form-input-fg-disabled: var(--brand-neutral-400);
   --sem-form-input-fg-readonly: var(--brand-neutral-700);
   --sem-form-input-placeholder: var(--brand-neutral-500);
@@ -1347,14 +1359,14 @@
   --sem-form-input-border-success: var(--brand-success-600);
   --sem-form-input-border-disabled: var(--brand-neutral-200);
   --sem-form-input-border-readonly: var(--brand-neutral-200);
-  --sem-form-label-fg: var(--brand-neutral-700);
+  --sem-form-label-fg: var(--brand-neutral-900);
   --sem-form-label-fg-focus: var(--brand-primary-roles-text);
   --sem-form-label-fg-disabled: var(--brand-neutral-400);
-  --sem-form-helper-fg: var(--brand-neutral-600);
+  --sem-form-helper-fg: var(--brand-neutral-900);
   --sem-form-required-fg: var(--brand-danger-600);
-  --sem-form-error-fg: var(--brand-danger-700);
+  --sem-form-error-fg: var(--brand-danger-900);
   --sem-form-error-icon: var(--brand-danger-600);
-  --sem-form-success-fg: var(--brand-success-700);
+  --sem-form-success-fg: var(--brand-success-900);
   --sem-form-success-icon: var(--brand-success-600);
   --sem-state-focus-ring-soft: var(--brand-primary-scale-200);
   --sem-state-error-ring-soft: var(--brand-danger-200);
@@ -1370,9 +1382,9 @@
   --sem-primary-bg-subtle: var(--brand-primary-dark-roles-tint);
   --sem-primary-bg-subtle-hover: var(--brand-primary-dark-roles-tint-hover);
   --sem-primary-bg-subtle-pressed: var(--brand-primary-dark-roles-tint-pressed);
-  --sem-primary-fg: var(--brand-primary-dark-roles-text);
-  --sem-primary-fg-on-bg: var(--brand-neutral-dark-100);
-  --sem-primary-fg-on-disabled-bg: var(--brand-neutral-dark-100);
+  --sem-primary-fg: var(--brand-primary-dark-scale-950);
+  --sem-primary-fg-on-bg: var(--brand-primary-dark-roles-on-action);
+  --sem-primary-fg-on-disabled-bg: var(--brand-neutral-dark-800);
   --sem-primary-border: var(--brand-primary-dark-roles-border);
   --sem-primary-border-subtle: var(--brand-primary-dark-roles-border-subtle);
   --sem-secondary-bg: var(--brand-secondary-dark-roles-action);
@@ -1383,7 +1395,7 @@
   --sem-secondary-bg-subtle-hover: var(--brand-secondary-dark-roles-tint-hover);
   --sem-secondary-bg-subtle-pressed: var(--brand-secondary-dark-roles-tint-pressed);
   --sem-secondary-fg: var(--brand-secondary-dark-roles-text);
-  --sem-secondary-fg-on-bg: var(--brand-neutral-dark-100);
+  --sem-secondary-fg-on-bg: var(--brand-secondary-dark-roles-on-action);
   --sem-secondary-border: var(--brand-secondary-dark-roles-border);
   --sem-secondary-border-subtle: var(--brand-secondary-dark-roles-border-subtle);
   --sem-neutral-bg: var(--brand-neutral-dark-100);
@@ -1418,9 +1430,9 @@
   --sem-bg-backdrop-blur: var(--colors-alpha-black-80);
   --sem-fg-primary: var(--brand-neutral-dark-950);
   --sem-fg-secondary: var(--brand-neutral-dark-900);
-  --sem-fg-tertiary: var(--brand-neutral-dark-800);
-  --sem-fg-placeholder: var(--brand-neutral-dark-500);
-  --sem-fg-disabled: var(--brand-neutral-dark-600);
+  --sem-fg-tertiary: var(--brand-neutral-dark-900);
+  --sem-fg-placeholder: var(--brand-neutral-dark-900);
+  --sem-fg-disabled: var(--brand-neutral-dark-800);
   --sem-fg-on-inverse: var(--brand-neutral-dark-50);
   --sem-fg-on-dark: var(--brand-neutral-dark-100);
   --sem-fg-link: var(--brand-primary-dark-scale-900);
@@ -1454,7 +1466,7 @@
   --sem-status-warning-bg: var(--brand-warning-dark-500);
   --sem-status-warning-bg-hover: var(--brand-warning-dark-400);
   --sem-status-warning-bg-subtle: var(--brand-warning-dark-50);
-  --sem-status-warning-fg: var(--brand-warning-dark-900);
+  --sem-status-warning-fg: var(--brand-warning-dark-950);
   --sem-status-warning-fg-on-bg: var(--brand-warning-dark-950);
   --sem-status-warning-border: var(--brand-warning-dark-500);
   --sem-status-warning-border-strong: var(--brand-warning-dark-700);
@@ -1462,7 +1474,7 @@
   --sem-status-success-bg: var(--brand-success-dark-500);
   --sem-status-success-bg-hover: var(--brand-success-dark-700);
   --sem-status-success-bg-subtle: var(--brand-success-dark-50);
-  --sem-status-success-fg: var(--brand-success-dark-900);
+  --sem-status-success-fg: var(--brand-success-dark-950);
   --sem-status-success-fg-on-bg: var(--brand-success-dark-950);
   --sem-status-success-border: var(--brand-success-dark-500);
   --sem-status-success-border-strong: var(--brand-success-dark-700);
@@ -1494,7 +1506,7 @@
   --sem-form-input-bg-hover: var(--brand-neutral-dark-50);
   --sem-form-input-bg-disabled: var(--brand-neutral-dark-100);
   --sem-form-input-bg-readonly: var(--brand-neutral-dark-50);
-  --sem-form-input-fg: var(--brand-neutral-dark-900);
+  --sem-form-input-fg: var(--brand-neutral-dark-950);
   --sem-form-input-fg-disabled: var(--brand-neutral-dark-400);
   --sem-form-input-fg-readonly: var(--brand-neutral-dark-700);
   --sem-form-input-placeholder: var(--brand-neutral-dark-500);
@@ -1505,14 +1517,14 @@
   --sem-form-input-border-success: var(--brand-success-dark-600);
   --sem-form-input-border-disabled: var(--brand-neutral-dark-200);
   --sem-form-input-border-readonly: var(--brand-neutral-dark-200);
-  --sem-form-label-fg: var(--brand-neutral-dark-700);
+  --sem-form-label-fg: var(--brand-neutral-dark-900);
   --sem-form-label-fg-focus: var(--brand-primary-dark-roles-text);
   --sem-form-label-fg-disabled: var(--brand-neutral-dark-400);
-  --sem-form-helper-fg: var(--brand-neutral-dark-600);
+  --sem-form-helper-fg: var(--brand-neutral-dark-900);
   --sem-form-required-fg: var(--brand-danger-dark-600);
-  --sem-form-error-fg: var(--brand-danger-dark-700);
+  --sem-form-error-fg: var(--brand-danger-dark-900);
   --sem-form-error-icon: var(--brand-danger-dark-600);
-  --sem-form-success-fg: var(--brand-success-dark-700);
+  --sem-form-success-fg: var(--brand-success-dark-900);
   --sem-form-success-icon: var(--brand-success-dark-600);
   --sem-state-focus-ring-soft: var(--brand-primary-dark-scale-200);
   --sem-state-error-ring-soft: var(--brand-danger-dark-200);

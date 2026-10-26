@@ -48,11 +48,20 @@ The build fails if any token points at something that does not exist, so Figma a
 - **One focus treatment.** Keyboard only, drawn outside the element so it never changes layout, offset against the surface behind it.
 - **Colour is never the only signal.** Status components carry an icon shape and a label as well as a fill.
 - **Every state is a token, not an opacity trick.** Hover, pressed, selected, disabled, read-only, error and success each resolve through the semantic layer, so they stay correct on dark and across brands.
+- **Text contrast is checked against the tokens, not against a screenshot.** The audit under Foundations resolves real computed colours for whichever brand and mode is selected, and it is the reason twelve tokens were remapped: the low end of the neutral ramp was being used for text, and the solid brand fill had one global foreground where it needed one per brand.
 
 ## What is here
 
 **Foundations** are generated from the live tokens, so these pages cannot go stale: colour ramps and every semantic colour, the type scale, the spacing scale, radius scale and radius roles, and stroke weights.
 
-**Components** are the ported slice: Button, Input, Badge, Switch, Alert and Table. They were picked to cover the hard parts rather than the easy ones, which is why the set includes a form field with seven states and a table with its own token group instead of six simple blocks.
+**Components** are twenty-two of them, grouped by job:
+
+- **Actions**: Button
+- **Forms**: Input, Text area, Select, Checkbox, Radio, Switch
+- **Data display**: Table, Card, Badge, Avatar
+- **Navigation**: Tabs, Breadcrumb, Pagination, Accordion
+- **Feedback**: Alert, Modal, Toast, Tooltip, Progress, Skeleton, Empty state
+
+Several of them lean on a native element on purpose. Modal is a real `<dialog>`, so focus trapping, Escape and page inertness come from the browser. Select is a real `<select>`, so type-ahead and the mobile picker come free. Accordion is `<details>`, so in-page find can open a closed section. Those are the four things hand-rolled versions usually get wrong.
 
 The accessibility addon runs on every story, so contrast and labelling problems surface in the panel rather than in review.

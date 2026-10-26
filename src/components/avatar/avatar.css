@@ -1,0 +1,43 @@
+/* Avatar
+ *
+ * Falls back from image to initials to a generic glyph, because a broken
+ * image in a list of people is worse than no image at all.
+ *
+ * The initials colour is picked from the person's name rather than at random,
+ * so the same person is the same colour on every screen they appear on.
+ */
+.era-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+  border-radius: var(--radius-radius-full);
+  background: var(--sem-bg-surface-sunken);
+  color: var(--sem-fg-secondary);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  user-select: none;
+}
+.era-avatar--square { border-radius: var(--brand-radius-roles-tags-chips-md); }
+
+.era-avatar--xs { inline-size: var(--spacing-space-20); block-size: var(--spacing-space-20); font-size: var(--typography-text-xs-size); }
+.era-avatar--sm { inline-size: var(--spacing-space-24); block-size: var(--spacing-space-24); font-size: var(--typography-text-xs-size); }
+.era-avatar--md { inline-size: var(--spacing-space-32); block-size: var(--spacing-space-32); font-size: var(--typography-text-xs-size); }
+.era-avatar--lg { inline-size: var(--spacing-space-40); block-size: var(--spacing-space-40); font-size: var(--typography-text-sm-size); }
+.era-avatar--xl { inline-size: var(--spacing-space-56); block-size: var(--spacing-space-56); font-size: var(--typography-text-lg-size); }
+
+.era-avatar__img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+.era-avatar--tone-1 { background: var(--sem-primary-bg-subtle); color: var(--sem-primary-fg); }
+.era-avatar--tone-2 { background: var(--sem-status-info-bg-subtle); color: var(--sem-status-info-fg); }
+.era-avatar--tone-3 { background: var(--sem-status-success-bg-subtle); color: var(--sem-status-success-fg); }
+.era-avatar--tone-4 { background: var(--sem-status-warning-bg-subtle); color: var(--sem-status-warning-fg); }
+.era-avatar--tone-5 { background: var(--sem-secondary-bg-subtle); color: var(--sem-secondary-fg); }
+
+/* The group overlaps avatars and relies on a ring in the surface colour to
+ * keep each one readable against the one behind it. */
+.era-avatar-group { display: inline-flex; }
+.era-avatar-group .era-avatar { box-shadow: 0 0 0 2px var(--sem-bg-surface); }
+.era-avatar-group .era-avatar + .era-avatar { margin-inline-start: calc(var(--spacing-space-8) * -1); }
+.era-avatar-group__overflow { background: var(--sem-bg-surface-sunken); color: var(--sem-fg-secondary); }

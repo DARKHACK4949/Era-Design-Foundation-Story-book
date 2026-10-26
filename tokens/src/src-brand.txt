@@ -288,3 +288,7 @@ tertiary-dark-roles-tint-hover|C|@B:tertiary-dark-scale-100|@B:tertiary-dark-sca
 tertiary-dark-roles-tint-pressed|C|@B:tertiary-dark-scale-200|@B:tertiary-dark-scale-200|@B:tertiary-dark-scale-200
 tertiary-dark-roles-border|C|@B:tertiary-dark-scale-700|@B:tertiary-dark-scale-700|@B:tertiary-dark-scale-700
 tertiary-dark-roles-border-subtle|C|@B:tertiary-dark-scale-200|@B:tertiary-dark-scale-200|@B:tertiary-dark-scale-200
+primary-roles-on-action|C|@P:colors-color-base-white|@B:neutral-950|@B:neutral-950
+primary-dark-roles-on-action|C|@P:colors-color-base-white|@P:colors-color-base-white|@B:neutral-dark-50
+secondary-roles-on-action|C|@B:neutral-950|@B:neutral-950|@B:neutral-950
+secondary-dark-roles-on-action|C|@B:neutral-dark-50|@B:neutral-dark-50|@B:neutral-dark-50

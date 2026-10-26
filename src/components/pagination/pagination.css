@@ -1,0 +1,38 @@
+/* Pagination
+ *
+ * Shows the first page, the last page and a window around the current one, so
+ * the control keeps the same width whether there are 5 pages or 500.
+ *
+ * Every page is a real button with its own label, because "3" on its own is
+ * meaningless when it is read out of context.
+ */
+.era-pagination { display: flex; align-items: center; gap: var(--spacing-space-12); flex-wrap: wrap; }
+.era-pagination__list { display: flex; align-items: center; gap: var(--spacing-space-2); list-style: none; margin: 0; padding: 0; }
+
+.era-pagination__btn {
+  min-inline-size: var(--spacing-space-32);
+  block-size: var(--spacing-space-32);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--spacing-space-8);
+  background: none;
+  border: var(--brand-stroke-default) solid transparent;
+  border-radius: var(--brand-radius-roles-menu-items-md);
+  font: inherit;
+  font-size: var(--typography-text-sm-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--sem-fg-secondary);
+  cursor: pointer;
+}
+.era-pagination__btn:hover:not(:disabled) { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+.era-pagination__btn:disabled { color: var(--sem-fg-disabled); cursor: not-allowed; }
+.era-pagination__btn[aria-current='page'] {
+  background: var(--sem-state-selected);
+  border-color: var(--sem-state-selected-border);
+  color: var(--sem-primary-fg);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+}
+
+.era-pagination__gap { min-inline-size: var(--spacing-space-24); text-align: center; color: var(--sem-fg-tertiary); }
+.era-pagination__summary { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); font-variant-numeric: tabular-nums; }

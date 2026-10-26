@@ -1,0 +1,31 @@
+/* Tooltip
+ *
+ * A tooltip names a control; it never holds information you need to finish a
+ * task. Anything a person must read belongs in the page, because a tooltip is
+ * unreachable by touch and gone the moment the pointer moves.
+ *
+ * It opens on hover and on focus, so keyboard users get it too.
+ */
+.era-tooltip { position: relative; display: inline-flex; }
+
+.era-tooltip__bubble {
+  position: absolute;
+  z-index: 10;
+  inset-block-end: calc(100% + var(--spacing-space-8));
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--sem-bg-inverse);
+  color: var(--sem-fg-on-inverse);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  padding: var(--spacing-space-4) var(--spacing-space-8);
+  border-radius: var(--brand-radius-roles-tags-chips-sm);
+  white-space: nowrap;
+  transition: opacity 120ms ease;
+}
+.era-tooltip__bubble--bottom { inset-block-end: auto; inset-block-start: calc(100% + var(--spacing-space-8)); }
+
+.era-tooltip:hover .era-tooltip__bubble,
+.era-tooltip:focus-within .era-tooltip__bubble { opacity: 1; }

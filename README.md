@@ -63,11 +63,15 @@ npm run typecheck
 - Colour is never the only signal. Status components carry an icon shape and a label as well as a fill.
 - Every state resolves through a token, including hover, pressed, selected, disabled and read-only, so none of them break on dark or in another brand.
 
-## Open accessibility gaps
+## Accessibility
 
-The contrast audit is in the Storybook rather than in a doc because it reports what the tokens actually resolve to. Two groups are below AA today:
+The contrast audit lives in the Storybook rather than in a doc, because it reports what the tokens actually resolve to for whichever brand and mode is selected. Every non-exempt text and surface pair now meets WCAG AA across all three brands and both modes.
 
-1. **The low end of the neutral ramp.** Placeholder (1.57:1), helper text (1.92:1) and field labels (3.32:1) sit on steps built to be borders, not text.
-2. **The solid brand fill on two of three brands.** Radix splits its step 9 colours into those that carry white text and those that need dark text. Cyan and Jade are in the second group, so a white label on the Brand 2 and Brand 3 action colour lands at 2.32:1 and 3.15:1. The fix is a per-brand foreground token rather than one global white.
+Getting there took twelve token changes in the Figma library, from two root causes:
 
-Both are fixes in the Figma library first, then a token re-export. They are listed here rather than quietly patched in CSS, because patching the code half is exactly how a design system starts lying about itself.
+1. **The low end of the neutral ramp was being used for text.** Placeholder sat at 1.57:1, helper text at 1.92:1, field labels at 3.32:1. Those steps exist to draw borders. Only steps 900 and 950 carry body text, which is what Radix intends: it guarantees exactly two text steps per ramp.
+2. **The solid brand fill had one global foreground.** Radix splits its step 9 colours into those that carry white text and those that need dark text. Iris is in the first group, Cyan and Jade are in the second, so a white label landed at 2.32:1 on Brand 2 and 3.15:1 on Brand 3. That is now a per-brand role token, `Primary/Roles/On action`, so each brand answers for its own fill.
+
+One pair is deliberately left below 4.5:1: the label on a disabled control. WCAG 1.4.3 exempts inactive controls, and a disabled button that reads at full contrast stops looking disabled. It moved from 1.68:1 to 3.33:1, so it is legible without pretending to be active.
+
+Both fixes were made in Figma first and re-exported, not patched in CSS. Patching the code half is how a design system starts lying about its own source.

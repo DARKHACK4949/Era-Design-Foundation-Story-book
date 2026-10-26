@@ -1,0 +1,40 @@
+/* Text area
+ *
+ * Shares the field chrome with Input so the two never drift apart visually.
+ * What it adds is a resize affordance and an optional character counter, and
+ * the counter only turns into a warning once it actually matters.
+ */
+.era-textarea {
+  inline-size: 100%;
+  min-block-size: calc(var(--spacing-space-80) + var(--spacing-space-16));
+  background: none;
+  border: 0;
+  padding: var(--spacing-space-8) 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  resize: vertical;
+}
+.era-textarea:focus { outline: none; }
+.era-textarea::placeholder { color: var(--sem-form-input-placeholder); }
+.era-textarea:disabled { cursor: not-allowed; resize: none; }
+.era-textarea[readonly] { resize: none; }
+
+.era-field__box--textarea { align-items: stretch; }
+
+.era-field__footer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+}
+.era-field__count {
+  flex: none;
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  font-variant-numeric: tabular-nums;
+  color: var(--sem-form-helper-fg);
+}
+.era-field__count--near { color: var(--sem-status-warning-fg); }
+.era-field__count--over { color: var(--sem-form-error-fg); }

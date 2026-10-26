@@ -1,0 +1,45 @@
+/* Progress
+ *
+ * Determinate when the work has a known end, indeterminate when it does not.
+ * Showing a fake percentage for an unknown wait is worse than showing none,
+ * because people time themselves against it.
+ */
+.era-progress { display: flex; flex-direction: column; gap: var(--spacing-space-4); }
+
+.era-progress__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+  font-size: var(--typography-text-xs-size);
+  line-height: var(--typography-text-xs-line-height);
+  color: var(--sem-fg-secondary);
+}
+.era-progress__value { font-variant-numeric: tabular-nums; color: var(--sem-fg-tertiary); }
+
+.era-progress__track {
+  position: relative;
+  overflow: hidden;
+  block-size: var(--spacing-space-8);
+  background: var(--sem-bg-track);
+  border-radius: var(--radius-radius-full);
+}
+.era-progress__track--sm { block-size: var(--spacing-space-4); }
+
+.era-progress__fill {
+  block-size: 100%;
+  background: var(--sem-primary-bg);
+  border-radius: var(--radius-radius-full);
+  transition: inline-size 240ms ease;
+}
+.era-progress--success .era-progress__fill { background: var(--sem-status-success-bg); }
+.era-progress--error .era-progress__fill { background: var(--sem-status-error-bg); }
+
+.era-progress--indeterminate .era-progress__fill {
+  inline-size: 40%;
+  animation: era-progress-slide 1200ms ease-in-out infinite;
+}
+@keyframes era-progress-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}

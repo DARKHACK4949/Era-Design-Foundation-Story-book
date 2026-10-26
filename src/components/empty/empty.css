@@ -1,0 +1,44 @@
+/* Empty state
+ *
+ * There are three reasons a list is empty and they need different words:
+ * nothing has been created yet, a filter matched nothing, or something broke.
+ * Showing "No results" for all three is how people end up stuck.
+ *
+ * The first-run case gets the action that creates the first item. The filtered
+ * case gets a way back out of the filter. The error case gets a retry.
+ */
+.era-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-space-8);
+  padding: var(--spacing-space-48) var(--spacing-space-24);
+}
+
+.era-empty__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--spacing-space-48);
+  block-size: var(--spacing-space-48);
+  margin-block-end: var(--spacing-space-4);
+  border-radius: var(--radius-radius-full);
+  background: var(--sem-bg-surface-sunken);
+  color: var(--sem-fg-tertiary);
+}
+.era-empty--error .era-empty__icon { background: var(--sem-status-error-bg-subtle); color: var(--sem-status-error-icon); }
+
+.era-empty__title {
+  font-size: var(--typography-text-base-size);
+  line-height: var(--typography-text-base-line-height);
+  font-weight: var(--brand-typography-theme-font-weight-heading);
+  color: var(--sem-fg-primary);
+}
+.era-empty__description {
+  font-size: var(--typography-text-sm-size);
+  line-height: var(--typography-text-sm-line-height);
+  color: var(--sem-fg-secondary);
+  max-inline-size: 44ch;
+}
+.era-empty__actions { display: flex; gap: var(--spacing-space-8); margin-block-start: var(--spacing-space-8); }

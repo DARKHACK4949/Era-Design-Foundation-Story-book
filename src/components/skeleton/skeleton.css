@@ -1,0 +1,36 @@
+/* Skeleton
+ *
+ * A placeholder shaped like the thing that is loading. It is hidden from
+ * assistive tech and the region that owns it is marked busy instead, because
+ * reading out a row of grey boxes helps nobody.
+ *
+ * The shimmer stops entirely under prefers-reduced-motion, which the base
+ * layer already handles.
+ */
+.era-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--sem-bg-skeleton);
+  border-radius: var(--brand-radius-scale-sm-4);
+}
+.era-skeleton--text {
+  block-size: var(--typography-text-sm-line-height);
+  border-radius: var(--brand-radius-scale-xs-2);
+}
+/* The last line of a paragraph is never full width, so neither is this. */
+.era-skeleton--text:last-child { inline-size: 70%; }
+.era-skeleton--circle { border-radius: var(--radius-radius-full); }
+
+.era-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  translate: -100% 0;
+  background: linear-gradient(90deg, transparent, var(--sem-state-hover-strong), transparent);
+  animation: era-skeleton-sweep 1400ms ease-in-out infinite;
+}
+@keyframes era-skeleton-sweep {
+  100% { translate: 100% 0; }
+}
+
+.era-skeleton-group { display: flex; flex-direction: column; gap: var(--spacing-space-8); }
