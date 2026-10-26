@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="Using ERA" description="What you can take from ERA today, and what is not ready.">
+  <h1>Using ERA</h1>
+  <p class="lede">
+    There are three levels of using a design system, and being honest about which ones work matters more than claiming all
+    three. Two of them work today. The third does not yet, and the reason is worth reading before you plan around it.
+  </p>
+
+  <h2>Level 1: read it</h2>
+
+  <p>
+    Everything is public. The <a href={`${base}/storybook/`}>Storybook</a> has every component with every state, the
+    <a href="https://github.com/DARKHACK4949/Era-Design-Foundation-Story-book">repository</a> has the source, and this site
+    has the reasoning. If you are building your own system and want to see how someone else handled multi-brand theming or
+    where the contrast traps are, that is all here and you do not need anything from this page.
+  </p>
+
+  <h2>Level 2: take the tokens</h2>
+
+  <p>
+    This works today and it is the part most worth taking. <code>tokens/generated/era.css</code> is plain CSS custom
+    properties with no dependencies, no build step and no framework. Drop it in, set two attributes, and 1,505 variables are
+    available:
+  </p>
+
+  <pre><code>{`<link rel="stylesheet" href="era.css">
+<html data-brand="brand-2" data-theme="dark">
+
+/* then, anywhere */
+.my-button {
+  background: var(--sem-primary-bg);
+  color: var(--sem-primary-fg-on-bg);
+  border-radius: var(--brand-radius-roles-buttons-button-md);
+  padding-inline: var(--spacing-space-16);
+}`}</code></pre>
+
+  <p>
+    It works with React, Vue, Svelte, plain HTML, or as the theme layer under Tailwind. There is also
+    <code>tokens/generated/tokens.json</code> in W3C design-token format, with every brand and mode under
+    <code>$extensions</code>, if you would rather run it through Style Dictionary and emit your own platform targets.
+  </p>
+
+  <p>
+    Both files are generated from the Figma library by <code>npm run tokens</code>, and the build fails on any reference that
+    does not resolve, so what you get cannot have drifted from the design source.
+  </p>
+
+  <h2>Level 3: install the components</h2>
+
+  <p>
+    <strong>This does not work yet, and that is a deliberate choice rather than an oversight.</strong>
+    The package is marked private and declares no entry points, so <code>npm install</code> of this repository gets you
+    nothing.
+  </p>
+
+  <p>
+    Publishing a component library is a maintenance commitment: a versioning policy, a deprecation policy, a changelog people
+    can rely on, and an answer every time someone needs a prop that does not exist. ERA is a personal system. Taking on that
+    commitment and then not meeting it would be worse than not making the promise.
+  </p>
+
+  <p>So the supported path is the one shadcn made normal: copy what you need.</p>
+
+  <pre><code>{`# the tokens
+cp tokens/generated/era.css your-project/src/styles/
+
+# a component, with its stylesheet
+cp -r src/components/button your-project/src/components/
+cp src/lib/cn.ts your-project/src/lib/`}</code></pre>
+
+  <p>
+    Each component folder is self-contained: one <code>.tsx</code>, one <code>.css</code>, and a single import of
+    <code>cn</code>. There is no runtime dependency, no context provider to wire up and no theme object to pass around.
+    Once <code>era.css</code> is loaded and <code>data-brand</code> and <code>data-theme</code> are set, the component is
+    already themed.
+  </p>
+
+  <p>
+    The trade-off of copying is the obvious one: you own what you copied and you will not get fixes automatically. For a
+    system this size that is usually the better deal, because the thing you most want to change in someone else's component
+    is the part a package would stop you from touching.
+  </p>
+
+  <h2>If you want the Figma side too</h2>
+
+  <p>
+    The tokens here are exported from a Figma library with the same three collections, the same names and the same modes. A
+    designer working in Figma and an engineer working from <code>era.css</code> are reading the same token names, which is
+    the actual point of doing it this way.
+  </p>
+
+  <h2>Licence</h2>
+
+  <p>
+    MIT. Use it, change it, ship it commercially, no attribution required beyond keeping the licence notice. If you do build
+    something on it, an issue saying so would be nice but is not owed.
+  </p>
+</Base>

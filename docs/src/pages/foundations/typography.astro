@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import Demo from '../../components/Demo.astro';
+const STEPS = [
+  ['4xl', 36, 40, 'Page titles, one per screen'],
+  ['3xl', 30, 36, 'Section titles on a marketing page'],
+  ['2xl', 24, 32, 'Modal and card headings'],
+  ['xl', 20, 28, 'Sub-headings'],
+  ['lg', 18, 28, 'Lead paragraphs'],
+  ['base', 16, 24, 'Body copy, the default'],
+  ['sm', 14, 20, 'Dense UI: tables, forms, menus'],
+  ['xs', 12, 16, 'Labels, counts, metadata'],
+];
+---
+
+<Base title="Typography" description="One type scale, thirteen steps, nothing below 12px.">
+  <h1>Typography</h1>
+  <p class="lede">
+    One scale, thirteen steps, nothing below 12px. Each step pairs a size with a line height that lands on the 4px grid, so
+    type never breaks the spacing system it sits inside.
+  </p>
+
+  <h2>The typeface is a brand decision</h2>
+
+  <p>
+    Family and the four weights are brand tokens. Sizes are not. Switch brand at the top of the page: the whole site is
+    reset in another typeface and not one size changes.
+  </p>
+
+  <table>
+    <thead><tr><th>Brand</th><th>Family</th><th>Display</th><th>Heading</th><th>Label</th><th>Body</th></tr></thead>
+    <tbody>
+      <tr><td>Brand 1</td><td>IBM Plex Sans</td><td>Medium</td><td>SemiBold</td><td>Medium</td><td>Regular</td></tr>
+      <tr><td>Brand 2</td><td>Geist</td><td>SemiBold</td><td>SemiBold</td><td>Medium</td><td>Regular</td></tr>
+      <tr><td>Brand 3</td><td>Source Sans 3</td><td>Medium</td><td>Medium</td><td>Medium</td><td>Regular</td></tr>
+    </tbody>
+  </table>
+
+  <h2>The steps you will actually use</h2>
+
+  <Demo padded>
+    <div style="inline-size: 100%; display: flex; flex-direction: column; gap: var(--spacing-space-16);">
+      {STEPS.map(([name, size, lh, use]) => (
+        <div style="display: flex; align-items: baseline; gap: var(--spacing-space-16); border-block-end: var(--brand-stroke-default) solid var(--sem-border-subtle); padding-block-end: var(--spacing-space-12);">
+          <span style="inline-size: 150px; flex: none; display: flex; flex-direction: column;">
+            <code style="font-size: var(--typography-text-xs-size);">text-{name}</code>
+            <span style="font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary);">{size} / {lh}</span>
+          </span>
+          <span style="flex: 1 1 auto; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--spacing-space-2);">
+            <span style={`font-size: var(--typography-text-${name}-size); line-height: var(--typography-text-${name}-line-height); font-weight: ${Number(size) >= 20 ? 'var(--brand-typography-theme-font-weight-heading)' : 'var(--brand-typography-theme-font-weight-body)'}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`}>
+              Payment released to vendor
+            </span>
+            <span style="font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary);">{use}</span>
+          </span>
+        </div>
+      ))}
+    </div>
+  </Demo>
+
+  <p>
+    The scale continues up to <code>text-9xl</code> at 128px. Those steps exist for marketing surfaces and are almost never
+    right inside a product.
+  </p>
+
+  <h2>Rules</h2>
+
+  <ul>
+    <li><strong>Nothing below 12px.</strong> The floor is deliberate. 12px is already the smallest size that stays legible for a label or a count, and anything under it is text nobody reads.</li>
+    <li><strong>Hierarchy comes from size and weight, not from colour.</strong> There are only two AA-safe text colours per ramp, so making something lighter to make it feel secondary is how you fail contrast.</li>
+    <li><strong>Tracking is a correction for size, not a style choice.</strong> Two tokens: large type is tightened by 1px, everything else sits at zero. Per-component tracking is a smell.</li>
+    <li><strong>Line height belongs to the step.</strong> Taking a size without its line height is how vertical rhythm breaks.</li>
+  </ul>
+</Base>

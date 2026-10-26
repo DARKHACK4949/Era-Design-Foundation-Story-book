@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import Demo from '../../components/Demo.astro';
+const SPACE = [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
+---
+
+<Base title="Spacing" description="A 4px and 8px grid, with 2px as one named exception.">
+  <h1>Spacing</h1>
+  <p class="lede">
+    A 4px and 8px grid, with 2px kept as one deliberate exception. Naming that exception is better than pretending it does
+    not exist and leaving people to hardcode it.
+  </p>
+
+  <h2>Why 2px is in the scale</h2>
+
+  <p>
+    Some gaps genuinely are smaller than 4px: a status dot next to its label, the space between a field and its error
+    message, the inset of a focus ring. A system that bans those gaps does not remove them, it just moves them into
+    inline styles where nobody can see them. So 2px is in the scale, documented as the exception, and everything else is a
+    multiple of 4.
+  </p>
+
+  <Demo padded>
+    <div style="inline-size: 100%; display: flex; flex-direction: column; gap: var(--spacing-space-8);">
+      {SPACE.map((n) => (
+        <div style="display: flex; align-items: center; gap: var(--spacing-space-12);">
+          <code style="inline-size: 120px; flex: none; font-size: var(--typography-text-xs-size);">space-{n}</code>
+          <span style={`inline-size: var(--spacing-space-${n}); block-size: var(--spacing-space-16); background: var(--sem-primary-bg); border-radius: var(--brand-radius-scale-xs-2);`}></span>
+          <span style="font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary);">{n}px</span>
+        </div>
+      ))}
+    </div>
+  </Demo>
+
+  <h2>Which step for which gap</h2>
+
+  <table>
+    <thead><tr><th>Token</th><th>Use it for</th></tr></thead>
+    <tbody>
+      <tr><td><code>space-2</code></td><td>The exception. A dot to its label, a field to its error line</td></tr>
+      <tr><td><code>space-4</code></td><td>Inside a tight control: icon to label in a small button</td></tr>
+      <tr><td><code>space-8</code></td><td>Between related controls: two buttons in a row, a checkbox and its label</td></tr>
+      <tr><td><code>space-12</code></td><td>Inside a card or a row of a table</td></tr>
+      <tr><td><code>space-16</code></td><td>Card padding, between fields in a form</td></tr>
+      <tr><td><code>space-24</code></td><td>Between groups of fields, section padding</td></tr>
+      <tr><td><code>space-32</code> and up</td><td>Between sections of a page</td></tr>
+    </tbody>
+  </table>
+
+  <h2>The rule that matters most</h2>
+
+  <p>
+    <strong>Space belongs to the container, not to the child.</strong> A card decides the gaps between its children; a button
+    does not add a margin hoping for the best. In practice that means reaching for <code>gap</code> on a flex or grid parent
+    rather than <code>margin</code> on the things inside it, which is why almost nothing in ERA sets a margin.
+  </p>
+
+  <p>
+    The payoff is that a component can be dropped into any layout without bringing its own spacing opinions, and two
+    components side by side never produce a gap neither of them intended.
+  </p>
+</Base>

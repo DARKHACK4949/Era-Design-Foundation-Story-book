@@ -1,0 +1,73 @@
+---
+/**
+ * Brand and mode pickers. They do exactly what the system claims is enough:
+ * set two attributes on <html>. Nothing else on the page is touched.
+ */
+const BRANDS = [
+  { id: 'brand-1', name: 'Brand 1, Iris', swatch: 'var(--colors-iris-700)' },
+  { id: 'brand-2', name: 'Brand 2, Cyan', swatch: 'var(--colors-cyan-700)' },
+  { id: 'brand-3', name: 'Brand 3, Jade', swatch: 'var(--colors-jade-700)' },
+];
+---
+
+<div class="switcher">
+  <div class="switcher" role="group" aria-label="Brand">
+    {BRANDS.map((b) => (
+      <button
+        type="button"
+        class="switcher__btn"
+        data-brand-btn={b.id}
+        aria-label={b.name}
+        title={b.name}
+        style={`background: ${b.swatch}`}
+      />
+    ))}
+  </div>
+  <button type="button" class="switcher__mode" data-mode-btn aria-live="polite">
+    <span data-mode-label>Light</span>
+  </button>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+
+    // Browser storage is a per-viewer convenience here, nothing depends on it,
+    // and it throws in a private window, so every touch is guarded.
+    function read(key, fallback) {
+      try { return localStorage.getItem(key) || fallback; } catch (e) { return fallback; }
+    }
+    function write(key, value) {
+      try { localStorage.setItem(key, value); } catch (e) { /* no-op */ }
+    }
+
+    function applyBrand(id) {
+      root.setAttribute('data-brand', id);
+      document.querySelectorAll('[data-brand-btn]').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-brand-btn') === id));
+      });
+      write('era-brand', id);
+    }
+
+    function applyMode(mode) {
+      root.setAttribute('data-theme', mode);
+      root.style.colorScheme = mode;
+      document.querySelectorAll('[data-mode-label]').forEach(function (l) {
+        l.textContent = mode === 'dark' ? 'Dark' : 'Light';
+      });
+      write('era-mode', mode);
+    }
+
+    applyBrand(read('era-brand', 'brand-1'));
+    // Default to whatever the person's system already asked for.
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyMode(read('era-mode', prefersDark ? 'dark' : 'light'));
+
+    document.addEventListener('click', function (e) {
+      var brandBtn = e.target.closest ? e.target.closest('[data-brand-btn]') : null;
+      if (brandBtn) applyBrand(brandBtn.getAttribute('data-brand-btn'));
+      var modeBtn = e.target.closest ? e.target.closest('[data-mode-btn]') : null;
+      if (modeBtn) applyMode(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+  })();
+</script>

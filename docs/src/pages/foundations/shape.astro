@@ -1,0 +1,81 @@
+---
+import Base from '../../layouts/Base.astro';
+import Demo from '../../components/Demo.astro';
+const SCALE = ['none', 'xs-2', 'sm-4', 'md-8', 'lg-12', 'xl-16', '2xl-24', '3xl-32', 'radius-full'];
+const ROLES: Array<[string, string]> = [
+  ['buttons-button-md', 'Button'],
+  ['input-field-md', 'Input'],
+  ['tags-chips-md', 'Chip'],
+  ['check-box-md', 'Checkbox'],
+  ['menu-items-md', 'Menu item'],
+  ['card-md', 'Card'],
+  ['surface-popover', 'Popover'],
+  ['surface-modal', 'Modal'],
+];
+---
+
+<Base title="Radius and stroke" description="Radius roles are how three brands get different shapes from one component set.">
+  <h1>Radius and stroke</h1>
+  <p class="lede">
+    Radius is where the three brands diverge most, and it is the clearest example of why ERA has a role layer at all.
+  </p>
+
+  <h2>The scale</h2>
+
+  <p>The raw steps. Components never read these directly.</p>
+
+  <Demo>
+    {SCALE.map((r) => (
+      <div style="display: flex; flex-direction: column; gap: var(--spacing-space-4); align-items: center;">
+        <div style={`inline-size: var(--spacing-space-64); block-size: var(--spacing-space-64); background: var(--sem-primary-bg-subtle); border: var(--brand-stroke-default) solid var(--sem-primary-border); border-radius: var(--brand-radius-scale-${r});`}></div>
+        <code style="font-size: var(--typography-text-xs-size);">{r}</code>
+      </div>
+    ))}
+  </Demo>
+
+  <h2>The roles</h2>
+
+  <p>
+    What components actually read. Each component kind has its own role token, so a brand can decide that buttons are
+    pill-shaped and cards are square without a single component being edited or overridden.
+  </p>
+
+  <Demo label="Switch brand at the top of the page and watch these change shape">
+    {ROLES.map(([role, label]) => (
+      <div style="display: flex; flex-direction: column; gap: var(--spacing-space-4); align-items: center;">
+        <div style={`inline-size: var(--spacing-space-80); block-size: var(--spacing-space-64); background: var(--sem-bg-surface-sunken); border: var(--brand-stroke-default) solid var(--sem-border-default); border-radius: var(--brand-radius-roles-${role});`}></div>
+        <span style="font-size: var(--typography-text-xs-size); color: var(--sem-fg-secondary);">{label}</span>
+      </div>
+    ))}
+  </Demo>
+
+  <p>
+    Without this layer, giving Brand 3 square cards would mean a brand-specific override inside the Card component. One
+    override is fine. Twenty is a second design system living inside the first one.
+  </p>
+
+  <h2>Stroke</h2>
+
+  <table>
+    <thead><tr><th>Token</th><th>Width</th><th>Use it for</th></tr></thead>
+    <tbody>
+      <tr><td><code>stroke-thin</code></td><td>1px</td><td>Dividers inside a container</td></tr>
+      <tr><td><code>stroke-default</code></td><td>1px</td><td>Borders on fields, cards and buttons</td></tr>
+      <tr><td><code>stroke-thick</code></td><td>2px</td><td>Emphasis: a selected card, a checked radio</td></tr>
+      <tr><td><code>stroke-focus</code></td><td>2px</td><td>The focus ring, and nothing else</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    <code>stroke-focus</code> is separate from <code>stroke-thick</code> even though both are 2px today. That is on purpose:
+    thickening the focus ring for accessibility should not thicken every selected card at the same time.
+  </p>
+
+  <h2>Rules</h2>
+
+  <ul>
+    <li><strong>Components read roles, never the scale.</strong> If a component needs a shape the roles do not cover, the answer is a new role, not a scale value.</li>
+    <li><strong>Round means round.</strong> Icon buttons and avatars use <code>radius-full</code> in every brand, because a round icon button is the shape, not a style.</li>
+    <li><strong>Nested radii step down.</strong> Something inside a card uses a smaller radius than the card, otherwise the inner corner looks wrong against the outer one.</li>
+  </ul>
+</Base>

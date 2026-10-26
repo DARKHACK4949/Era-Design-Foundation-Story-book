@@ -4,3 +4,7 @@ storybook-static/
 .DS_Store
 sb/
 artifact-page.html
+docs/node_modules/
+docs/dist/
+docs/.astro/
+site/

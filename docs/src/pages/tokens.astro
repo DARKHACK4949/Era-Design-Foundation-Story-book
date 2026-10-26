@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import Demo from '../components/Demo.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="How tokens work" description="The three token layers in ERA, and the rules that keep them honest.">
+  <h1>How tokens work</h1>
+  <p class="lede">
+    Three layers, and each one is allowed to know about exactly one thing below it. Everything else in ERA follows from
+    that, including the parts that look like component decisions.
+  </p>
+
+  <h2>The chain, end to end</h2>
+
+  <p>Following one colour the whole way down is the fastest way to see it:</p>
+
+  <pre><code>{`Primitives   --colors-iris-700: #5b5bd6;
+                        ^ a raw value, no opinion about use
+
+Brand        --brand-primary-scale-700: var(--colors-iris-700);
+                        ^ which ramp this brand uses
+
+             --brand-primary-roles-action: var(--brand-primary-scale-700);
+                        ^ which step is the solid action fill
+
+Semantics    --sem-primary-bg: var(--brand-primary-roles-action);
+                        ^ what the colour is for
+
+Component    background: var(--sem-primary-bg);
+                        ^ the only layer a component may read`}</code></pre>
+
+  <p>
+    Change <code>data-brand</code> and the second line resolves to Cyan or Jade. Change <code>data-theme</code> and the
+    fourth line resolves to the dark counterpart. The component never changes, and it has no way to know which happened.
+  </p>
+
+  <h2>Why there is a role layer</h2>
+
+  <p>
+    The brand layer could have stopped at the ramps. The reason it does not is radius. Brand 1 wants soft corners, Brand 3
+    wants square ones, and both want their buttons and their cards to disagree with each other in a brand-specific way. If a
+    component read the radius scale directly, that would be impossible without a component override per brand, which is
+    exactly the leak this whole structure exists to prevent.
+  </p>
+
+  <p>So components ask for a role, not a size:</p>
+
+  <table>
+    <thead><tr><th>Role token</th><th>Brand 1</th><th>Brand 2</th><th>Brand 3</th></tr></thead>
+    <tbody>
+      <tr><td><code>radius-roles-buttons-button-md</code></td><td>8px</td><td>4px</td><td>0</td></tr>
+      <tr><td><code>radius-roles-input-field-md</code></td><td>8px</td><td>4px</td><td>0</td></tr>
+      <tr><td><code>radius-roles-card-md</code></td><td>12px</td><td>8px</td><td>2px</td></tr>
+      <tr><td><code>radius-roles-surface-modal</code></td><td>16px</td><td>12px</td><td>4px</td></tr>
+      <tr><td><code>radius-roles-buttons-button-icon</code></td><td colspan="3">Fully round in every brand, because a round icon button is the shape, not a style</td></tr>
+    </tbody>
+  </table>
+
+  <Demo label="Same component, three radius roles. Switch brand at the top of the page.">
+    <div style="display: flex; gap: var(--spacing-space-16); flex-wrap: wrap;">
+      <div style="inline-size: 120px; block-size: 72px; background: var(--sem-primary-bg-subtle); border: var(--brand-stroke-default) solid var(--sem-primary-border); border-radius: var(--brand-radius-roles-buttons-button-md); display: grid; place-items: center; font-size: var(--typography-text-xs-size); color: var(--sem-primary-fg);">Button</div>
+      <div style="inline-size: 120px; block-size: 72px; background: var(--sem-bg-surface-sunken); border: var(--brand-stroke-default) solid var(--sem-border-default); border-radius: var(--brand-radius-roles-card-md); display: grid; place-items: center; font-size: var(--typography-text-xs-size); color: var(--sem-fg-secondary);">Card</div>
+      <div style="inline-size: 120px; block-size: 72px; background: var(--sem-bg-surface-sunken); border: var(--brand-stroke-default) solid var(--sem-border-default); border-radius: var(--brand-radius-roles-surface-modal); display: grid; place-items: center; font-size: var(--typography-text-xs-size); color: var(--sem-fg-secondary);">Modal</div>
+    </div>
+  </Demo>
+
+  <h2>Naming</h2>
+
+  <p>
+    A semantic token name answers "what is this for", never "what colour is it". The pattern is
+    <code>--sem-[subject]-[property]-[variant]</code>:
+  </p>
+
+  <table>
+    <thead><tr><th>Name</th><th>Reads as</th></tr></thead>
+    <tbody>
+      <tr><td><code>--sem-primary-bg-hover</code></td><td>the primary surface, on hover</td></tr>
+      <tr><td><code>--sem-status-error-bg-subtle</code></td><td>the quiet error background, the one you use in a list</td></tr>
+      <tr><td><code>--sem-form-input-border-focus</code></td><td>a field's border while it is focused</td></tr>
+      <tr><td><code>--sem-table-row-bg-selected-hover</code></td><td>a selected table row that is also hovered</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    The test for a name is whether it still makes sense after the colour changes. <code>--sem-status-error-bg</code> survives
+    being a dark red on light and a lighter red on dark. <code>--red-700</code> would be a lie in one of those two.
+  </p>
+
+  <h2>Rules that are actually enforced</h2>
+
+  <ul>
+    <li><strong>Components read semantics only.</strong> No hex value, pixel radius or raw spacing number lives in a component.</li>
+    <li><strong>The build fails on a dangling reference.</strong> If a token points at something that does not exist, <code>npm run tokens</code> exits non-zero rather than emitting a broken file.</li>
+    <li><strong>Nothing below 12px.</strong> The type scale stops there, because smaller is text nobody reads.</li>
+    <li><strong>A 4px and 8px grid, with 2px as one named exception.</strong> Some gaps really are smaller than 4px. Naming the exception beats leaving people to hardcode it.</li>
+    <li><strong>Every state is a token.</strong> Hover, pressed, selected, disabled, read-only, error and success all resolve through the semantic layer, so none of them break on dark or in another brand.</li>
+  </ul>
+
+  <h2>Alpha overlays, and why hover is not a colour</h2>
+
+  <p>
+    <code>--sem-state-hover</code> is <code>rgba(0,0,0,0.04)</code> on light and <code>rgba(255,255,255,0.04)</code> on dark,
+    rather than a fixed grey. That is deliberate. A hover state painted as a solid colour needs one token per surface it can
+    sit on: on a card, on a table row, on a selected row, on a status fill. As an overlay it works on all of them and the
+    count stays at one.
+  </p>
+
+  <h2>Where the files are</h2>
+
+  <table>
+    <thead><tr><th>File</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><code>tokens/src/*.txt</code></td><td>The export from the Figma library, one line per variable</td></tr>
+      <tr><td><code>tokens/build.mjs</code></td><td>The generator. Resolves aliases, validates, emits both outputs</td></tr>
+      <tr><td><code>tokens/generated/era.css</code></td><td>1,505 custom properties, layered <code>:root</code> then <code>[data-brand]</code> then <code>[data-theme]</code></td></tr>
+      <tr><td><code>tokens/generated/tokens.json</code></td><td>W3C design-token format, every brand and mode under <code>$extensions</code></td></tr>
+    </tbody>
+  </table>
+
+  <p><a href={`${base}/using-era`}>Using ERA</a> covers how to pull these into your own project.</p>
+</Base>

@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import Demo from '../components/Demo.astro';
+import { Button } from '@era/components/button/Button';
+import { Badge } from '@era/components/badge/Badge';
+import { Input } from '@era/components/input/Input';
+import { Select } from '@era/components/select/Select';
+import { Alert } from '@era/components/alert/Alert';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const VENDORS = [
+  { value: 'northwind', label: 'Northwind Supply', hint: '4 invoices this quarter' },
+  { value: 'calder', label: 'Calder Logistics', hint: '2 invoices this quarter' },
+  { value: 'brightwell', label: 'Brightwell Print', hint: 'New vendor, first payment held' },
+];
+---
+
+<Base title="Overview" description="ERA is a multi-brand design system: three brands and two modes from one set of components.">
+  <h1>ERA</h1>
+  <p class="lede">
+    A multi-brand design system. Three brands and two modes come out of one set of components, and no component knows which
+    brand or mode it is in.
+  </p>
+
+  <p>
+    Use the swatches at the top of this page to change brand, and the Light and Dark button to change mode. Everything on
+    every page here follows, including this site's own chrome, because the docs are built with the system they document.
+  </p>
+
+  <Demo label="The same components, whichever brand and mode you have selected">
+    <Button client:load>Release payment</Button>
+    <Button intent="outline" client:load>Hold for review</Button>
+    <Button intent="danger" client:load>Reject</Button>
+    <Badge tone="success" fill="subtle" dot>Released</Badge>
+    <Badge tone="warning" fill="subtle" dot>Held</Badge>
+  </Demo>
+
+  <h2>What it actually is</h2>
+
+  <p>
+    ERA started as an answer to a problem that shows up in every company running more than one product: three products, three
+    sets of buttons, three definitions of "error red", and a redesign that has to be done three times. The usual fix is to
+    make one component library and let each product override it, which lasts about a quarter before the overrides become the
+    real system.
+  </p>
+
+  <p>
+    The approach here is to put the variation in the tokens rather than in the components. There are three layers, and each
+    one is allowed to know about exactly one thing below it.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Layer</th><th>What it holds</th><th>What changes it</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Primitives</strong></td>
+        <td>Raw values with no opinion: 11-step ramps, a 4px spacing scale, type sizes, radius steps, stroke weights.</td>
+        <td>Nothing. These are constants.</td>
+      </tr>
+      <tr>
+        <td><strong>Brand</strong></td>
+        <td>Which primitive each brand reaches for, plus radius roles so a brand can shape buttons differently from cards.</td>
+        <td><code>data-brand</code></td>
+      </tr>
+      <tr>
+        <td><strong>Semantics</strong></td>
+        <td>Names for jobs, not for colours: <code>--sem-status-error-bg</code> rather than <code>--red-700</code></td>
+        <td><code>data-theme</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Components read the semantic layer and nothing else. That is the rule the whole thing rests on, and it is what lets a
+    brand swap be two attributes:
+  </p>
+
+  <pre><code>&lt;html data-brand="brand-2" data-theme="dark"&gt;</code></pre>
+
+  <h2>What that buys</h2>
+
+  <p>
+    A form is the honest test, because forms are where systems usually leak. Nothing below is brand-aware or mode-aware.
+    Change either one at the top of this page and read it again.
+  </p>
+
+  <Demo label="One form, three brands, two modes, no overrides">
+    <div style="display: grid; gap: var(--spacing-space-16); max-width: 380px; width: 100%;">
+      <Input label="Invoice number" defaultValue="INV-2301" client:load />
+      <Select label="Vendor" options={VENDORS} defaultValue="calder" client:load />
+      <Alert
+        tone="warning"
+        title="This invoice is a near-duplicate."
+        description="INV-2301 from the same vendor was paid on 11 Oct for the same amount."
+        client:load
+      />
+      <div style="display: flex; gap: var(--spacing-space-8);">
+        <Button client:load>Release</Button>
+        <Button intent="ghost" client:load>Cancel</Button>
+      </div>
+    </div>
+  </Demo>
+
+  <h2>Where to go next</h2>
+
+  <ul>
+    <li><a href={`${base}/using-era`}>Using ERA</a> is the honest answer to "can I use this in my project", including what does not work yet.</li>
+    <li><a href={`${base}/tokens`}>How tokens work</a> goes through the three layers properly, with the naming rules.</li>
+    <li><a href={`${base}/accessibility`}>Accessibility</a> covers the contrast audit, what it caught, and the one exemption.</li>
+    <li><a href={`${base}/storybook/`}>The Storybook</a> has every component, every state, and a live contrast audit you can run per brand.</li>
+  </ul>
+
+  <h2>Built by</h2>
+
+  <p>
+    Sanyam Sharma, a product designer who works on design systems. ERA is a personal project, not a company system, and the
+    code and the Figma library are both open. If something here is wrong or unclear,
+    <a href="https://github.com/DARKHACK4949/Era-Design-Foundation-Story-book/issues">open an issue</a>.
+  </p>
+</Base>

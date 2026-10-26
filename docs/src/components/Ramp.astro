@@ -1,0 +1,34 @@
+---
+interface Props { name: string; prefix: string; note?: string }
+const { name, prefix, note } = Astro.props;
+const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+---
+
+<div class="ramp">
+  <div class="ramp__head">
+    <strong>{name}</strong>
+    {note && <span class="ramp__note">{note}</span>}
+  </div>
+  <div class="ramp__row">
+    {STEPS.map((step) => (
+      <div class="ramp__cell">
+        <div class="ramp__chip" style={`background: var(${prefix}-${step})`}></div>
+        <span class="ramp__step">{step}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ramp { margin-block-end: var(--spacing-space-20); }
+  .ramp__head { display: flex; align-items: baseline; gap: var(--spacing-space-8); margin-block-end: var(--spacing-space-4); font-size: var(--typography-text-sm-size); }
+  .ramp__note { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); }
+  .ramp__row { display: grid; grid-template-columns: repeat(11, 1fr); gap: var(--spacing-space-2); }
+  .ramp__cell { display: flex; flex-direction: column; gap: var(--spacing-space-4); }
+  .ramp__chip {
+    block-size: var(--spacing-space-48);
+    border-radius: var(--brand-radius-scale-sm-4);
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  .ramp__step { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); text-align: center; }
+</style>

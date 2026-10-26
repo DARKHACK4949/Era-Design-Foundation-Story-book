@@ -1,0 +1,90 @@
+---
+import Base from '../../layouts/Base.astro';
+import Demo from '../../components/Demo.astro';
+import Ramp from '../../components/Ramp.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="Colour" description="How ERA's colour ramps are structured and which step does which job.">
+  <h1>Colour</h1>
+  <p class="lede">
+    Every ramp runs 50 to 950 and every step has a job. The mapping is identical in all three brands and both modes, which
+    is what lets a component ask for a border without knowing which brand it is in.
+  </p>
+
+  <h2>What each step is for</h2>
+
+  <table>
+    <thead><tr><th>Steps</th><th>Job</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>50 to 200</td><td>Backgrounds and tints</td><td>The subtle fill behind a status badge</td></tr>
+      <tr><td>300</td><td>Hovered tint</td><td>A selected row being hovered</td></tr>
+      <tr><td>400 and 500</td><td>Borders</td><td>A field outline, a divider that needs to be seen</td></tr>
+      <tr><td>600</td><td>Hovered border</td><td>A field under the pointer</td></tr>
+      <tr><td>700 and 800</td><td>Solid fills</td><td>The primary button</td></tr>
+      <tr><td>900 and 950</td><td>Text</td><td>Body copy, headings, the only two steps that clear AA</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    900 and 950 are the only steps that carry body text. Anything lighter fails AA against a surface in both modes. That is
+    not a limitation to work around, it is the structure: text hierarchy comes from size and weight, not from a third grey.
+    The <a href={`${base}/accessibility`}>accessibility page</a> has the measurements.
+  </blockquote>
+
+  <h2>The brand ramp</h2>
+
+  <p>This is the one that changes per brand. Switch brand at the top of the page and watch only this move.</p>
+
+  <Demo label="--brand-primary-scale-{step}" padded>
+    <div style="inline-size: 100%;">
+      <Ramp name="Primary" prefix="--brand-primary-scale" note="Iris, Cyan or Jade depending on brand" />
+    </div>
+  </Demo>
+
+  <h2>Support ramps</h2>
+
+  <p>
+    Shared across brands, on purpose. A warning should not change meaning because you switched product. Only the brand
+    accent is allowed to be a brand decision.
+  </p>
+
+  <Demo padded>
+    <div style="inline-size: 100%;">
+      <Ramp name="Neutral" prefix="--brand-neutral" note="Surfaces, borders, text" />
+      <Ramp name="Success" prefix="--brand-success" />
+      <Ramp name="Danger" prefix="--brand-danger" />
+      <Ramp name="Warning" prefix="--brand-warning" />
+      <Ramp name="Info" prefix="--brand-info" />
+    </div>
+  </Demo>
+
+  <h2>Choosing a token</h2>
+
+  <p>Work from the job backwards, not from the colour forwards.</p>
+
+  <table>
+    <thead><tr><th>You want</th><th>Reach for</th></tr></thead>
+    <tbody>
+      <tr><td>The page behind everything</td><td><code>--sem-bg-canvas</code></td></tr>
+      <tr><td>A card, panel or table row</td><td><code>--sem-bg-surface</code></td></tr>
+      <tr><td>An inset or well</td><td><code>--sem-bg-surface-sunken</code></td></tr>
+      <tr><td>Body text</td><td><code>--sem-fg-primary</code></td></tr>
+      <tr><td>Supporting copy</td><td><code>--sem-fg-secondary</code></td></tr>
+      <tr><td>A divider inside a card</td><td><code>--sem-border-subtle</code></td></tr>
+      <tr><td>A field or card edge</td><td><code>--sem-border-default</code></td></tr>
+      <tr><td>The one main action on a view</td><td><code>--sem-primary-bg</code> with <code>--sem-primary-fg-on-bg</code></td></tr>
+      <tr><td>A status in a dense list</td><td>The <code>-subtle</code> pair, never the solid one</td></tr>
+      <tr><td>Hover on anything</td><td><code>--sem-state-hover</code>, which is an overlay and works on any surface</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Do not</h3>
+
+  <ul>
+    <li>Do not reach for a primitive. <code>var(--colors-iris-700)</code> in a component is a brand decision hardcoded in the wrong place.</li>
+    <li>Do not use a solid status fill for a row in a list. A page of solid reds is unreadable; that is what the subtle pair is for.</li>
+    <li>Do not use colour as the only signal. Pair it with a word or a shape.</li>
+    <li>Do not invent a lighter grey for "less important" text. Use a smaller step on the type scale instead.</li>
+  </ul>
+</Base>

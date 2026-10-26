@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="Accessibility" description="What ERA checks, what the audit caught, and the one exemption.">
+  <h1>Accessibility</h1>
+  <p class="lede">
+    The contrast audit lives in the Storybook rather than in a document, because it resolves what the tokens actually
+    compute to for whichever brand and mode is selected. A document can claim a pass. A live audit cannot.
+  </p>
+
+  <p>
+    <a href={`${base}/storybook/?path=/story/foundations-accessibility--contrast-audit`}>Open the audit</a> and switch brands
+    in the toolbar. The numbers move, because they are read from real computed colours rather than written down once.
+  </p>
+
+  <h2>What it caught</h2>
+
+  <p>
+    The first run failed 10 of 23 pairs. Both causes were in the tokens, not in any component, which is the argument for
+    auditing the token layer rather than auditing screens.
+  </p>
+
+  <h3>The neutral ramp was carrying text</h3>
+
+  <p>
+    Placeholder sat at 1.57:1, helper text at 1.92:1, field labels at 3.32:1. All three were pointing at ramp steps that
+    exist to draw borders. Measured against a surface, in both modes:
+  </p>
+
+  <table>
+    <thead><tr><th>Step</th><th>On light</th><th>On dark</th><th>Usable for body text</th></tr></thead>
+    <tbody>
+      <tr><td><code>neutral-700</code></td><td>3.32:1</td><td>3.12:1</td><td>No</td></tr>
+      <tr><td><code>neutral-800</code></td><td>3.79:1</td><td>3.76:1</td><td>No</td></tr>
+      <tr><td><code>neutral-900</code></td><td>5.92:1</td><td>7.67:1</td><td>Yes</td></tr>
+      <tr><td><code>neutral-950</code></td><td>16.29:1</td><td>13.71:1</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    So ERA has exactly two text colours per ramp, not five. That is not a gap, it is what the underlying Radix scales
+    guarantee: two text steps, everything below them is for borders and fills. The consequence is worth saying plainly,
+    because it changes how you build: <strong>hierarchy in text comes from size and weight, not from a third grey.</strong>
+    Reaching for a lighter grey to make something feel secondary is how you end up at 3.79:1.
+  </p>
+
+  <h3>The solid brand fill had one global foreground</h3>
+
+  <p>
+    Radix splits its step 9 colours into two families: those dark enough to carry white text, and those that need dark text.
+    Iris is in the first, Cyan and Jade are in the second. ERA was painting white on all three.
+  </p>
+
+  <table>
+    <thead><tr><th></th><th>Fill</th><th>White on it</th><th>Near-black on it</th><th>Correct choice</th></tr></thead>
+    <tbody>
+      <tr><td>Brand 1 light</td><td><code>#5b5bd6</code></td><td>5.37:1</td><td>3.04:1</td><td>White</td></tr>
+      <tr><td>Brand 1 dark</td><td><code>#5b5bd6</code></td><td>5.37:1</td><td>3.28:1</td><td>White</td></tr>
+      <tr><td>Brand 2 light</td><td><code>#3db9cf</code></td><td>2.32:1</td><td>7.01:1</td><td>Near-black</td></tr>
+      <tr><td>Brand 2 dark</td><td><code>#11809c</code></td><td>4.57:1</td><td>3.84:1</td><td>White</td></tr>
+      <tr><td>Brand 3 light</td><td><code>#29a383</code></td><td>3.15:1</td><td>5.17:1</td><td>Near-black</td></tr>
+      <tr><td>Brand 3 dark</td><td><code>#29a383</code></td><td>3.15:1</td><td>5.58:1</td><td>Near-black</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    There is no single answer in that table, which is the finding. The fix was a new brand role token,
+    <code>Primary/Roles/On action</code>, so each brand answers for its own fill instead of the semantic layer guessing on
+    behalf of all three.
+  </p>
+
+  <h2>The one exemption</h2>
+
+  <p>
+    The label on a disabled control is deliberately below 4.5:1. WCAG 1.4.3 exempts inactive controls, and a disabled button
+    rendered at full contrast stops reading as disabled, which trades a real usability signal for a number. It moved from
+    1.68:1 to 3.33:1: legible, without pretending to be active.
+  </p>
+
+  <h2>Beyond contrast</h2>
+
+  <ul>
+    <li><strong>One focus treatment.</strong> Keyboard only, drawn outside the element so it never changes layout, offset against the surface behind it so it stays visible on tinted and solid backgrounds alike.</li>
+    <li><strong>Colour is never the only signal.</strong> Alert and Toast carry a distinct icon shape per tone. Badge always carries a word. Table sort state is announced through <code>aria-sort</code>, not just an arrow.</li>
+    <li><strong>Native where native is better.</strong> Modal is a real <code>&lt;dialog&gt;</code>, so focus trapping, Escape and page inertness come from the browser. Accordion is <code>&lt;details&gt;</code>, so in-page find can open a closed section.</li>
+    <li><strong>Correct roles where native is not used.</strong> Menu is <code>role="menu"</code> with the menu button keyboard pattern; Select is a combobox trigger over <code>role="listbox"</code> with <code>aria-activedescendant</code>. They share a surface and deliberately not their semantics.</li>
+    <li><strong>Reduced motion is respected.</strong> Anything that moves does so to help someone follow a change, so when the OS asks for less motion it is removed rather than shortened.</li>
+    <li><strong>The axe addon runs on every story</strong>, so labelling and role problems surface in the panel rather than in review.</li>
+  </ul>
+
+  <h2>What is not covered</h2>
+
+  <p>
+    Honest limits. There is no screen reader testing on real assistive tech, no testing with actual users with disabilities,
+    and no automated check in CI yet, so a regression would currently be caught by someone opening the audit rather than by
+    the build. Automated axe runs in CI are the obvious next step.
+  </p>
+</Base>
