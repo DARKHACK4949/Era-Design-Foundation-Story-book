@@ -35,7 +35,7 @@ npm run tokens
 | `tokens/generated/era.css` | CSS custom properties, layered `:root` → `[data-brand]` → `[data-theme]` |
 | `tokens/generated/tokens.json` | W3C design-token format, with every brand and mode under `$extensions`, for Style Dictionary or any other transform |
 
-758 Figma variables across three collections become 1,493 custom properties. The build fails on any reference that does not resolve, so Figma and code cannot quietly drift apart.
+762 Figma variables across three collections become 1,505 custom properties. The build fails on any reference that does not resolve, so Figma and code cannot quietly drift apart. It also fails if a brand's typeface would not actually load, because a missing web font falls back to the system stack and three brands then render in one face while looking entirely fine.
 
 ## Running it
 
@@ -52,7 +52,32 @@ npm run typecheck
 
 **Foundations** are generated from the live tokens, so the pages cannot go stale: colour ramps and semantic colour, the type scale, spacing, radius scale and radius roles, stroke weights, and a contrast audit that resolves real computed colours for whichever brand and mode is selected.
 
-**Components** are Button, Input, Badge, Switch, Alert and Table. They were picked to cover the hard parts rather than the easy ones, which is why the set includes a field with seven states and a table with its own token group instead of six simple blocks.
+**Components**, 23 of them: Accordion, Alert, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, EmptyState, Input, Menu, Modal, Pagination, Progress, Radio, Select, Skeleton, Switch, Table, Tabs, TextArea, Toast and Tooltip.
+
+They were picked to cover the hard parts rather than the easy ones: a field with seven states, a table with its own token group, a Menu implementing the full WAI-ARIA menu button pattern with arrow keys, type-ahead and focus return, and a Select built as a listbox so focus stays on the trigger. Where a native element was better it is used, so Modal is a real `<dialog>` and Accordion is `<details>`, which keeps in-page find working.
+
+## Visual regression
+
+A token change is invisible until something renders it, and Brand 2 dark is the
+combination nobody looks at, so it is the one that breaks quietly.
+
+`npm run test:visual` screenshots ten stories across all three brands and both
+modes, sixty shots in total, chosen to exercise the token layers rather than to
+cover every story: the solid brand fill, the ramp as text, borders, status
+colour, radius roles, elevation, and the contrast audit that resolves real
+computed colours.
+
+Baselines are generated in CI, in the Playwright container, because font
+rasterisation differs between machines and locally made baselines fail on the
+runner for reasons that have nothing to do with the system. To seed or refresh
+them, run the **Visual regression** workflow with *Regenerate baselines* ticked
+and it commits the result.
+
+One thing worth knowing if you change the tolerance: it is an absolute pixel
+count, not a ratio. A ratio scales with the image, so a colour change confined
+to one component is a small fraction of a large screenshot and slips under it.
+Recolouring Brand 2's primary button moved 5,174 of 599,040 pixels, which is
+0.86%, and a 1% ratio passed it as noise.
 
 ## Rules the components follow
 

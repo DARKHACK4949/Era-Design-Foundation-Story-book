@@ -1,0 +1,66 @@
+name: Visual regression
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      update:
+        description: 'Regenerate baselines and commit them'
+        type: boolean
+        default: false
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    # The same container every time. Font rasterisation differs between
+    # machines, so baselines made anywhere else fail for reasons that have
+    # nothing to do with the design system.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Builds the tokens first, so a screenshot can never be taken against a
+      # stale token file.
+      - run: npm run build
+
+      - name: Compare against baselines
+        if: ${{ !inputs.update }}
+        run: npx playwright test
+
+      - name: Regenerate baselines
+        if: ${{ inputs.update }}
+        run: npx playwright test --update-snapshots
+
+      - name: Commit regenerated baselines
+        if: ${{ inputs.update }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/visual.spec.ts-snapshots
+          if git diff --cached --quiet; then
+            echo "Baselines unchanged."
+          else
+            git commit -m "Update visual regression baselines"
+            git push
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
