@@ -8,3 +8,6 @@ docs/node_modules/
 docs/dist/
 docs/.astro/
 site/
+test-results/
+playwright-report/
+blob-report/

@@ -56,6 +56,29 @@ npm run typecheck
 
 They were picked to cover the hard parts rather than the easy ones: a field with seven states, a table with its own token group, a Menu implementing the full WAI-ARIA menu button pattern with arrow keys, type-ahead and focus return, and a Select built as a listbox so focus stays on the trigger. Where a native element was better it is used, so Modal is a real `<dialog>` and Accordion is `<details>`, which keeps in-page find working.
 
+## Visual regression
+
+A token change is invisible until something renders it, and Brand 2 dark is the
+combination nobody looks at, so it is the one that breaks quietly.
+
+`npm run test:visual` screenshots ten stories across all three brands and both
+modes, sixty shots in total, chosen to exercise the token layers rather than to
+cover every story: the solid brand fill, the ramp as text, borders, status
+colour, radius roles, elevation, and the contrast audit that resolves real
+computed colours.
+
+Baselines are generated in CI, in the Playwright container, because font
+rasterisation differs between machines and locally made baselines fail on the
+runner for reasons that have nothing to do with the system. To seed or refresh
+them, run the **Visual regression** workflow with *Regenerate baselines* ticked
+and it commits the result.
+
+One thing worth knowing if you change the tolerance: it is an absolute pixel
+count, not a ratio. A ratio scales with the image, so a colour change confined
+to one component is a small fraction of a large screenshot and slips under it.
+Recolouring Brand 2's primary button moved 5,174 of 599,040 pixels, which is
+0.86%, and a 1% ratio passed it as noise.
+
 ## Rules the components follow
 
 - Semantic tokens only. No hex value, pixel radius or raw spacing number lives in a component.
