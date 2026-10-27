@@ -35,7 +35,7 @@ npm run tokens
 | `tokens/generated/era.css` | CSS custom properties, layered `:root` → `[data-brand]` → `[data-theme]` |
 | `tokens/generated/tokens.json` | W3C design-token format, with every brand and mode under `$extensions`, for Style Dictionary or any other transform |
 
-758 Figma variables across three collections become 1,493 custom properties. The build fails on any reference that does not resolve, so Figma and code cannot quietly drift apart.
+762 Figma variables across three collections become 1,505 custom properties. The build fails on any reference that does not resolve, so Figma and code cannot quietly drift apart. It also fails if a brand's typeface would not actually load, because a missing web font falls back to the system stack and three brands then render in one face while looking entirely fine.
 
 ## Running it
 
@@ -52,7 +52,9 @@ npm run typecheck
 
 **Foundations** are generated from the live tokens, so the pages cannot go stale: colour ramps and semantic colour, the type scale, spacing, radius scale and radius roles, stroke weights, and a contrast audit that resolves real computed colours for whichever brand and mode is selected.
 
-**Components** are Button, Input, Badge, Switch, Alert and Table. They were picked to cover the hard parts rather than the easy ones, which is why the set includes a field with seven states and a table with its own token group instead of six simple blocks.
+**Components**, 23 of them: Accordion, Alert, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, EmptyState, Input, Menu, Modal, Pagination, Progress, Radio, Select, Skeleton, Switch, Table, Tabs, TextArea, Toast and Tooltip.
+
+They were picked to cover the hard parts rather than the easy ones: a field with seven states, a table with its own token group, a Menu implementing the full WAI-ARIA menu button pattern with arrow keys, type-ahead and focus return, and a Select built as a listbox so focus stays on the trigger. Where a native element was better it is used, so Modal is a real `<dialog>` and Accordion is `<details>`, which keeps in-page find working.
 
 ## Rules the components follow
 
