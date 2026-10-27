@@ -77,7 +77,7 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
 
 .wordmark {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--spacing-space-8);
   text-decoration: none;
   color: inherit;
@@ -89,13 +89,7 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   /* Tracking is size-specific: large type reads too loose as it grows. */
   letter-spacing: -0.03em;
 }
-.wordmark__dot {
-  inline-size: 6px;
-  block-size: 6px;
-  border-radius: var(--radius-radius-full);
-  background: var(--sem-primary-bg);
-  align-self: center;
-}
+.wordmark svg { flex: none; display: block; color: var(--sem-fg-primary); }
 
 .chrome__nav { display: flex; align-items: center; gap: var(--spacing-space-2); }
 .chrome__link {
