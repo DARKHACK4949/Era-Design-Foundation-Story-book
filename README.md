@@ -67,11 +67,17 @@ cover every story: the solid brand fill, the ramp as text, borders, status
 colour, radius roles, elevation, and the contrast audit that resolves real
 computed colours.
 
-Baselines are generated in CI, in the Playwright container, because font
-rasterisation differs between machines and locally made baselines fail on the
-runner for reasons that have nothing to do with the system. To seed or refresh
-them, run the **Visual regression** workflow with *Regenerate baselines* ticked
-and it commits the result.
+Baselines live in `tests/__screenshots__` and are generated in CI, in the
+Playwright container, because font rasterisation differs between machines and
+locally made baselines fail on the runner for reasons that have nothing to do
+with the system. To seed or refresh them, run the **Visual regression**
+workflow with *Regenerate baselines* ticked: it commits the result and also
+attaches it to the run as the `visual-baselines` artifact, so the shots are
+never stranded inside a failed run.
+
+If that push ever fails, the cause is almost always repository settings rather
+than the workflow: **Settings > Actions > General > Workflow permissions** has
+to be *Read and write permissions* for a job to commit back.
 
 One thing worth knowing if you change the tolerance: it is an absolute pixel
 count, not a ratio. A ratio scales with the image, so a colour change confined
