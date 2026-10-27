@@ -7,6 +7,9 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
+  // Explicit, so the path does not depend on a Playwright default and the
+  // workflow can reference it without guessing.
+  snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
