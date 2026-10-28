@@ -1,0 +1,205 @@
+---
+import { Badge } from '@era/components/badge/Badge';
+import { Button } from '@era/components/button/Button';
+
+interface Props { brand: string }
+const { brand } = Astro.props;
+
+const ROWS = [
+  ['Calder Logistics', 'INV-4812', 'Paid', 'success'],
+  ['Northwind Supply', 'INV-4813', 'Due', 'warning'],
+  ['Harper Freight', 'INV-4815', 'Paid', 'success'],
+  ['Vale Industrial', 'INV-4816', 'Held', 'danger'],
+] as const;
+---
+
+{/* A whole screen rather than a lone button. Three buttons side by side prove
+    nothing; an interface does, because every token group is in it at once:
+    surfaces, borders, text, status, radius and the typeface.
+
+    Built at its real size and scaled down as a whole, the way a screenshot is.
+    Building it small instead would mean 8px labels, and nothing in ERA is
+    allowed below 12px. */}
+<div class="shot" data-brand={brand}>
+  <div class="shot__scale">
+    <div class="shot__win">
+      <div class="shot__bar">
+        <span class="shot__dot"></span>
+        <span class="shot__search">Search invoices</span>
+        <span class="shot__avatar"></span>
+      </div>
+
+      <div class="shot__body">
+        <nav class="shot__nav">
+          <span class="shot__navitem is-on">Invoices</span>
+          <span class="shot__navitem">Vendors</span>
+          <span class="shot__navitem">Payments</span>
+          <span class="shot__navitem">Reports</span>
+        </nav>
+
+        <div class="shot__main">
+          <div class="shot__head">
+            <strong>Invoices</strong>
+            <Button size="sm">New invoice</Button>
+          </div>
+
+          <table class="shot__table">
+            <thead>
+              <tr><th>Vendor</th><th>Reference</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              {ROWS.map(([vendor, ref, label, tone]) => (
+                <tr>
+                  <td>{vendor}</td>
+                  <td class="shot__ref">{ref}</td>
+                  <td><Badge tone={tone} fill="subtle" dot>{label}</Badge></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div class="shot__foot">
+            <span>4 of 128</span>
+            <span class="shot__pager">&lsaquo; &rsaquo;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* The window is drawn at 720 and the whole thing is scaled to the column,
+     so every size inside it stays a real token value. */
+  /* The screen is a fixed drawing at a declared size, scaled to whatever
+     column it lands in.
+
+     The factor has to come from script. scale() wants a unitless number and
+     there is no way to divide a container query unit by a length in CSS, so
+     calc(100cqi / 720) resolves to a length and is thrown away. The fallback
+     below is the factor for the three up layout, so the screen is close to
+     right before script runs and if script never runs at all.
+
+     --w and --h are the one declared pair: the window is sized to them and the
+     ratio is built from them, so the two cannot drift apart. Add a row and the
+     window clips, which is visible, rather than the panel silently reserving
+     the wrong height. */
+  .shot {
+    --w: 720;
+    --h: 375;
+    --s: 0.47;
+    aspect-ratio: var(--w) / var(--h);
+    overflow: hidden;
+    /* Never bigger than it was drawn. In the one column layout the panel is
+       wider than 720, and a screen blown up past its real size reads as a
+       mistake rather than as a screenshot. */
+    max-inline-size: calc(var(--w) * 1px);
+    margin-inline: auto;
+  }
+  .shot__scale {
+    inline-size: calc(var(--w) * 1px);
+    transform: scale(var(--s));
+    transform-origin: top left;
+  }
+
+  .shot__win {
+    inline-size: calc(var(--w) * 1px);
+    block-size: calc(var(--h) * 1px);
+    background: var(--sem-bg-surface);
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+    border-radius: var(--radius-radius-12);
+    overflow: hidden;
+    font-family: var(--brand-typography-theme-font-family-font);
+    color: var(--sem-fg-primary);
+  }
+
+  .shot__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-12);
+    padding: var(--spacing-space-12) var(--spacing-space-16);
+    border-block-end: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  .shot__dot {
+    inline-size: var(--spacing-space-16); block-size: var(--spacing-space-16);
+    border-radius: var(--brand-radius-roles-buttons-button-icon);
+    background: var(--sem-primary-bg);
+  }
+  .shot__search {
+    flex: 1;
+    padding: var(--spacing-space-4) var(--spacing-space-12);
+    border: var(--brand-stroke-default) solid var(--sem-border-default);
+    border-radius: var(--brand-radius-roles-inputs-input-md);
+    font-size: var(--typography-text-sm-size);
+    color: var(--sem-fg-placeholder);
+  }
+  .shot__avatar {
+    inline-size: var(--spacing-space-24); block-size: var(--spacing-space-24);
+    border-radius: var(--radius-radius-full);
+    background: var(--sem-bg-surface-sunken);
+  }
+
+  .shot__body { display: grid; grid-template-columns: 152px minmax(0, 1fr); }
+  .shot__nav {
+    display: grid; align-content: start; gap: var(--spacing-space-2);
+    padding: var(--spacing-space-12);
+    border-inline-end: var(--brand-stroke-default) solid var(--sem-border-subtle);
+    background: var(--sem-bg-surface-sunken);
+  }
+  .shot__navitem {
+    padding: var(--spacing-space-4) var(--spacing-space-8);
+    border-radius: var(--brand-radius-scale-sm-4);
+    font-size: var(--typography-text-sm-size);
+    color: var(--sem-fg-secondary);
+  }
+  .shot__navitem.is-on { background: var(--sem-state-selected); color: var(--sem-fg-primary); }
+
+  .shot__main { padding: var(--spacing-space-16); }
+  .shot__head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-block-end: var(--spacing-space-12);
+  }
+  .shot__table { inline-size: 100%; border-collapse: collapse; font-size: var(--typography-text-sm-size); }
+  .shot__table th {
+    text-align: start; font-weight: var(--brand-typography-theme-font-weight-label);
+    color: var(--sem-fg-tertiary); font-size: var(--typography-text-xs-size);
+    padding-block-end: var(--spacing-space-8);
+    border-block-end: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  .shot__table td {
+    padding-block: var(--spacing-space-8);
+    border-block-end: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  .shot__ref { color: var(--sem-fg-secondary); font-variant-numeric: tabular-nums; }
+  .shot__foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-block-start: var(--spacing-space-12);
+    font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    if (window.__eraShotScale) return;    // one observer for every screen
+    window.__eraShotScale = true;
+
+    var shots = document.querySelectorAll('.shot');
+    if (!shots.length) return;
+
+    function fit(el) {
+      var w = parseFloat(getComputedStyle(el).getPropertyValue('--w')) || 720;
+      el.style.setProperty('--s', String(Math.min(1, el.clientWidth / w)));
+    }
+
+    if (typeof ResizeObserver === 'function') {
+      var ro = new ResizeObserver(function (entries) {
+        entries.forEach(function (e) { fit(e.target); });
+      });
+      shots.forEach(function (el) { ro.observe(el); });
+    } else {
+      var run = function () { shots.forEach(fit); };
+      run();
+      window.addEventListener('resize', run);
+    }
+  })();
+</script>
