@@ -74,7 +74,10 @@ a:hover { color: var(--sem-fg-link-hover); text-decoration-color: currentColor; 
  * edge. */
 .chrome__inner {
   block-size: 100%;
-  max-inline-size: 1280px;
+  /* Must match .layout exactly. These two have drifted apart twice now: once
+   * when the header was full width and the page was capped, and again when the
+   * page widened to 1680 and the header stayed at 1280. */
+  max-inline-size: 1680px;
   margin-inline: auto;
   padding-inline: var(--spacing-space-24);
   display: flex;
