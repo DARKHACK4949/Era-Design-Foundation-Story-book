@@ -1,3 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 126" fill="#101315"><rect x="0"  y="90" width="36" height="36" rx="9"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 126">
+  <style>
+    /* A tab bar can be light or dark and the favicon has to survive
+       both. A dark mark on a dark tab bar all but disappears. */
+    :root { fill: #141416 }
+    @media (prefers-color-scheme: dark) { :root { fill: #F7F7F8 } }
+  </style>
+  <rect x="0"  y="90" width="36" height="36" rx="9"/>
     <rect x="45" y="45" width="36" height="36" rx="9"/>
-    <rect x="90" y="0"  width="36" height="36" rx="9"/></svg>
+    <rect x="90" y="0"  width="36" height="36" rx="9"/>
+</svg>
