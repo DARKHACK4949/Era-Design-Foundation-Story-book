@@ -1,5 +1,6 @@
 ---
 import Shell from '../../layouts/Shell.astro';
+import Opening from '../../components/Opening.astro';
 import Demo from '../../components/Demo.astro';
 const SPACE = [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
 ---
@@ -10,6 +11,8 @@ const SPACE = [2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
     A 4px and 8px grid, with 2px kept as one deliberate exception. Naming that exception is better than pretending it does
     not exist and leaving people to hardcode it.
   </p>
+
+  <Opening kind="spacing" />
 
   <h2>Why 2px is in the scale</h2>
 

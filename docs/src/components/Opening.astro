@@ -1,0 +1,129 @@
+---
+interface Props { kind: 'colour' | 'typography' | 'spacing' | 'shape' }
+const { kind } = Astro.props;
+
+/* One large visual at the top of each foundation page.
+   Every one is built from the live tokens rather than drawn, so it re-themes
+   with the page and cannot go out of date the way an exported image would. */
+
+const RAMP = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const FACES = [
+  { brand: 'brand-1', name: 'IBM Plex Sans', note: 'Brand 1, Iris' },
+  { brand: 'brand-2', name: 'Geist', note: 'Brand 2, Cyan' },
+  { brand: 'brand-3', name: 'Source Sans 3', note: 'Brand 3, Jade' },
+];
+const SPACE = [4, 8, 12, 16, 24, 32, 48, 64, 96, 128];
+const SHAPES = [
+  { token: '--brand-radius-roles-buttons-button-md', label: 'Button' },
+  { token: '--brand-radius-roles-input-field-md', label: 'Field' },
+  { token: '--brand-radius-roles-check-box-md', label: 'Checkbox' },
+  { token: '--brand-radius-roles-card-md', label: 'Card' },
+];
+---
+
+<div class:list={['open', `open--${kind}`]}>
+  {kind === 'colour' && (
+    <div class="open__ramp">
+      {RAMP.map((s) => (
+        <span class="open__cell">
+          <span
+            class="open__chip"
+            style={`--chip-light: var(--brand-primary-scale-${s}); --chip-dark: var(--brand-primary-dark-scale-${s})`}
+          ></span>
+          <span class="open__note">{s}</span>
+        </span>
+      ))}
+    </div>
+  )}
+
+  {kind === 'typography' && (
+    <ul class="open__faces">
+      {FACES.map((f) => (
+        <li data-brand={f.brand}>
+          <span class="open__face">{f.name}</span>
+          <span class="open__note">{f.note}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  {kind === 'spacing' && (
+    <ul class="open__space">
+      {SPACE.map((n) => (
+        <li>
+          <span class="open__bar" style={`inline-size: var(--spacing-space-${n})`}></span>
+          <span class="open__note">{n}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  {kind === 'shape' && (
+    <ul class="open__shapes">
+      {SHAPES.map((r) => (
+        <li>
+          <span class="open__box" style={`border-radius: var(${r.token})`}></span>
+          <span class="open__note">{r.label}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+<style>
+  .open {
+    margin-block: var(--spacing-space-24) var(--spacing-space-40);
+    padding: var(--spacing-space-32);
+    border-radius: var(--radius-radius-24);
+    background: var(--sem-bg-canvas);
+  }
+
+  /* colour: the whole ramp edge to edge, with the step number sitting on the
+     step it names rather than under it. */
+  /* colour: the whole ramp, with each step's number under it. On the step
+     itself the number would only clear AA on the two text steps, and a label
+     that is legible on two swatches out of eleven is not a label. */
+  .open__ramp { display: grid; grid-template-columns: repeat(11, 1fr); gap: var(--spacing-space-4); }
+  .open__cell { display: grid; gap: var(--spacing-space-8); justify-items: center; }
+  .open__chip {
+    inline-size: 100%;
+    block-size: var(--spacing-space-128);
+    border-radius: var(--radius-radius-8);
+    background: var(--chip-light);
+    /* Step 50 is the canvas colour in both modes, and this panel sits on the
+       canvas, so without an edge the first swatch simply is not there. */
+    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  }
+  html[data-theme='dark'] .open__chip { background: var(--chip-dark); }
+
+  /* typography: the three faces, each set in itself. */
+  .open__faces { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-24); }
+  .open__faces li { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--spacing-space-16); }
+  .open__face {
+    font-family: var(--brand-typography-theme-font-family-font);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  /* spacing: the real steps, drawn at their real width. */
+  .open__space { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-8); }
+  .open__space li { display: flex; align-items: center; gap: var(--spacing-space-12); }
+  .open__bar {
+    block-size: var(--spacing-space-16);
+    border-radius: var(--radius-radius-2);
+    background: var(--sem-primary-bg);
+    flex: none;
+  }
+
+  /* shape: the brand's own radius roles, at a size where they differ. */
+  .open__shapes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--spacing-space-32); }
+  .open__shapes li { display: grid; gap: var(--spacing-space-8); justify-items: center; }
+  .open__box {
+    inline-size: var(--spacing-space-96);
+    block-size: var(--spacing-space-96);
+    background: var(--sem-primary-bg);
+  }
+
+  .open__note { font-size: var(--typography-text-sm-size); color: var(--sem-fg-tertiary); }
+</style>

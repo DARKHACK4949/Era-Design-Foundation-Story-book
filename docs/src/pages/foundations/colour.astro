@@ -1,5 +1,6 @@
 ---
 import Shell from '../../layouts/Shell.astro';
+import Opening from '../../components/Opening.astro';
 import Demo from '../../components/Demo.astro';
 import Ramp from '../../components/Ramp.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -11,6 +12,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     Every ramp runs 50 to 950 and every step has a job. The mapping is identical in all three brands and both modes, which
     is what lets a component ask for a border without knowing which brand it is in.
   </p>
+
+  <Opening kind="colour" />
 
   <h2>What each step is for</h2>
 
