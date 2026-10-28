@@ -2,6 +2,17 @@
 interface Props { name: string; prefix: string; note?: string }
 const { name, prefix, note } = Astro.props;
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+
+/* Every ramp has a dark counterpart, and the ramp used to render the light one
+   whatever mode the page was in, so the colour pages showed values the system
+   was not using. The dark name inserts -dark after the family: primary-scale
+   becomes primary-dark-scale, neutral becomes neutral-dark.
+
+   Both are handed to the chip as custom properties and CSS picks one. Building
+   the name in CSS is not possible, and doing it in script would leave the
+   first paint wrong. */
+const dark = prefix.replace(/^--brand-([a-z]+)(-scale)?$/, '--brand-$1-dark$2');
+if (dark === prefix) throw new Error(`Ramp: no dark counterpart for "${prefix}"`);
 ---
 
 <div class="ramp">
@@ -11,8 +22,8 @@ const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
   </div>
   <div class="ramp__row">
     {STEPS.map((step) => (
-      <div class="ramp__cell">
-        <div class="ramp__chip" style={`background: var(${prefix}-${step})`}></div>
+      <div class="ramp__cell" style={`--chip-light: var(${prefix}-${step}); --chip-dark: var(${dark}-${step})`}>
+        <div class="ramp__chip"></div>
         <span class="ramp__step">{step}</span>
       </div>
     ))}
@@ -26,9 +37,11 @@ const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
   .ramp__row { display: grid; grid-template-columns: repeat(11, 1fr); gap: var(--spacing-space-2); }
   .ramp__cell { display: flex; flex-direction: column; gap: var(--spacing-space-4); }
   .ramp__chip {
+    background: var(--chip-light);
     block-size: var(--spacing-space-48);
     border-radius: var(--brand-radius-scale-sm-4);
     border: var(--brand-stroke-default) solid var(--sem-border-subtle);
   }
+  html[data-theme='dark'] .ramp__chip { background: var(--chip-dark); }
   .ramp__step { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); text-align: center; }
 </style>

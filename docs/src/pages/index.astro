@@ -1,171 +1,187 @@
 ---
 import Shell from '../layouts/Shell.astro';
-import Chain from '../components/Chain.astro';
-import Tiles from '../components/Tiles.astro';
-import { Button } from '@era/components/button/Button';
-import { Input } from '@era/components/input/Input';
-import { Select } from '@era/components/select/Select';
-import { Switch } from '@era/components/switch/Switch';
-import { Badge } from '@era/components/badge/Badge';
+import AppShot from '../components/AppShot.astro';
+import Ramp from '../components/Ramp.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const VENDORS = [
-  { value: 'northwind', label: 'Northwind Supply', hint: '4 invoices this quarter' },
-  { value: 'calder', label: 'Calder Logistics', hint: '2 invoices this quarter' },
-];
+
 const BRANDS = [
-  ['brand-1', 'Brand 1', 'IBM Plex Sans'],
-  ['brand-2', 'Brand 2', 'Geist'],
-  ['brand-3', 'Brand 3', 'Source Sans 3'],
+  { id: 'brand-1', name: 'Brand 1', hue: 'Iris', face: 'IBM Plex Sans' },
+  { id: 'brand-2', name: 'Brand 2', hue: 'Cyan', face: 'Geist' },
+  { id: 'brand-3', name: 'Brand 3', hue: 'Jade', face: 'Source Sans 3' },
 ];
 ---
 
 <Shell title="Overview" description="ERA is a multi-brand design system: three brands and two modes from one set of components.">
-  <section class="hero">
-    <div class="hero__copy">
-      <h1 class="display">Three brands.<br />One set of components.</h1>
-      <p class="lede">The variation lives in the tokens, not in the components. Switching brand or mode is two attributes on the page.</p>
-      <div class="hero__cta">
-        <a class="btn btn--solid lift" href={`${base}/foundations`}>Explore foundations</a>
-        <a class="btn btn--quiet lift" href={`${base}/storybook/`}>Open Storybook</a>
-      </div>
-    </div>
-    <div class="hero__art"><Chain /></div>
-  </section>
+  <div class="home">
+    <p class="pill">
+      <span>v0.1. Twenty three components, three brands, two modes.</span>
+      <a class="pill__cta" href={`${base}/storybook/`}>Open Storybook</a>
+    </p>
 
-  <section class="band">
-    <p class="band__code mono">&lt;html data-brand="brand-2" data-theme="dark"&gt;</p>
-    <p class="band__note">Change either attribute at the top of this page. Nothing below is aware of it.</p>
-  </section>
-
-  <section class="slab">
-    <h2 class="slab__title">Foundations</h2>
-    <Tiles />
-  </section>
-
-  <section class="slab">
-    <h2 class="slab__title">The same panel, three brands</h2>
-    <p class="slab__lede">Identical markup in each column. Typeface, accent and corner treatment are brand decisions; everything else is shared.</p>
-    <div class="trio">
-      {BRANDS.map(([id, name, face]) => (
-        <div class="trio__col" data-brand={id}>
-          <div class="trio__label">
-            <strong>{name}</strong>
-            <span>{face}</span>
-          </div>
-          <div class="panel">
-            <div class="panel__head">
-              <strong>Release rules</strong>
-              <Badge tone="success" fill="subtle" dot>Active</Badge>
-            </div>
-            <Input label="Auto-release ceiling" defaultValue="500.00" client:load />
-            <Select label="Vendor" options={VENDORS} defaultValue="calder" client:load />
-            <Switch label="Hold first payment" defaultChecked client:load />
-            <div class="panel__foot">
-              <Button size="sm" client:load>Save rules</Button>
-              <Button size="sm" intent="ghost" client:load>Cancel</Button>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="split">
-    <div>
-      <h2 class="slab__title">Take the tokens</h2>
-      <p class="slab__lede">
-        1,505 custom properties, no dependencies, no build step. Works under React, Vue, plain HTML, or as the theme layer
-        beneath Tailwind.
+    <section class="hero">
+      <h1 class="hero__title">Three brands. One set of components.</h1>
+      <p class="hero__lede">
+        The variation lives in the tokens, not in the components. Switching brand or
+        mode is two attributes on the page.
       </p>
-      <p><a href={`${base}/using-era`}>What you can and cannot use yet</a></p>
-    </div>
-    <pre class="code"><code>{`<link rel="stylesheet" href="era.css">
+      <p class="hero__cta">
+        <a class="btn btn--solid" href={`${base}/foundations`}>Explore foundations</a>
+        <a class="btn btn--quiet" href={`${base}/tokens`}>How tokens work</a>
+      </p>
+    </section>
 
-.my-button {
-  background: var(--sem-primary-bg);
-  color: var(--sem-primary-fg-on-bg);
-  border-radius: var(--brand-radius-roles-buttons-button-md);
-}`}</code></pre>
-  </section>
+    {/* The argument, before anyone scrolls. One screen, three brands, identical
+        markup. The only differences are the accent, the typeface and the corner
+        treatment, and all three are token decisions. */}
+    <section class="shots" aria-label="The same screen in three brands">
+      {BRANDS.map((b) => (
+        <figure class="panel panel--tight shots__one">
+          <AppShot brand={b.id} />
+          <figcaption class="shots__cap">
+            <strong>{b.name}, {b.hue}</strong>
+            <span>{b.face}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </section>
+
+    <section class="panel">
+      <h2 class="home__h2">Colour</h2>
+      <p class="home__note">
+        Eleven steps, each with a job. Two of them carry text, and that is on purpose.
+        Switch brand above and only the first ramp moves.
+      </p>
+      <div class="home__ramps">
+        <Ramp name="Brand" prefix="--brand-primary-scale" note="Iris, Cyan or Jade, depending on the brand above" />
+        <Ramp name="Neutral" prefix="--brand-neutral" note="Surfaces, borders, text. Shared by all three" />
+      </div>
+    </section>
+
+    <div class="home__pair">
+      <section class="panel">
+        <h2 class="home__h2">Type</h2>
+        <p class="home__note">One typeface per brand. Nothing else about the type scale changes.</p>
+        <ul class="faces">
+          {BRANDS.map((b) => (
+            <li class="faces__row" data-brand={b.id}>
+              <span class="faces__name">{b.face}</span>
+              <span class="faces__meta">{b.name}, {b.hue}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="panel home__audit">
+        <p class="audit__figure">138</p>
+        <p class="audit__of">of 138 pairs pass WCAG AA</p>
+        <p class="home__note">
+          Across three brands and both modes. One pair is deliberately below 4.5:1,
+          the label on a disabled control, which WCAG 1.4.3 exempts.
+        </p>
+        <p><a href={`${base}/accessibility`}>See the measurements</a></p>
+      </section>
+    </div>
+  </div>
 </Shell>
 
 <style>
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: var(--spacing-space-64);
-    align-items: center;
-    padding-block: var(--spacing-space-32) var(--spacing-space-64);
+  .home { display: grid; gap: var(--spacing-space-16); }
+
+  /* --------------------------------------------------------------- pill */
+  .pill {
+    justify-self: center;
+    display: flex; align-items: center; gap: var(--spacing-space-12);
+    margin: var(--spacing-space-32) 0 0;
+    padding: var(--spacing-space-4) var(--spacing-space-4) var(--spacing-space-4) var(--spacing-space-16);
+    background: var(--sem-bg-surface-raised);
+    border-radius: var(--radius-radius-full);
+    font-size: var(--typography-text-sm-size);
+    color: var(--sem-fg-secondary);
   }
-  @media (max-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-space-32); } }
+  .pill__cta {
+    padding: var(--spacing-space-4) var(--spacing-space-12);
+    border-radius: var(--radius-radius-full);
+    background: var(--sem-primary-bg);
+    color: var(--sem-primary-fg-on-bg);
+    text-decoration: none;
+    font-weight: var(--brand-typography-theme-font-weight-label);
+  }
+  .pill__cta:hover { background: var(--sem-primary-bg-hover); color: var(--sem-primary-fg-on-bg); }
 
-  .hero__copy .display { margin-block-end: var(--spacing-space-20); }
-  .hero__cta { display: flex; gap: var(--spacing-space-12); flex-wrap: wrap; }
-
+  /* --------------------------------------------------------------- hero */
+  /* No panel. The hero is the page field itself, so the panels below are the
+     first objects the eye lands on. */
+  .hero { text-align: center; padding: var(--spacing-space-56) 0 var(--spacing-space-48); }
+  .hero__title {
+    margin: 0 auto;
+    max-inline-size: 18ch;
+    font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: var(--brand-typography-theme-font-weight-display);
+  }
+  .hero__lede {
+    margin: var(--spacing-space-20) auto 0;
+    max-inline-size: 54ch;
+    font-size: var(--typography-text-lg-size);
+    color: var(--sem-fg-secondary);
+  }
+  .hero__cta {
+    display: flex; justify-content: center; gap: var(--spacing-space-12);
+    margin-block-start: var(--spacing-space-32);
+  }
   .btn {
-    display: inline-flex;
-    align-items: center;
+    display: inline-flex; align-items: center;
     min-block-size: var(--spacing-space-40);
-    padding-inline: var(--spacing-space-16);
-    border-radius: var(--brand-radius-roles-buttons-button-md);
+    padding-inline: var(--spacing-space-20);
+    border-radius: var(--radius-radius-full);
     font-size: var(--typography-text-sm-size);
     font-weight: var(--brand-typography-theme-font-weight-label);
     text-decoration: none;
-    white-space: nowrap;
   }
-  .btn--solid { background: var(--sem-primary-bg); color: var(--sem-primary-fg-on-bg); }
-  .btn--solid:hover { background: var(--sem-primary-bg-hover); }
-  .btn--quiet { color: var(--sem-fg-primary); border: var(--brand-stroke-default) solid var(--sem-border-default); }
-  .btn--quiet:hover { background: var(--sem-bg-surface-hover); }
+  .btn--solid { background: var(--sem-fg-primary); color: var(--sem-bg-canvas); }
+  .btn--solid:hover { background: var(--sem-fg-secondary); color: var(--sem-bg-canvas); }
+  .btn--quiet { color: var(--sem-fg-secondary); }
+  .btn--quiet:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
 
-  .band {
-    padding: var(--spacing-space-24) 0;
-    border-block: var(--brand-stroke-default) solid var(--sem-border-subtle);
-    display: flex;
-    flex-wrap: wrap;
+  /* -------------------------------------------------------------- shots */
+  .shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-space-16); }
+  @media (max-width: 1100px) { .shots { grid-template-columns: minmax(0, 1fr); } }
+  .shots__one { margin: 0; }
+  .shots__cap {
+    display: flex; flex-wrap: wrap; gap: var(--spacing-space-8);
     align-items: baseline;
-    gap: var(--spacing-space-16);
+    margin-block-start: var(--spacing-space-16);
+    font-size: var(--typography-text-sm-size);
   }
-  .band__code { font-size: var(--typography-text-sm-size); color: var(--sem-primary-fg); }
-  .band__note { margin: 0; font-size: var(--typography-text-sm-size); color: var(--sem-fg-tertiary); }
+  .shots__cap span { color: var(--sem-fg-tertiary); }
 
-  .slab { padding-block: var(--spacing-space-64) 0; }
-  .slab__title {
-    font-size: var(--typography-text-2xl-size);
-    line-height: var(--typography-text-2xl-line-height);
-    letter-spacing: -0.022em;
-    font-weight: var(--brand-typography-theme-font-weight-heading);
-    margin: 0 0 var(--spacing-space-8);
+  /* -------------------------------------------------------------- panels */
+  .home__h2 { margin: 0 0 var(--spacing-space-8); font-size: var(--typography-text-2xl-size); }
+  .home__note { margin: 0; max-inline-size: 62ch; color: var(--sem-fg-secondary); font-size: var(--typography-text-sm-size); }
+  .home__ramps { margin-block-start: var(--spacing-space-24); }
+  .home__pair { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--spacing-space-16); }
+  @media (max-width: 1000px) { .home__pair { grid-template-columns: minmax(0, 1fr); } }
+
+  .faces { list-style: none; margin: var(--spacing-space-24) 0 0; padding: 0; display: grid; gap: var(--spacing-space-20); }
+  .faces__row { display: flex; flex-wrap: wrap; gap: var(--spacing-space-12); align-items: baseline; }
+  /* Each row carries its own brand, so each name is set in the face it names. */
+  .faces__name {
+    font-family: var(--brand-typography-theme-font-family-font);
+    font-size: var(--typography-text-3xl-size);
+    letter-spacing: -0.02em;
   }
-  .slab__lede { margin: 0 0 var(--spacing-space-24); color: var(--sem-fg-secondary); max-inline-size: 60ch; }
+  .faces__meta { font-size: var(--typography-text-sm-size); color: var(--sem-fg-tertiary); }
 
-  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-space-20); align-items: start; }
-  @media (max-width: 900px) { .trio { grid-template-columns: minmax(0, 1fr); } }
-
-  .trio__col { color: var(--sem-fg-primary); font-family: var(--brand-typography-theme-font-family-font); }
-  .trio__label { display: flex; flex-direction: column; margin-block-end: var(--spacing-space-8); font-size: var(--typography-text-sm-size); }
-  .trio__label span { font-size: var(--typography-text-xs-size); color: var(--sem-fg-tertiary); }
-
-  .panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-space-16);
-    padding: var(--spacing-space-16);
-    border-radius: var(--brand-radius-roles-card-md);
-    background: var(--sem-bg-surface);
-    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+  .home__audit { display: grid; align-content: start; gap: var(--spacing-space-8); }
+  .audit__figure {
+    margin: 0;
+    font-size: clamp(3.5rem, 7vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--brand-typography-theme-font-weight-display);
   }
-  .panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-space-8); }
-  .panel__foot { display: flex; gap: var(--spacing-space-8); }
-
-  .split {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--spacing-space-48);
-    align-items: center;
-    padding-block: var(--spacing-space-64) 0;
-  }
-  @media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-space-24); } }
-  .split .code { margin: 0; }
+  .audit__of { margin: 0; font-size: var(--typography-text-lg-size); color: var(--sem-fg-secondary); }
 </style>

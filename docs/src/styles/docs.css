@@ -55,12 +55,26 @@ a:hover { color: var(--sem-fg-link-hover); text-decoration-color: currentColor; 
   position: sticky;
   inset-block-start: 0;
   z-index: 40;
-  block-size: var(--spacing-space-64);
+  block-size: var(--spacing-space-72);
+  /* Nothing at rest. The header only becomes a material once content is
+   * actually passing under it; at the top of the page it dissolves into the
+   * field and the panels below are the only objects on screen. */
+  background: transparent;
+  transition: background 200ms ease;
+}
+/* The same container the page uses, so the lockup and the rail share a left
+ * edge. */
+.chrome__inner {
+  block-size: 100%;
+  max-inline-size: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-space-24);
   display: flex;
   align-items: center;
-  gap: var(--spacing-space-20);
-  padding-inline: var(--spacing-space-24);
-  /* A material the page passes under, rather than a bar sitting on top of it. */
+  gap: var(--spacing-space-24);
+}
+
+body[data-scrolled='true'] .chrome {
   background: var(--sem-bg-backdrop-blur);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -104,7 +118,7 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
 .chrome__link[aria-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
 
 .chrome__spacer { flex: 1 1 auto; }
-.chrome__tools { display: flex; align-items: center; gap: var(--spacing-space-12); flex: none; }
+.chrome__tools { display: flex; align-items: center; gap: var(--spacing-space-16); flex: none; }
 
 .chip {
   padding: 2px var(--spacing-space-8);
@@ -154,30 +168,123 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
 }
 .brands__btn[aria-pressed='true']::after { border-color: var(--sem-fg-primary); }
 
+/* ------------------------------------------------------------------- panel */
+/* One raised surface, used everywhere. The old site drew a hairline box around
+ * every region at the same elevation, so nothing was emphasised and nothing
+ * receded. A panel lifts instead: its own surface colour against a deeper page
+ * field, and no border doing the work. */
+.panel {
+  background: var(--sem-bg-surface-raised);
+  border-radius: var(--radius-radius-24);
+  padding: var(--spacing-space-32);
+}
+.panel--tight { padding: var(--spacing-space-20); }
+.panel--flush { padding: 0; overflow: hidden; }
+
 /* ------------------------------------------------------------------ layout */
 .layout {
   display: grid;
-  grid-template-columns: 216px minmax(0, 1fr);
-  gap: var(--spacing-space-48);
-  max-inline-size: 1200px;
+  grid-template-columns: auto 216px minmax(0, 1fr);
+  gap: var(--spacing-space-16);
+  max-inline-size: 1280px;
   margin-inline: auto;
-  padding: var(--spacing-space-48) var(--spacing-space-24) var(--spacing-space-128);
+  padding: var(--spacing-space-16) var(--spacing-space-24) var(--spacing-space-128);
+  align-items: start;
 }
-.layout--wide { grid-template-columns: minmax(0, 1fr); max-inline-size: 1200px; }
+.layout--wide { grid-template-columns: auto minmax(0, 1fr); }
+/* The contents list is the last column and the first thing to go: below 1200
+ * there is not enough width for it without squeezing the measure. */
+@media (min-width: 1200px) {
+  .layout:has(.toc) { grid-template-columns: auto 216px minmax(0, 1fr) 190px; }
+  body[data-side='collapsed'] .layout:has(.toc) { grid-template-columns: auto minmax(0, 1fr) 190px; }
+}
+/* Collapsing the section list leaves the rail in place, which is the point of
+ * having a rail at all. */
+body[data-side='collapsed'] .layout { grid-template-columns: auto minmax(0, 1fr); }
+body[data-side='collapsed'] .side { display: none; }
 
 @media (max-width: 900px) {
-  .layout { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-space-24); padding-block-start: var(--spacing-space-32); }
-  .side { display: none; }
+  .layout, .layout--wide, body[data-side='collapsed'] .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-space-24);
+  }
+  .side, .rail { display: none; }
   .chrome__nav { display: none; }
 }
 
+/* On a phone the header's controls add up to 290px, which with the lockup and
+ * the gutters is wider than the window. The brand switches are the point of
+ * this site and the mode switch is next, so the version chip and the source
+ * link are the two that go. */
+@media (max-width: 560px) {
+  .chrome__inner { padding-inline: var(--spacing-space-16); gap: var(--spacing-space-12); }
+  .chrome__tools { gap: var(--spacing-space-12); }
+  .chrome__tools .chip,
+  .chrome__tools a.icon-btn { display: none; }
+}
+
+/* -------------------------------------------------------------------- rail */
+/* The top level of the navigation, and the thing the section list collapses
+ * into. Icons are drawn inline, not loaded from an icon font, so the rail is
+ * never an empty box when a CDN is unreachable. */
+.rail {
+  position: sticky;
+  inset-block-start: var(--spacing-space-88);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  padding: var(--spacing-space-12);
+  background: var(--sem-bg-surface-raised);
+  border-radius: var(--radius-radius-24);
+}
+.rail__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-8); }
+.rail__link {
+  display: grid;
+  place-items: center;
+  inline-size: var(--spacing-space-40);
+  block-size: var(--spacing-space-40);
+  border-radius: var(--radius-radius-12);
+  color: var(--sem-fg-tertiary);
+  text-decoration: none;
+}
+.rail__link:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+.rail__link[aria-current] { color: var(--sem-fg-primary); background: var(--sem-state-selected); }
+/* The label is for screen readers and for the title tooltip, not for sighted
+ * layout: the rail is icons only by design. */
+.rail__label {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.rail__toggle {
+  /* Separated from the sections: it is a different kind of control, not a
+   * fifth place to go. */
+  margin-block-start: var(--spacing-space-24);
+  display: grid;
+  place-items: center;
+  inline-size: var(--spacing-space-40);
+  block-size: var(--spacing-space-40);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-radius-12);
+  background: none;
+  color: var(--sem-fg-tertiary);
+  cursor: pointer;
+}
+.rail__toggle:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+
+/* ----------------------------------------------------------- section list */
 .side {
   position: sticky;
-  inset-block-start: var(--spacing-space-96);
+  inset-block-start: var(--spacing-space-88);
   align-self: start;
-  max-block-size: calc(100vh - var(--spacing-space-128));
+  max-block-size: calc(100vh - var(--spacing-space-96));
   overflow-y: auto;
   font-size: var(--typography-text-sm-size);
+  padding: var(--spacing-space-20);
+  background: var(--sem-bg-surface-raised);
+  border-radius: var(--radius-radius-24);
 }
 .side__group + .side__group { margin-block-start: var(--spacing-space-24); }
 .side__title {
@@ -209,6 +316,51 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   background: var(--sem-primary-bg);
 }
 .side__link[aria-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
+
+/* --------------------------------------------------------------- contents */
+.toc {
+  position: sticky;
+  inset-block-start: var(--spacing-space-88);
+  align-self: start;
+  font-size: var(--typography-text-sm-size);
+  /* No panel. The contents list is a pointer into the page, not an object on
+   * it, so it stays plain text beside the panel that holds the page. */
+}
+@media (max-width: 1199px) { .toc { display: none; } }
+.toc__title {
+  margin: 0 0 var(--spacing-space-8);
+  padding-inline-start: var(--spacing-space-12);
+  font-size: var(--typography-text-xs-size);
+  color: var(--sem-fg-tertiary);
+}
+.toc__list { list-style: none; margin: 0; padding: 0; }
+.toc__link {
+  position: relative;
+  display: block;
+  padding: var(--spacing-space-4) 0 var(--spacing-space-4) var(--spacing-space-12);
+  color: var(--sem-fg-secondary);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.toc__link:hover { color: var(--sem-fg-primary); }
+.toc__link[aria-current] { color: var(--sem-fg-primary); }
+.toc__link[aria-current]::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 3px;
+  inline-size: var(--stroke-stroke-2);
+  border-radius: var(--radius-radius-full);
+  background: var(--sem-fg-primary);
+}
+
+/* A panel supplies its own padding, so the first and last child must not add
+ * their margins on top of it. Without this a heading's margin-block-start
+ * collapses out of the panel and leaves a gap above the text. */
+.panel > :first-child,
+.panel > .prose > :first-child { margin-block-start: 0; }
+.panel > :last-child,
+.panel > .prose > :last-child { margin-block-end: 0; }
 
 /* ------------------------------------------------------------------- prose */
 .prose { max-inline-size: 68ch; }
@@ -278,7 +430,24 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
 
 /* Tables group with hairlines between rows only. No outer box, no vertical
  * rules, nothing under the last row. */
-.prose table { inline-size: 100%; border-collapse: collapse; margin: 0 0 var(--spacing-space-16); font-size: var(--typography-text-sm-size); }
+/* table-layout fixed, and cells that will break mid-word. A docs table is full
+ * of token names, which are long and have nothing to break on, so by default
+ * the table sets its own width from its content and pushes the page sideways
+ * on a phone. */
+.prose table {
+  inline-size: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 0 0 var(--spacing-space-16);
+  font-size: var(--typography-text-sm-size);
+}
+.prose th, .prose td { overflow-wrap: anywhere; }
+
+/* Inline code is usually a token name, which is one long unbreakable string.
+ * A block of code scrolls instead, because wrapping code changes what it
+ * says. */
+.prose :not(pre) > code { overflow-wrap: anywhere; }
+.prose pre { overflow-x: auto; max-inline-size: 100%; }
 .prose th {
   text-align: start;
   font-size: var(--typography-text-xs-size);

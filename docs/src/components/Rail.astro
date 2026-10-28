@@ -1,0 +1,78 @@
+---
+import { PRIMARY } from '../nav';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const here = Astro.url.pathname.replace(base, '').replace(/\/$/, '') || '/';
+
+/* The top level of the navigation. Four sections, drawn rather than pulled
+   from an icon font, so the rail cannot be blank if a CDN is unreachable.
+   Each path is stroked at the same weight and sits on the same 24 unit box. */
+const ICONS: Record<string, string> = {
+  '/foundations':
+    'M12 3 3 7.5l9 4.5 9-4.5L12 3Z M3 12l9 4.5 9-4.5 M3 16.5 12 21l9-4.5',
+  '/components':
+    'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z',
+  '/accessibility':
+    'M12 3.5a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Z M4.5 9h15 M12 9v5 M12 14l-3 6.5 M12 14l3 6.5',
+  '/using-era':
+    'M12 3v11 M8 10.5 12 14.5l4-4 M4.5 17.5v2a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-2',
+};
+---
+
+<nav class="rail" aria-label="Sections">
+  <ul class="rail__list">
+    {PRIMARY.map((l) => {
+      const active = here === l.href || here.startsWith(l.href + '/');
+      return (
+        <li>
+          <a
+            class="rail__link"
+            href={`${base}${l.href}`}
+            aria-current={active ? 'page' : undefined}
+            aria-label={l.label}
+            title={l.label}
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                 stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d={ICONS[l.href]} />
+            </svg>
+            <span class="rail__label">{l.label}</span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  <button type="button" class="rail__toggle" data-side-toggle aria-label="Collapse the section list" aria-expanded="true">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
+      <path d="M10 4.5v15" />
+    </svg>
+  </button>
+</nav>
+
+<script is:inline>
+  (function () {
+    // Per viewer convenience only, and it throws in a private window, so every
+    // touch is guarded and the page renders correctly without it.
+    function read(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+    function write(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+    var btn = document.querySelector('[data-side-toggle]');
+    if (!btn) return;
+
+    function apply(state) {
+      document.body.setAttribute('data-side', state);
+      btn.setAttribute('aria-expanded', String(state !== 'collapsed'));
+      btn.setAttribute('aria-label', state === 'collapsed'
+        ? 'Show the section list' : 'Collapse the section list');
+      write('era-side', state);
+    }
+
+    apply(read('era-side', 'open'));
+    btn.addEventListener('click', function () {
+      apply(document.body.getAttribute('data-side') === 'collapsed' ? 'open' : 'collapsed');
+    });
+  })();
+</script>
