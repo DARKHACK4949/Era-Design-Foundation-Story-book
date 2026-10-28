@@ -13,33 +13,39 @@ const BRANDS = [
 ---
 
 <header class="chrome">
-  <a class="wordmark lift" href={base || '/'}>
-    <Lockup height={24} />
-  </a>
-
-  <div class="chrome__spacer"></div>
-
-  <div class="chrome__tools">
-    <div class="brands" role="group" aria-label="Brand">
-      {BRANDS.map((b) => (
-        <button type="button" class="brands__btn" data-brand-btn={b.id} aria-label={b.name} title={b.name} style={`background: ${b.swatch}`} />
-      ))}
-    </div>
-
-    <button type="button" class="icon-btn" data-mode-btn aria-label="Switch between light and dark">
-      <span data-mode-icon="light" aria-hidden="true"><SunDim size={18} weight="regular" /></span>
-      <span data-mode-icon="dark" hidden aria-hidden="true"><MoonStars size={18} weight="regular" /></span>
-    </button>
-
-    <button type="button" class="icon-btn" data-search-open aria-label="Search, press slash">
-      <MagnifyingGlass size={18} weight="regular" />
-    </button>
-
-    <span class="chip">v0.1</span>
-
-    <a class="icon-btn" href="https://github.com/DARKHACK4949/Era-Design-Foundation-Story-book" aria-label="Source on GitHub">
-      <GithubLogo size={18} weight="regular" />
+  {/* The header shares the page container, so the lockup and the rail
+      below it start on the same line at every width. Before this the
+      header was full width while the page was capped and centred, so at
+      1440 the lockup sat at 24 and the rail at 96. */}
+  <div class="chrome__inner">
+    <a class="wordmark lift" href={base || '/'}>
+      <Lockup height={24} />
     </a>
+
+    <div class="chrome__spacer"></div>
+
+    <div class="chrome__tools">
+      <div class="brands" role="group" aria-label="Brand">
+        {BRANDS.map((b) => (
+          <button type="button" class="brands__btn" data-brand-btn={b.id} aria-label={b.name} title={b.name} style={`background: ${b.swatch}`} />
+        ))}
+      </div>
+
+      <button type="button" class="icon-btn" data-mode-btn aria-label="Switch between light and dark">
+        <span data-mode-icon="light" aria-hidden="true"><SunDim size={18} weight="regular" /></span>
+        <span data-mode-icon="dark" hidden aria-hidden="true"><MoonStars size={18} weight="regular" /></span>
+      </button>
+
+      <button type="button" class="icon-btn" data-search-open aria-label="Search, press slash">
+        <MagnifyingGlass size={18} weight="regular" />
+      </button>
+
+      <span class="chip">v0.1</span>
+
+      <a class="icon-btn" href="https://github.com/DARKHACK4949/Era-Design-Foundation-Story-book" aria-label="Source on GitHub">
+        <GithubLogo size={18} weight="regular" />
+      </a>
+    </div>
   </div>
 </header>
 

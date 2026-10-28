@@ -55,17 +55,25 @@ a:hover { color: var(--sem-fg-link-hover); text-decoration-color: currentColor; 
   position: sticky;
   inset-block-start: 0;
   z-index: 40;
-  block-size: var(--spacing-space-64);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-space-20);
-  padding-inline: var(--spacing-space-24);
+  block-size: var(--spacing-space-72);
   /* Nothing at rest. The header only becomes a material once content is
    * actually passing under it; at the top of the page it dissolves into the
    * field and the panels below are the only objects on screen. */
   background: transparent;
   transition: background 200ms ease;
 }
+/* The same container the page uses, so the lockup and the rail share a left
+ * edge. */
+.chrome__inner {
+  block-size: 100%;
+  max-inline-size: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-space-24);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-24);
+}
+
 body[data-scrolled='true'] .chrome {
   background: var(--sem-bg-backdrop-blur);
   backdrop-filter: blur(20px) saturate(180%);
@@ -110,7 +118,7 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
 .chrome__link[aria-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
 
 .chrome__spacer { flex: 1 1 auto; }
-.chrome__tools { display: flex; align-items: center; gap: var(--spacing-space-12); flex: none; }
+.chrome__tools { display: flex; align-items: center; gap: var(--spacing-space-16); flex: none; }
 
 .chip {
   padding: 2px var(--spacing-space-8);
@@ -180,7 +188,7 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   gap: var(--spacing-space-16);
   max-inline-size: 1280px;
   margin-inline: auto;
-  padding: var(--spacing-space-16) var(--spacing-space-16) var(--spacing-space-128);
+  padding: var(--spacing-space-16) var(--spacing-space-24) var(--spacing-space-128);
   align-items: start;
 }
 .layout--wide { grid-template-columns: auto minmax(0, 1fr); }
@@ -210,7 +218,7 @@ body[data-side='collapsed'] .side { display: none; }
  * never an empty box when a CDN is unreachable. */
 .rail {
   position: sticky;
-  inset-block-start: var(--spacing-space-80);
+  inset-block-start: var(--spacing-space-88);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
@@ -218,7 +226,7 @@ body[data-side='collapsed'] .side { display: none; }
   background: var(--sem-bg-surface-raised);
   border-radius: var(--radius-radius-24);
 }
-.rail__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-4); }
+.rail__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-8); }
 .rail__link {
   display: grid;
   place-items: center;
@@ -239,7 +247,9 @@ body[data-side='collapsed'] .side { display: none; }
   clip-path: inset(50%); white-space: nowrap;
 }
 .rail__toggle {
-  margin-block-start: auto;
+  /* Separated from the sections: it is a different kind of control, not a
+   * fifth place to go. */
+  margin-block-start: var(--spacing-space-24);
   display: grid;
   place-items: center;
   inline-size: var(--spacing-space-40);
@@ -256,7 +266,7 @@ body[data-side='collapsed'] .side { display: none; }
 /* ----------------------------------------------------------- section list */
 .side {
   position: sticky;
-  inset-block-start: var(--spacing-space-80);
+  inset-block-start: var(--spacing-space-88);
   align-self: start;
   max-block-size: calc(100vh - var(--spacing-space-96));
   overflow-y: auto;
@@ -299,7 +309,7 @@ body[data-side='collapsed'] .side { display: none; }
 /* --------------------------------------------------------------- contents */
 .toc {
   position: sticky;
-  inset-block-start: var(--spacing-space-80);
+  inset-block-start: var(--spacing-space-88);
   align-self: start;
   font-size: var(--typography-text-sm-size);
   /* No panel. The contents list is a pointer into the page, not an object on
