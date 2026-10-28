@@ -20,7 +20,7 @@ const groups = [...new Set(COMPONENTS.map((c) => c.group))];
         {COMPONENTS.filter((c) => c.group === group).map((c) => (
           <a class="card lift" href={`${base}/components/${slugify(c.name)}`}>
             <span class="card__name">{c.name}</span>
-            <span class="card__purpose">{c.purpose.split('. ')[0]}.</span>
+            <span class="card__purpose">{c.purpose.split('. ')[0].replace(/\.$/, '')}.</span>
           </a>
         ))}
       </div>
