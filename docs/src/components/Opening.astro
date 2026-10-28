@@ -83,7 +83,11 @@ const SHAPES = [
   /* colour: the whole ramp, with each step's number under it. On the step
      itself the number would only clear AA on the two text steps, and a label
      that is legible on two swatches out of eleven is not a label. */
-  .open__ramp { display: grid; grid-template-columns: repeat(11, 1fr); gap: var(--spacing-space-4); }
+    /* minmax(0, 1fr), not 1fr: a grid track's default minimum is its content, so
+     the step labels refused to shrink and the ramp pushed past the panel on a
+     phone. Below 640 it folds to two rows rather than becoming eleven slivers. */
+  .open__ramp { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: var(--spacing-space-4); }
+  @media (max-width: 640px) { .open__ramp { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--spacing-space-8); } }
   .open__cell { display: grid; gap: var(--spacing-space-8); justify-items: center; }
   .open__chip {
     inline-size: 100%;
