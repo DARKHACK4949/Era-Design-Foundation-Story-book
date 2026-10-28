@@ -21,6 +21,14 @@ html {
 
 body {
   margin: 0;
+  /* The window does not scroll. The rail, the section list and the contents
+   * list are laid out once and never move; only the middle column scrolls.
+   * Sticky would have let them drift until they caught, which is what made the
+   * site feel like a static page with a long scroll. */
+  block-size: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   background: var(--sem-bg-canvas);
   color: var(--sem-fg-primary);
   font-family: var(--brand-typography-theme-font-family-font);
@@ -66,7 +74,10 @@ a:hover { color: var(--sem-fg-link-hover); text-decoration-color: currentColor; 
  * edge. */
 .chrome__inner {
   block-size: 100%;
-  max-inline-size: 1280px;
+  /* Must match .layout exactly. These two have drifted apart twice now: once
+   * when the header was full width and the page was capped, and again when the
+   * page widened to 1680 and the header stayed at 1280. */
+  max-inline-size: 1680px;
   margin-inline: auto;
   padding-inline: var(--spacing-space-24);
   display: flex;
@@ -178,36 +189,83 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   border-radius: var(--radius-radius-24);
   padding: var(--spacing-space-32);
 }
+/* The content panel was as tight at 1680 as at 900. */
+@media (min-width: 1200px) {
+  main.panel { padding: var(--spacing-space-48) var(--spacing-space-64); }
+}
+/* The scrolling column is the only thing in motion, so it is the only thing
+ * that casts. The rails stay flat on the field. */
+@media (min-width: 901px) {
+  main.panel { box-shadow: 0 1px 2px var(--colors-alpha-black-8), 0 12px 32px -12px var(--colors-alpha-black-16); }
+}
 .panel--tight { padding: var(--spacing-space-20); }
 .panel--flush { padding: 0; overflow: hidden; }
 
 /* ------------------------------------------------------------------ layout */
 .layout {
   display: grid;
-  grid-template-columns: auto 216px minmax(0, 1fr);
+  grid-template-columns: auto 232px minmax(0, 1fr);
   gap: var(--spacing-space-16);
-  max-inline-size: 1280px;
+  /* Wider than it was. A 1280 cap left a third of a large screen empty, while
+   * the reference sites run to about ninety per cent of the window. */
+  max-inline-size: 1680px;
+  inline-size: 100%;
   margin-inline: auto;
-  padding: var(--spacing-space-16) var(--spacing-space-24) var(--spacing-space-128);
-  align-items: start;
+  padding: var(--spacing-space-16) var(--spacing-space-24) 0;
+  align-items: stretch;
+  flex: 1;
+  min-block-size: 0;
+}
+/* The one scrolling region, and the only thing that moves. */
+.scroller {
+  min-inline-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block-end: var(--spacing-space-64);
 }
 .layout--wide { grid-template-columns: auto minmax(0, 1fr); }
 /* The contents list is the last column and the first thing to go: below 1200
  * there is not enough width for it without squeezing the measure. */
 @media (min-width: 1200px) {
-  .layout:has(.toc) { grid-template-columns: auto 216px minmax(0, 1fr) 190px; }
-  body[data-side='collapsed'] .layout:has(.toc) { grid-template-columns: auto minmax(0, 1fr) 190px; }
+  .layout:has(.toc) { grid-template-columns: auto 232px minmax(0, 1fr) 210px; }
+  /* Four tracks, not three. The section list is still in the grid now that it
+     animates instead of being switched off, so collapsing means giving it a
+     zero width track rather than removing one. */
+  body[data-side='collapsed'] .layout:has(.toc) { grid-template-columns: auto 0px minmax(0, 1fr) 210px; }
 }
 /* Collapsing the section list leaves the rail in place, which is the point of
  * having a rail at all. */
-body[data-side='collapsed'] .layout { grid-template-columns: auto minmax(0, 1fr); }
-body[data-side='collapsed'] .side { display: none; }
+/* Animated rather than switched off. display:none cannot be transitioned, so
+ * the column width and the panel's own width carry the motion. */
+.layout, body[data-side='collapsed'] .layout { transition: grid-template-columns 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+body[data-side='collapsed'] .layout { grid-template-columns: auto 0px minmax(0, 1fr); }
+body[data-side='collapsed'] .side {
+  padding-inline: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.side {
+  transition: opacity 180ms ease, padding 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .layout, body[data-side='collapsed'] .layout, .side { transition: none; }
+}
 
 @media (max-width: 900px) {
+  /* The rails are gone at this width, so there is nothing to hold still and
+   * the document scrolls normally again. A locked body with an inner scroller
+   * is worse on a phone: it breaks pull to refresh and the address bar never
+   * collapses. */
+  body { block-size: auto; overflow: visible; display: block; }
+  .chrome { position: sticky; }
   .layout, .layout--wide, body[data-side='collapsed'] .layout {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--spacing-space-24);
+    block-size: auto;
+    padding-block-end: var(--spacing-space-64);
   }
+  .scroller { overflow: visible; }
   .side, .rail { display: none; }
   .chrome__nav { display: none; }
 }
@@ -228,8 +286,10 @@ body[data-side='collapsed'] .side { display: none; }
  * into. Icons are drawn inline, not loaded from an icon font, so the rail is
  * never an empty box when a CDN is unreachable. */
 .rail {
-  position: sticky;
-  inset-block-start: var(--spacing-space-88);
+  position: relative;
+  align-self: start;
+  max-block-size: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
@@ -276,10 +336,9 @@ body[data-side='collapsed'] .side { display: none; }
 
 /* ----------------------------------------------------------- section list */
 .side {
-  position: sticky;
-  inset-block-start: var(--spacing-space-88);
+  position: relative;
   align-self: start;
-  max-block-size: calc(100vh - var(--spacing-space-96));
+  max-block-size: 100%;
   overflow-y: auto;
   font-size: var(--typography-text-sm-size);
   padding: var(--spacing-space-20);
@@ -319,9 +378,10 @@ body[data-side='collapsed'] .side { display: none; }
 
 /* --------------------------------------------------------------- contents */
 .toc {
-  position: sticky;
-  inset-block-start: var(--spacing-space-88);
+  position: relative;
   align-self: start;
+  max-block-size: 100%;
+  overflow-y: auto;
   font-size: var(--typography-text-sm-size);
   /* No panel. The contents list is a pointer into the page, not an object on
    * it, so it stays plain text beside the panel that holds the page. */
@@ -363,7 +423,11 @@ body[data-side='collapsed'] .side { display: none; }
 .panel > .prose > :last-child { margin-block-end: 0; }
 
 /* ------------------------------------------------------------------- prose */
-.prose { max-inline-size: 68ch; }
+/* The measure belongs to the text, not to the column. Capping the whole
+ * container left a third of the panel empty beside every ramp and table,
+ * because a visual was being held to a reading width it has no use for. */
+.prose { max-inline-size: none; }
+.prose > :is(p, h2, h3, h4, ul, ol, blockquote, .lede) { max-inline-size: 68ch; }
 
 .display {
   font-size: clamp(2rem, 1.2rem + 3vw, 3.25rem);
