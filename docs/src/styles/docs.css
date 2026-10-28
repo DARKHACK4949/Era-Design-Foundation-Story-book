@@ -154,30 +154,104 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
 }
 .brands__btn[aria-pressed='true']::after { border-color: var(--sem-fg-primary); }
 
+/* ------------------------------------------------------------------- panel */
+/* One raised surface, used everywhere. The old site drew a hairline box around
+ * every region at the same elevation, so nothing was emphasised and nothing
+ * receded. A panel lifts instead: its own surface colour against a deeper page
+ * field, and no border doing the work. */
+.panel {
+  background: var(--sem-bg-surface-raised);
+  border-radius: var(--radius-radius-24);
+  padding: var(--spacing-space-32);
+}
+.panel--tight { padding: var(--spacing-space-20); }
+.panel--flush { padding: 0; overflow: hidden; }
+
 /* ------------------------------------------------------------------ layout */
 .layout {
   display: grid;
-  grid-template-columns: 216px minmax(0, 1fr);
-  gap: var(--spacing-space-48);
-  max-inline-size: 1200px;
+  grid-template-columns: auto 216px minmax(0, 1fr);
+  gap: var(--spacing-space-16);
+  max-inline-size: 1280px;
   margin-inline: auto;
-  padding: var(--spacing-space-48) var(--spacing-space-24) var(--spacing-space-128);
+  padding: var(--spacing-space-16) var(--spacing-space-16) var(--spacing-space-128);
+  align-items: start;
 }
-.layout--wide { grid-template-columns: minmax(0, 1fr); max-inline-size: 1200px; }
+.layout--wide { grid-template-columns: auto minmax(0, 1fr); }
+/* Collapsing the section list leaves the rail in place, which is the point of
+ * having a rail at all. */
+body[data-side='collapsed'] .layout { grid-template-columns: auto minmax(0, 1fr); }
+body[data-side='collapsed'] .side { display: none; }
 
 @media (max-width: 900px) {
-  .layout { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-space-24); padding-block-start: var(--spacing-space-32); }
-  .side { display: none; }
+  .layout, .layout--wide, body[data-side='collapsed'] .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-space-24);
+  }
+  .side, .rail { display: none; }
   .chrome__nav { display: none; }
 }
 
+/* -------------------------------------------------------------------- rail */
+/* The top level of the navigation, and the thing the section list collapses
+ * into. Icons are drawn inline, not loaded from an icon font, so the rail is
+ * never an empty box when a CDN is unreachable. */
+.rail {
+  position: sticky;
+  inset-block-start: var(--spacing-space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  padding: var(--spacing-space-12);
+  background: var(--sem-bg-surface-raised);
+  border-radius: var(--radius-radius-24);
+}
+.rail__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-4); }
+.rail__link {
+  display: grid;
+  place-items: center;
+  inline-size: var(--spacing-space-40);
+  block-size: var(--spacing-space-40);
+  border-radius: var(--radius-radius-12);
+  color: var(--sem-fg-tertiary);
+  text-decoration: none;
+}
+.rail__link:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+.rail__link[aria-current] { color: var(--sem-fg-primary); background: var(--sem-state-selected); }
+/* The label is for screen readers and for the title tooltip, not for sighted
+ * layout: the rail is icons only by design. */
+.rail__label {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.rail__toggle {
+  margin-block-start: auto;
+  display: grid;
+  place-items: center;
+  inline-size: var(--spacing-space-40);
+  block-size: var(--spacing-space-40);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-radius-12);
+  background: none;
+  color: var(--sem-fg-tertiary);
+  cursor: pointer;
+}
+.rail__toggle:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+
+/* ----------------------------------------------------------- section list */
 .side {
   position: sticky;
-  inset-block-start: var(--spacing-space-96);
+  inset-block-start: var(--spacing-space-16);
   align-self: start;
-  max-block-size: calc(100vh - var(--spacing-space-128));
+  max-block-size: calc(100vh - var(--spacing-space-32));
   overflow-y: auto;
   font-size: var(--typography-text-sm-size);
+  padding: var(--spacing-space-20);
+  background: var(--sem-bg-surface-raised);
+  border-radius: var(--radius-radius-24);
 }
 .side__group + .side__group { margin-block-start: var(--spacing-space-24); }
 .side__title {

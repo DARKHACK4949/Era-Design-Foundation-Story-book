@@ -1,6 +1,5 @@
 ---
 import { MagnifyingGlass, SunDim, MoonStars, GithubLogo } from '@phosphor-icons/react';
-import { PRIMARY } from '../nav';
 import Lockup from './Lockup.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -17,14 +16,6 @@ const BRANDS = [
   <a class="wordmark lift" href={base || '/'}>
     <Lockup height={24} />
   </a>
-
-  <nav class="chrome__nav" aria-label="Sections">
-    {PRIMARY.map((l) => (
-      <a class="chrome__link" href={`${base}${l.href}`} aria-current={here.startsWith(l.href) ? 'page' : undefined}>
-        {l.label}
-      </a>
-    ))}
-  </nav>
 
   <div class="chrome__spacer"></div>
 

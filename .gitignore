@@ -11,3 +11,8 @@ site/
 test-results/
 playwright-report/
 blob-report/
+
+# Superdesign's local working state: repo analysis dumps, an extracted copy of a
+# reference site, and scratch HTML. All regenerable, and the init files restate
+# source that already lives in this repo.
+.superdesign/
