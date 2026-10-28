@@ -60,7 +60,13 @@ a:hover { color: var(--sem-fg-link-hover); text-decoration-color: currentColor; 
   align-items: center;
   gap: var(--spacing-space-20);
   padding-inline: var(--spacing-space-24);
-  /* A material the page passes under, rather than a bar sitting on top of it. */
+  /* Nothing at rest. The header only becomes a material once content is
+   * actually passing under it; at the top of the page it dissolves into the
+   * field and the panels below are the only objects on screen. */
+  background: transparent;
+  transition: background 200ms ease;
+}
+body[data-scrolled='true'] .chrome {
   background: var(--sem-bg-backdrop-blur);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -178,6 +184,12 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   align-items: start;
 }
 .layout--wide { grid-template-columns: auto minmax(0, 1fr); }
+/* The contents list is the last column and the first thing to go: below 1200
+ * there is not enough width for it without squeezing the measure. */
+@media (min-width: 1200px) {
+  .layout:has(.toc) { grid-template-columns: auto 216px minmax(0, 1fr) 190px; }
+  body[data-side='collapsed'] .layout:has(.toc) { grid-template-columns: auto minmax(0, 1fr) 190px; }
+}
 /* Collapsing the section list leaves the rail in place, which is the point of
  * having a rail at all. */
 body[data-side='collapsed'] .layout { grid-template-columns: auto minmax(0, 1fr); }
@@ -198,7 +210,7 @@ body[data-side='collapsed'] .side { display: none; }
  * never an empty box when a CDN is unreachable. */
 .rail {
   position: sticky;
-  inset-block-start: var(--spacing-space-16);
+  inset-block-start: var(--spacing-space-80);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
@@ -244,9 +256,9 @@ body[data-side='collapsed'] .side { display: none; }
 /* ----------------------------------------------------------- section list */
 .side {
   position: sticky;
-  inset-block-start: var(--spacing-space-16);
+  inset-block-start: var(--spacing-space-80);
   align-self: start;
-  max-block-size: calc(100vh - var(--spacing-space-32));
+  max-block-size: calc(100vh - var(--spacing-space-96));
   overflow-y: auto;
   font-size: var(--typography-text-sm-size);
   padding: var(--spacing-space-20);
@@ -283,6 +295,43 @@ body[data-side='collapsed'] .side { display: none; }
   background: var(--sem-primary-bg);
 }
 .side__link[aria-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
+
+/* --------------------------------------------------------------- contents */
+.toc {
+  position: sticky;
+  inset-block-start: var(--spacing-space-80);
+  align-self: start;
+  font-size: var(--typography-text-sm-size);
+  /* No panel. The contents list is a pointer into the page, not an object on
+   * it, so it stays plain text beside the panel that holds the page. */
+}
+@media (max-width: 1199px) { .toc { display: none; } }
+.toc__title {
+  margin: 0 0 var(--spacing-space-8);
+  padding-inline-start: var(--spacing-space-12);
+  font-size: var(--typography-text-xs-size);
+  color: var(--sem-fg-tertiary);
+}
+.toc__list { list-style: none; margin: 0; padding: 0; }
+.toc__link {
+  position: relative;
+  display: block;
+  padding: var(--spacing-space-4) 0 var(--spacing-space-4) var(--spacing-space-12);
+  color: var(--sem-fg-secondary);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.toc__link:hover { color: var(--sem-fg-primary); }
+.toc__link[aria-current] { color: var(--sem-fg-primary); }
+.toc__link[aria-current]::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 3px;
+  inline-size: var(--stroke-stroke-2);
+  border-radius: var(--radius-radius-full);
+  background: var(--sem-fg-primary);
+}
 
 /* ------------------------------------------------------------------- prose */
 .prose { max-inline-size: 68ch; }

@@ -8,6 +8,7 @@ import '../../../tokens/generated/era.css';
 import '../styles/docs.css';
 import Chrome from '../components/Chrome.astro';
 import Rail from '../components/Rail.astro';
+import Toc from '../components/Toc.astro';
 import Search from '../components/Search.astro';
 import { SECTIONS } from '../nav';
 
@@ -59,6 +60,8 @@ const groups = section ? SECTIONS[section] : null;
       <main class={prose ? 'panel' : undefined}>
         {prose ? <div class="prose"><slot /></div> : <slot />}
       </main>
+
+      {prose && <Toc />}
     </div>
 
     <footer class="foot">
