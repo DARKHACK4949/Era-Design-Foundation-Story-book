@@ -55,16 +55,18 @@ const groups = section ? SECTIONS[section] : null;
         </nav>
       )}
 
-      {/* A prose page is one region, so it is one panel. The home page sets
-          prose to false and lays out its own panels instead. */}
-      <main class={prose ? 'panel' : undefined}>
-        {prose ? <div class="prose"><slot /></div> : <slot />}
-      </main>
+      {/* The only scrolling region. The rail, the section list and the
+          contents list sit outside it, so they do not move at all when the
+          page is read, which is how the reference sites behave. The footer
+          lives in here for the same reason. */}
+      <div class="scroller">
+        {/* A prose page is one region, so it is one panel. The home page sets
+            prose to false and lays out its own panels instead. */}
+        <main class={prose ? 'panel' : undefined}>
+          {prose ? <div class="prose"><slot /></div> : <slot />}
+        </main>
 
-      {prose && <Toc />}
-    </div>
-
-    <footer class="foot">
+        <footer class="foot">
       <span>ERA, a personal design system by Sanyam Sharma.</span>
       <span class="chrome__spacer"></span>
       <a href={`${base}/using-era`}>Adopt</a>
@@ -74,9 +76,13 @@ const groups = section ? SECTIONS[section] : null;
       <a href="https://www.linkedin.com/in/sanyamsharma98" target="_blank" rel="noopener">LinkedIn</a>
       <a href="mailto:sanyamsharma4978@gmail.com">Email</a>
       <span>MIT</span>
-    </footer>
+        </footer>
 
-    <p class="foot__colophon"><span>Colour scales start from Radix Colors and are re-pointed per brand. Set in IBM Plex Sans, Geist and Source Sans 3, one typeface per brand.</span></p>
+        <p class="foot__colophon"><span>Colour scales start from Radix Colors and are re-pointed per brand. Set in IBM Plex Sans, Geist and Source Sans 3, one typeface per brand.</span></p>
+      </div>
+
+      {prose && <Toc />}
+    </div>
 
     <Search />
   </body>
