@@ -89,12 +89,6 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   color: inherit;
   flex: none;
 }
-.wordmark__name {
-  font-size: var(--typography-text-lg-size);
-  font-weight: var(--brand-typography-theme-font-weight-display);
-  /* Tracking is size-specific: large type reads too loose as it grows. */
-  letter-spacing: -0.03em;
-}
 .wordmark svg { flex: none; display: block; color: var(--sem-fg-primary); }
 
 .chrome__nav { display: flex; align-items: center; gap: var(--spacing-space-2); }

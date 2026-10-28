@@ -1,7 +1,7 @@
 ---
 import { MagnifyingGlass, SunDim, MoonStars, GithubLogo } from '@phosphor-icons/react';
 import { PRIMARY } from '../nav';
-import Mark from './Mark.astro';
+import Lockup from './Lockup.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const here = Astro.url.pathname.replace(base, '').replace(/\/$/, '') || '/';
@@ -15,8 +15,7 @@ const BRANDS = [
 
 <header class="chrome">
   <a class="wordmark lift" href={base || '/'}>
-    <Mark size={24} />
-    <span class="wordmark__name">ERA</span>
+    <Lockup height={24} />
   </a>
 
   <nav class="chrome__nav" aria-label="Sections">
