@@ -13,9 +13,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <Tiles />
 
-  <hr class="rule" />
-
-  <div class="prose">
+  <section class="panel foundations__about">
+    <div class="prose">
     <h2>How they fit together</h2>
     <p>
       Colour, type, spacing and shape are not four separate systems. They share one structure: a raw scale that never
@@ -27,5 +26,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       and the type scale are the same everywhere, because a brand that needs its own spacing scale is really a second
       design system.
     </p>
-  </div>
+    </div>
+  </section>
 </Shell>
+
+<style>
+  .foundations__about { margin-block-start: var(--spacing-space-24); }
+</style>

@@ -45,14 +45,16 @@ const groups = [...new Set(COMPONENTS.map((c) => c.group))];
 </Shell>
 
 <style>
-  .grp { padding-block-start: var(--spacing-space-48); }
+  /* Not a panel. In dark mode --sem-bg-surface, -raised and -sunken all
+     resolve to the same value, so a card inside a panel would have no edge at
+     all. The cards are the only raised surface here and the group heading sits
+     on the page field. */
+  .grp { margin-block-start: var(--spacing-space-40); }
   .grp__title {
     font-size: var(--typography-text-lg-size);
     letter-spacing: -0.015em;
     font-weight: var(--brand-typography-theme-font-weight-heading);
     margin: 0 0 var(--spacing-space-16);
-    padding-block-end: var(--spacing-space-8);
-    border-block-end: var(--brand-stroke-default) solid var(--sem-border-subtle);
   }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--spacing-space-12); }
   .card {
@@ -80,7 +82,7 @@ const groups = [...new Set(COMPONENTS.map((c) => c.group))];
     margin-block-end: var(--spacing-space-12);
     padding: var(--spacing-space-12);
     border-radius: var(--radius-radius-12);
-    background: var(--sem-bg-surface-sunken);
+    background: var(--sem-bg-canvas);
     overflow: hidden;
     pointer-events: none;
   }

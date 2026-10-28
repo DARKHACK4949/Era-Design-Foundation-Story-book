@@ -12,10 +12,10 @@ const STEPS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
   <a class="tile tile--wide lift" href={`${base}/foundations/colour`}>
     <div class="tile__art">
       <div class="ramp">
-        {STEPS.map((s) => <span style={`background: var(--brand-primary-scale-${s})`}></span>)}
+        {STEPS.map((s) => <span style={`--chip-light: var(--brand-primary-scale-${s}); --chip-dark: var(--brand-primary-dark-scale-${s})`}></span>)}
       </div>
       <div class="ramp ramp--thin">
-        {STEPS.map((s) => <span style={`background: var(--brand-neutral-${s})`}></span>)}
+        {STEPS.map((s) => <span style={`--chip-light: var(--brand-neutral-${s}); --chip-dark: var(--brand-neutral-dark-${s})`}></span>)}
       </div>
     </div>
     <div class="tile__text">
@@ -81,22 +81,25 @@ const STEPS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
     block-size: 148px;
     padding: var(--spacing-space-20);
     margin-block-end: var(--spacing-space-12);
-    border-radius: var(--brand-radius-roles-card-md);
-    background: var(--sem-bg-surface);
-    border: var(--brand-stroke-default) solid var(--sem-border-subtle);
+    border-radius: var(--radius-radius-16);
+    background: var(--sem-bg-surface-raised);
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: var(--spacing-space-8);
     overflow: hidden;
-    transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background 160ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .tile:hover .tile__art { border-color: var(--sem-border-default); }
+  .tile:hover .tile__art { background: var(--sem-bg-surface-hover); }
   .tile__art--center { align-items: center; justify-content: center; }
 
   .ramp { display: flex; block-size: var(--spacing-space-40); border-radius: var(--brand-radius-scale-sm-4); overflow: hidden; }
   .ramp--thin { block-size: var(--spacing-space-12); opacity: 0.8; }
-  .ramp span { flex: 1 1 0; }
+  /* Same reason as the Ramp component: the dark scale is a different set of
+     values, and showing the light one in dark mode shows what the system is
+     not using. */
+  .ramp span { flex: 1 1 0; background: var(--chip-light); }
+  html[data-theme='dark'] .ramp span { background: var(--chip-dark); }
 
   .aa {
     font-size: 64px;

@@ -343,6 +343,14 @@ body[data-side='collapsed'] .side { display: none; }
   background: var(--sem-fg-primary);
 }
 
+/* A panel supplies its own padding, so the first and last child must not add
+ * their margins on top of it. Without this a heading's margin-block-start
+ * collapses out of the panel and leaves a gap above the text. */
+.panel > :first-child,
+.panel > .prose > :first-child { margin-block-start: 0; }
+.panel > :last-child,
+.panel > .prose > :last-child { margin-block-end: 0; }
+
 /* ------------------------------------------------------------------- prose */
 .prose { max-inline-size: 68ch; }
 
