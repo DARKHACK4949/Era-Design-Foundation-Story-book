@@ -6,6 +6,14 @@
  *   [data-brand]         brand layer, re-points primitives per brand
  *   [data-theme]         semantic layer, re-points the brand layer per mode
  *
+ * The semantic layer is emitted twice per mode: once for the themed root and
+ * once for any [data-brand] inside it. A custom property is substituted where
+ * it is declared, so a semantic declared only on <html> resolves against the
+ * root brand and then inherits that finished value. Re-declaring it on the
+ * nested element is what lets a brand scope inside the page resolve its own
+ * brand. Without it a nested scope switches typeface but keeps the root's
+ * colour, which is the one thing a brand scope exists to change.
+ *
  * Components read the semantic layer only.
  */
 
@@ -1216,7 +1224,7 @@
   --brand-secondary-dark-roles-on-action: var(--brand-neutral-dark-50);
 }
 
-[data-theme='light'] {
+[data-theme='light'], [data-theme='light'] [data-brand] {
   --sem-primary-bg: var(--brand-primary-roles-action);
   --sem-primary-bg-hover: var(--brand-primary-roles-action-hover);
   --sem-primary-bg-pressed: var(--brand-primary-roles-action-pressed);
@@ -1374,7 +1382,7 @@
   --sem-bg-track: var(--brand-neutral-200);
 }
 
-[data-theme='dark'] {
+[data-theme='dark'], [data-theme='dark'] [data-brand] {
   --sem-primary-bg: var(--brand-primary-dark-roles-action);
   --sem-primary-bg-hover: var(--brand-primary-dark-roles-action-hover);
   --sem-primary-bg-pressed: var(--brand-primary-dark-roles-action-pressed);

@@ -27,7 +27,7 @@ const BRANDS = [
     <div class="chrome__tools">
       <div class="brands" role="group" aria-label="Brand">
         {BRANDS.map((b) => (
-          <button type="button" class="brands__btn" data-brand-btn={b.id} aria-label={b.name} title={b.name} style={`background: ${b.swatch}`} />
+          <button type="button" class="brands__btn" data-brand-btn={b.id} aria-label={b.name} title={b.name} style={`--swatch: ${b.swatch}`} />
         ))}
       </div>
 
@@ -60,27 +60,15 @@ const BRANDS = [
 
     function applyBrand(id) {
       root.setAttribute('data-brand', id);
-      syncScopes(root.getAttribute('data-theme') || 'light');
       document.querySelectorAll('[data-brand-btn]').forEach(function (b) {
         b.setAttribute('aria-pressed', String(b.getAttribute('data-brand-btn') === id));
       });
       write('era-brand', id);
     }
 
-    // A custom property is substituted where it is DECLARED, so the semantic
-    // layer declared on <html> resolves against <html>'s brand. A nested
-    // [data-brand] block therefore needs the semantic layer redeclared on it
-    // too, which means carrying the current mode down with it.
-    function syncScopes(mode) {
-      document.querySelectorAll('[data-brand]').forEach(function (el) {
-        if (el !== root) el.setAttribute('data-theme', mode);
-      });
-    }
-
     function applyMode(mode) {
       root.setAttribute('data-theme', mode);
       root.style.colorScheme = mode;
-      syncScopes(mode);
       document.querySelectorAll('[data-mode-icon]').forEach(function (el) {
         el.hidden = el.getAttribute('data-mode-icon') !== mode;
       });
