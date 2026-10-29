@@ -20,7 +20,11 @@ const ROWS = [
     Built at its real size and scaled down as a whole, the way a screenshot is.
     Building it small instead would mean 8px labels, and nothing in ERA is
     allowed below 12px. */}
-<div class="shot" data-brand={brand}>
+{/* inert, because this is a picture of a screen, not a screen. The button
+    and the nav items are the real components, which means they are real
+    focus stops too: without this a keyboard lands on three New invoice
+    buttons that cannot do anything. The caption below carries the meaning. */}
+<div class="shot" data-brand={brand} inert>
   <div class="shot__scale">
     <div class="shot__win">
       <div class="shot__bar">
@@ -183,23 +187,36 @@ const ROWS = [
     if (window.__eraShotScale) return;    // one observer for every screen
     window.__eraShotScale = true;
 
-    var shots = document.querySelectorAll('.shot');
-    if (!shots.length) return;
-
     function fit(el) {
       var w = parseFloat(getComputedStyle(el).getPropertyValue('--w')) || 720;
       el.style.setProperty('--s', String(Math.min(1, el.clientWidth / w)));
     }
 
-    if (typeof ResizeObserver === 'function') {
-      var ro = new ResizeObserver(function (entries) {
-        entries.forEach(function (e) { fit(e.target); });
-      });
-      shots.forEach(function (el) { ro.observe(el); });
+    /* This script ships inside the component, so the browser runs the first
+       copy while the rest of the page is still being parsed. Querying right
+       here finds only the screens above this one, which is why the second and
+       third brand used to sit at the CSS fallback factor while the first was
+       measured. Wait for the whole document before looking. */
+    function start() {
+      var shots = document.querySelectorAll('.shot');
+      if (!shots.length) return;
+
+      if (typeof ResizeObserver === 'function') {
+        var ro = new ResizeObserver(function (entries) {
+          entries.forEach(function (e) { fit(e.target); });
+        });
+        shots.forEach(function (el) { ro.observe(el); });
+      } else {
+        var run = function () { shots.forEach(fit); };
+        run();
+        window.addEventListener('resize', run);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
     } else {
-      var run = function () { shots.forEach(fit); };
-      run();
-      window.addEventListener('resize', run);
+      start();
     }
   })();
 </script>
