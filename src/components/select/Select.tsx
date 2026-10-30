@@ -88,8 +88,24 @@ export function Select({
 
   useLayoutEffect(() => {
     if (!open || !anchor.current) return;
-    const r = anchor.current.getBoundingClientRect();
-    setAbove(window.innerHeight - r.bottom < 300 && r.top > 300);
+    const t = triggerRef.current;
+    const r = (t ?? anchor.current).getBoundingClientRect();
+    /* Flip when the popup does not fit below AND there is more room above.
+       The old test asked whether the trigger was more than 300px from the top
+       and less than 300px from the bottom, which in a window shorter than
+       600px can never both be true, so the menu never flipped and simply ran
+       off the bottom. Measured against the popup's own height instead. */
+    const popup = listRef.current?.offsetHeight ?? 280;
+    const roomBelow = window.innerHeight - r.bottom;
+    const roomAbove = r.top;
+    setAbove(roomBelow < popup + 8 && roomAbove > roomBelow);
+    /* Where the trigger sits inside the anchor, so the popup can open from the
+       trigger rather than from an anchor that may have been stretched by the
+       layout around it. */
+    if (t) {
+      anchor.current.style.setProperty('--era-trigger-top', t.offsetTop + 'px');
+      anchor.current.style.setProperty('--era-trigger-bottom', t.offsetTop + t.offsetHeight + 'px');
+    }
   }, [open]);
 
   useEffect(() => {

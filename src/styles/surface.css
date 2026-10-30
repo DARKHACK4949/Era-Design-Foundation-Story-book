@@ -28,8 +28,15 @@
  * with the field rather than sizing itself. */
 .era-surface--match-trigger { inline-size: 100%; min-inline-size: 100%; max-inline-size: none; }
 
-.era-surface--below { inset-block-start: calc(100% + var(--spacing-space-4)); }
-.era-surface--above { inset-block-end: calc(100% + var(--spacing-space-4)); }
+/* Measured from the trigger, not from the anchor box around it. The anchor is
+ * normally the same height as its trigger, so 100% was right by accident. Put
+ * one in a flex row and it stretches to the row's height like any other flex
+ * item, and the popup opens from the bottom of that stretched box: a menu on a
+ * 40px icon button inside a 280px row opened 240px below the button.
+ *
+ * The fallbacks keep the old behaviour for any anchor that does not set them. */
+.era-surface--below { inset-block-start: calc(var(--era-trigger-bottom, 100%) + var(--spacing-space-4)); }
+.era-surface--above { inset-block-end: calc(100% - var(--era-trigger-top, 0px) + var(--spacing-space-4)); }
 .era-surface--start { inset-inline-start: 0; }
 .era-surface--end { inset-inline-end: 0; }
 
