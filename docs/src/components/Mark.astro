@@ -1,27 +1,19 @@
 ---
 interface Props { size?: number }
 const { size = 20 } = Astro.props;
-/* Three plates in oblique projection. ERA is three token layers, and the one
-   a component is allowed to read is the plate on top.
+/* The mark is three plates in oblique projection: ERA is three token layers,
+   and the plate on top is the one a component is allowed to read.
 
-   The two edge pairs run in different directions on purpose. Sheared one way
-   only, a plate reads as a slanted bar; the second direction is its thickness,
-   and that is what makes it lie flat instead.
-
-   Below 32 the full mark's plates land on under two pixels each and smear
-   together, so the reduced cut takes over: fewer units across, thicker plates,
-   more air between them. */
+   The path data is exactly as supplied. Two things about the file around it
+   had to change: the fill is currentColor rather than black, because the mark
+   sits on a dark surface half the time and a black mark on near black is an
+   empty header, and the white background rectangle is gone for the same
+   reason. The viewBox is the artwork's own bounding box rather than the 255
+   square it was drawn in, so the mark fills the height it is given instead of
+   sitting in a third of it. */
 ---
-{size < 32 ? (
-  <svg width={size} height={size * 107 / 90} viewBox="0 0 90 107" fill="currentColor" role="img" aria-label="ERA" focusable="false">
-    <path d="M3.38 22.14 Q0.00 20.00 3.79 18.74 L56.21 1.26 Q60.00 0.00 63.38 2.14 L86.62 16.86 Q90.00 19.00 86.21 20.26 L33.79 37.74 Q30.00 39.00 26.62 36.86 Z"/>
-    <path d="M3.38 56.14 Q0.00 54.00 3.79 52.74 L56.21 35.26 Q60.00 34.00 63.38 36.14 L86.62 50.86 Q90.00 53.00 86.21 54.26 L33.79 71.74 Q30.00 73.00 26.62 70.86 Z"/>
-    <path d="M3.38 90.14 Q0.00 88.00 3.79 86.74 L56.21 69.26 Q60.00 68.00 63.38 70.14 L86.62 84.86 Q90.00 87.00 86.21 88.26 L33.79 105.74 Q30.00 107.00 26.62 104.86 Z"/>
-  </svg>
-) : (
-  <svg width={size} height={size * 103 / 94} viewBox="0 0 94 103" fill="currentColor" role="img" aria-label="ERA" focusable="false">
-    <path d="M2.84 30.98 Q0.00 30.00 2.70 28.69 L59.30 1.31 Q62.00 0.00 64.84 0.98 L91.16 10.02 Q94.00 11.00 91.30 12.31 L34.70 39.69 Q32.00 41.00 29.16 40.02 Z"/>
-    <path d="M2.84 61.98 Q0.00 61.00 2.70 59.69 L59.30 32.31 Q62.00 31.00 64.84 31.98 L91.16 41.02 Q94.00 42.00 91.30 43.31 L34.70 70.69 Q32.00 72.00 29.16 71.02 Z"/>
-    <path d="M2.84 92.98 Q0.00 92.00 2.70 90.69 L59.30 63.31 Q62.00 62.00 64.84 62.98 L91.16 72.02 Q94.00 73.00 91.30 74.31 L34.70 101.69 Q32.00 103.00 29.16 102.02 Z"/>
-  </svg>
-)}
+<svg width={size} height={size * 150.5 / 136.0} viewBox="59 53.5 136 150.5" fill="currentColor" role="img" aria-label="ERA" focusable="false">
+  <path d="M97 136.5L59 117V141.5L97 161.5L195 112.5V88L97 136.5Z"/>
+  <path d="M97 179L59 159.5V184L97 204L195 155V130.5L97 179Z"/>
+  <path d="M96.5 119L59 100L155 53.5L194.5 69L96.5 119Z"/>
+</svg>
