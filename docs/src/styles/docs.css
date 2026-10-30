@@ -14,6 +14,13 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
+  /* The gutter is reserved whether or not the page needs it. Without this a
+   * short page has no scrollbar and a long one does, so the centred layout is
+   * two different widths and everything in it steps sideways by half a
+   * scrollbar as you move between pages. Table and Avatar fit; Input and
+   * Select do not. On a machine with overlay scrollbars there is nothing to
+   * reserve and this costs nothing. */
+  scrollbar-gutter: stable;
   scroll-behavior: smooth;
   scroll-padding-block-start: var(--spacing-space-96);
   -webkit-text-size-adjust: 100%;

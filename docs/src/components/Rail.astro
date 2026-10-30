@@ -9,8 +9,11 @@ const active = sectionFor(here);
    of blank boxes when a CDN is unreachable. Each path is stroked at the same
    weight on the same 24 unit box. */
 const ICONS: Record<string, string> = {
+  /* A block standing on a base, not a stack of layers. Layers are now the
+     logo, and a nav icon that repeats the logo makes the system say two
+     different things with one shape. */
   '/foundations':
-    'M12 3 3 7.5l9 4.5 9-4.5L12 3Z M3 12l9 4.5 9-4.5 M3 16.5 12 21l9-4.5',
+    'M3.5 20.5h17 M7.5 4.5h9v12h-9z M7.5 10.5h9',
   '/components':
     'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z',
   '/accessibility':

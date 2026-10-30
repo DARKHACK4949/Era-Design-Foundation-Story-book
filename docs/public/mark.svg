@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 126">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 107">
   <style>
     /* A tab bar can be light or dark and the favicon has to survive
        both. A dark mark on a dark tab bar all but disappears. */
     :root { fill: #141416 }
     @media (prefers-color-scheme: dark) { :root { fill: #F7F7F8 } }
   </style>
-  <rect x="0"  y="90" width="36" height="36" rx="9"/>
-    <rect x="45" y="45" width="36" height="36" rx="9"/>
-    <rect x="90" y="0"  width="36" height="36" rx="9"/>
+  <path d="M3.38 22.14 Q0.00 20.00 3.79 18.74 L56.21 1.26 Q60.00 0.00 63.38 2.14 L86.62 16.86 Q90.00 19.00 86.21 20.26 L33.79 37.74 Q30.00 39.00 26.62 36.86 Z"/>
+  <path d="M3.38 56.14 Q0.00 54.00 3.79 52.74 L56.21 35.26 Q60.00 34.00 63.38 36.14 L86.62 50.86 Q90.00 53.00 86.21 54.26 L33.79 71.74 Q30.00 73.00 26.62 70.86 Z"/>
+  <path d="M3.38 90.14 Q0.00 88.00 3.79 86.74 L56.21 69.26 Q60.00 68.00 63.38 70.14 L86.62 84.86 Q90.00 87.00 86.21 88.26 L33.79 105.74 Q30.00 107.00 26.62 104.86 Z"/>
 </svg>
