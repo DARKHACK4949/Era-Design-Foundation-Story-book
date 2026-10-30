@@ -10,14 +10,17 @@ import Chrome from '../components/Chrome.astro';
 import Rail from '../components/Rail.astro';
 import Toc from '../components/Toc.astro';
 import Search from '../components/Search.astro';
-import { SECTIONS } from '../nav';
+import { sectionFor } from '../nav';
 
-interface Props { title: string; description?: string; section?: keyof typeof SECTIONS | null; prose?: boolean }
-const { title, description = 'ERA, a multi-brand design system.', section = null, prose = Boolean(Astro.props.section) } = Astro.props;
+interface Props { title: string; description?: string; section?: string | null; prose?: boolean }
+const { title, description = 'ERA, a multi-brand design system.', prose = Boolean(Astro.props.section) } = Astro.props;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const here = Astro.url.pathname.replace(base, '').replace(/\/$/, '') || '/';
-const groups = section ? SECTIONS[section] : null;
+/* The section comes from the navigation itself rather than from a prop each
+   page repeats. A page that said it was somewhere the nav did not list it
+   would highlight one place and open another. */
+const active = sectionFor(here);
 ---
 
 <!doctype html>
@@ -29,31 +32,26 @@ const groups = section ? SECTIONS[section] : null;
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/svg+xml" href={`${base}/mark.svg`} />
+    {/* Before first paint, so the rail is already the width it should be when
+        the page appears. Set after paint it would be a visible jump on every
+        navigation, which is exactly the seam this nav is trying not to have.
+        The section this page belongs to is the server's answer; the rail width
+        is the viewer's, remembered from last time. */}
+    <script is:inline define:vars={{ active }}>
+      (function () {
+        var d = document.documentElement;
+        var rail = 'labels';
+        try { rail = localStorage.getItem('era-rail') || (active ? 'icons' : 'labels'); } catch (e) { rail = active ? 'icons' : 'labels'; }
+        d.setAttribute('data-rail', rail);
+        d.setAttribute('data-flyout', active || '');
+      })();
+    </script>
   </head>
   <body>
     <Chrome />
 
-    <div class={groups ? 'layout' : 'layout layout--wide'}>
+    <div class="layout">
       <Rail />
-
-      {groups && (
-        <nav class="side" aria-label="In this section">
-          {groups.map((group) => (
-            <div class="side__group">
-              <div class="side__title">{group.title}</div>
-              <ul class="side__list">
-                {group.links.map((link) => (
-                  <li>
-                    <a class="side__link" href={`${base}${link.href}`} aria-current={here === link.href ? 'page' : undefined}>
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      )}
 
       {/* The only scrolling region. The rail, the section list and the
           contents list sit outside it, so they do not move at all when the
@@ -62,7 +60,7 @@ const groups = section ? SECTIONS[section] : null;
       <div class="scroller">
         {/* A prose page is one region, so it is one panel. The home page sets
             prose to false and lays out its own panels instead. */}
-        <main class={prose ? 'panel' : undefined}>
+        <main class={prose ? "content" : undefined}>
           {prose ? <div class="prose"><slot /></div> : <slot />}
         </main>
 

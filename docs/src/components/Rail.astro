@@ -1,12 +1,13 @@
 ---
-import { PRIMARY } from '../nav';
+import { SECTIONS, sectionFor, collapsible } from '../nav';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const here = Astro.url.pathname.replace(base, '').replace(/\/$/, '') || '/';
+const active = sectionFor(here);
 
-/* The top level of the navigation. Four sections, drawn rather than pulled
-   from an icon font, so the rail cannot be blank if a CDN is unreachable.
-   Each path is stroked at the same weight and sits on the same 24 unit box. */
+/* Drawn rather than pulled from an icon font, so the rail cannot be a column
+   of blank boxes when a CDN is unreachable. Each path is stroked at the same
+   weight on the same 24 unit box. */
 const ICONS: Record<string, string> = {
   '/foundations':
     'M12 3 3 7.5l9 4.5 9-4.5L12 3Z M3 12l9 4.5 9-4.5 M3 16.5 12 21l9-4.5',
@@ -19,31 +20,39 @@ const ICONS: Record<string, string> = {
 };
 ---
 
-<nav class="rail" aria-label="Sections">
+{/* Level one. These are buttons, not links, because pressing one opens the
+    panel beside it and leaves the page alone. The page only changes when you
+    pick something in that panel, which is the whole point of a two level nav:
+    you can look through a section without losing the one you are reading. */}
+{/* On a wide screen this wrapper is display:contents and the two levels are
+    columns of the page grid, exactly as if it were not here. On a phone it
+    becomes the sheet that holds them both. One wrapper, so the markup does not
+    have to exist twice. */}
+<div class="nav" data-nav-root>
+  <div class="nav__grab" aria-hidden="true"></div>
+  <nav class="rail" aria-label="Sections">
   <ul class="rail__list">
-    {PRIMARY.map((l) => {
-      const active = here === l.href || here.startsWith(l.href + '/');
-      return (
-        <li>
-          <a
-            class="rail__link"
-            href={`${base}${l.href}`}
-            aria-current={active ? 'page' : undefined}
-            aria-label={l.label}
-            title={l.label}
-          >
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                 stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d={ICONS[l.href]} />
-            </svg>
-            <span class="rail__label">{l.label}</span>
-          </a>
-        </li>
-      );
-    })}
+    {SECTIONS.map((s) => (
+      <li>
+        <button
+          type="button"
+          class="rail__btn"
+          data-section={s.href}
+          aria-expanded="false"
+          aria-controls={`panel-${s.href.slice(1)}`}
+          data-current={active === s.href ? 'true' : undefined}
+        >
+          <svg class="rail__icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d={ICONS[s.href]} />
+          </svg>
+          <span class="rail__label">{s.label}</span>
+        </button>
+      </li>
+    ))}
   </ul>
 
-  <button type="button" class="rail__toggle" data-side-toggle aria-label="Collapse the section list" aria-expanded="true">
+  <button type="button" class="rail__toggle" data-rail-toggle aria-label="Collapse the sidebar" aria-expanded="true">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
          stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
@@ -52,27 +61,218 @@ const ICONS: Record<string, string> = {
   </button>
 </nav>
 
+{/* Level two. Every section's panel is rendered once and the open one is
+    shown, so switching between them is a swap in the page rather than a
+    fetch. That is what lets it move at all. */}
+<div class="flyout" data-flyout-root>
+  {SECTIONS.map((s) => {
+    const open = active === s.href;
+    const fold = collapsible(s);
+    return (
+      <nav
+        class="flyout__panel"
+        id={`panel-${s.href.slice(1)}`}
+        data-panel={s.href}
+        aria-label={s.label}
+        hidden={!open}
+      >
+        <div class="flyout__head">{s.label}</div>
+        {s.groups.map((g, gi) => {
+          /* The first group sits straight under the panel heading with no
+             title of its own. Its title either repeats the section name or is
+             a word like "All" standing over a single link, and a label that
+             says nothing is worse than no label. Nothing above a link is left
+             to click open either, so only the groups below it fold. */
+          const titled = gi > 0;
+          const foldThis = fold && titled;
+          const holdsHere = g.links.some((l) => here === l.href);
+          const expanded = !foldThis || holdsHere || (gi === 1 && !s.groups.some((x) => x.links.some((l) => here === l.href)));
+          return (
+            <div class="flyout__group" data-fold={foldThis ? '' : undefined} data-expanded={expanded ? 'true' : 'false'}>
+              {foldThis ? (
+                <button type="button" class="flyout__title flyout__title--fold" data-fold-btn aria-expanded={String(expanded)}>
+                  <span>{g.title}</span>
+                  <svg class="flyout__chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 6 6 6-6 6" />
+                  </svg>
+                </button>
+              ) : titled ? (
+                <div class="flyout__title">{g.title}</div>
+              ) : null}
+              {/* The list is wrapped because the open and close is a grid row
+                  going from 1fr to 0fr, and that needs exactly one row to
+                  animate. Left on the list itself only its first item would
+                  collapse and the rest would hold the group open. */}
+              <div class="flyout__wrap">
+                <ul class="flyout__list">
+                  {g.links.map((l, i) => (
+                    <li style={`--i:${i}`}>
+                      <a class="flyout__link" href={`${base}${l.href}`} aria-current={here === l.href ? 'page' : undefined}>
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          );
+        })}
+      </nav>
+    );
+  })}
+</div>
+</div>
+
+{/* The nav is behind a button on a phone instead of sitting above the article.
+    Stacked, the two levels cost most of the first screen before a word of the
+    page is visible. Spectrum floats a rail over the content; a sheet from the
+    bottom is the same idea put where a thumb already is. */}
+<button type="button" class="navfab" data-sheet-toggle aria-expanded="false" aria-label="Open the navigation">
+  <svg class="navfab__open" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 7h16 M4 12h16 M4 17h10" />
+  </svg>
+  <svg class="navfab__close" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <path d="M6 6 18 18 M18 6 6 18" />
+  </svg>
+</button>
+<div class="scrim" data-sheet-close hidden></div>
+
 <script is:inline>
   (function () {
+    var root = document.documentElement;
+
     // Per viewer convenience only, and it throws in a private window, so every
-    // touch is guarded and the page renders correctly without it.
-    function read(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+    // touch is guarded and the page is correct without it.
+    function read(k, d) { try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }
     function write(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
-    var btn = document.querySelector('[data-side-toggle]');
-    if (!btn) return;
+    var rail = document.querySelector('.rail');
+    var flyout = document.querySelector('[data-flyout-root]');
+    if (!rail || !flyout) return;
 
-    function apply(state) {
-      document.body.setAttribute('data-side', state);
-      btn.setAttribute('aria-expanded', String(state !== 'collapsed'));
-      btn.setAttribute('aria-label', state === 'collapsed'
-        ? 'Show the section list' : 'Collapse the section list');
-      write('era-side', state);
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function openPanel(href) {
+      root.setAttribute('data-flyout', href || '');
+      flyout.querySelectorAll('[data-panel]').forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== href;
+      });
+      rail.querySelectorAll('[data-section]').forEach(function (b) {
+        b.setAttribute('aria-expanded', String(b.getAttribute('data-section') === href));
+      });
+      write('era-flyout', href || '');
     }
 
-    apply(read('era-side', 'open'));
-    btn.addEventListener('click', function () {
-      apply(document.body.getAttribute('data-side') === 'collapsed' ? 'open' : 'collapsed');
+    function setRail(mode) {
+      root.setAttribute('data-rail', mode);
+      var t = rail.querySelector('[data-rail-toggle]');
+      if (t) {
+        t.setAttribute('aria-expanded', String(mode === 'labels'));
+        t.setAttribute('aria-label', mode === 'labels' ? 'Collapse the sidebar' : 'Expand the sidebar');
+      }
+      write('era-rail', mode);
+    }
+
+    /* The state the head script already put on <html> before paint. Reading it
+       back rather than recomputing keeps the two in step: if they disagreed,
+       the page would visibly correct itself a frame after it appeared. */
+    setRail(root.getAttribute('data-rail') || 'labels');
+    openPanel(root.getAttribute('data-flyout') || '');
+
+    rail.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-section]');
+      if (btn) {
+        var href = btn.getAttribute('data-section');
+        // Pressing the open section closes it, so the rail is a toggle rather
+        // than a thing that can only ever open.
+        openPanel(root.getAttribute('data-flyout') === href ? '' : href);
+        return;
+      }
+      if (e.target.closest('[data-rail-toggle]')) {
+        setRail(root.getAttribute('data-rail') === 'labels' ? 'icons' : 'labels');
+        // Pressing the toggle is someone saying what width they want. From
+        // here on the rail stops squeezing itself on navigation, because a
+        // control that undoes the person's last instruction is not a control.
+        write('era-rail-set', '1');
+      }
+    });
+
+    flyout.addEventListener('click', function (e) {
+      var fold = e.target.closest('[data-fold-btn]');
+      if (fold) {
+        var group = fold.closest('[data-fold]');
+        var next = group.getAttribute('data-expanded') !== 'true';
+        group.setAttribute('data-expanded', String(next));
+        fold.setAttribute('aria-expanded', String(next));
+        return;
+      }
+
+      var link = e.target.closest('.flyout__link');
+      if (!link) return;
+      // A new tab, a background tab or a saved link is not navigation here, so
+      // the browser keeps those.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+      /* This is the squeeze. The rail narrows on the page you are leaving and
+         the next page is served with the same state already on <html>, so the
+         two halves read as one movement. Doing it after the navigation would
+         mean animating from a standing start on a page that has only just
+         painted, which is where this sort of thing usually goes wrong. */
+      if (root.getAttribute('data-rail') === 'icons' || reduce.matches) return;
+      if (read('era-rail-set', '') === '1') return;
+
+      e.preventDefault();
+      setRail('icons');
+
+      var layout = document.querySelector('.layout');
+      var done = false;
+      function go() {
+        if (done) return;
+        done = true;
+        window.location.href = link.href;
+      }
+      if (layout) layout.addEventListener('transitionend', function (ev) {
+        if (ev.propertyName === 'grid-template-columns') go();
+      }, { once: true });
+      // The transition can be dropped on a busy frame, and a navigation that
+      // waits on an event that never arrives is a dead link.
+      setTimeout(go, 320);
+    });
+
+    /* ---- the sheet, on a phone ---- */
+    var fab = document.querySelector('[data-sheet-toggle]');
+    var scrim = document.querySelector('[data-sheet-close]');
+
+    function sheet(open) {
+      root.setAttribute('data-sheet', open ? 'open' : '');
+      if (fab) {
+        fab.setAttribute('aria-expanded', String(open));
+        fab.setAttribute('aria-label', open ? 'Close the navigation' : 'Open the navigation');
+      }
+      if (scrim) scrim.hidden = !open;
+      // The page behind a sheet should not scroll under it.
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    if (fab) fab.addEventListener('click', function () {
+      sheet(root.getAttribute('data-sheet') !== 'open');
+    });
+    if (scrim) scrim.addEventListener('click', function () { sheet(false); });
+
+    // Picking something is the end of the errand, so the sheet gets out of the
+    // way rather than waiting to be dismissed.
+    flyout.addEventListener('click', function (e) {
+      if (e.target.closest('.flyout__link')) sheet(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      // The sheet is the nearer of the two things open, so it closes first.
+      if (root.getAttribute('data-sheet') === 'open') sheet(false);
+      else if (root.getAttribute('data-flyout')) openPanel('');
     });
   })();
 </script>
