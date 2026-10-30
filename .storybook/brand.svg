@@ -1,4 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="109" height="28" viewBox="0 -6.40 322.11 82.80" fill="#101315" role="img" aria-label="ERA design system"><title>ERA design system</title><g transform="translate(0,-6.40) scale(0.6571)"><rect x="0"  y="90" width="36" height="36" rx="9"/>
-  <rect x="45" y="45" width="36" height="36" rx="9"/>
-  <rect x="90" y="0"  width="36" height="36" rx="9"/></g>
-  <g transform="translate(130.11,0)"><g fill="currentColor"><path fill="none" stroke="currentColor" stroke-width="10" d="M43.0 5.0 H5.0 V67.0 H43.0"/><path fill="none" stroke="currentColor" stroke-width="10" d="M5.0 36.0 H39.0"/><g transform="translate(74,0)"><path fill="none" stroke="currentColor" stroke-width="10" d="M5.0 72 V5.0 H28 A15 15 0 0 1 28 35 H5.0"/><path d="M20 35 H32.54 L48 72 H35.46 Z"/></g><g transform="translate(140,0)"><path d="M0 72 L26.0 -2 L52 72 H42.00 L26.0 26.45 L10.00 72 Z"/></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="106" height="28" viewBox="0 -5.40 314.10 82.80" fill="#101315" role="img" aria-label="ERA design system">
+  <title>ERA design system</title>
+  <g transform="translate(-32.4598,-34.8339) scale(0.5502)">
+    <path d="M97 136.5L59 117V141.5L97 161.5L195 112.5V88L97 136.5Z"/>
+    <path d="M97 179L59 159.5V184L97 204L195 155V130.5L97 179Z"/>
+    <path d="M96.5 119L59 100L155 53.5L194.5 69L96.5 119Z"/>
+  </g>
+  <g transform="translate(122.10,0)">
+    <path fill="none" stroke="#101315" stroke-width="10" d="M43.0 5.0 H5.0 V67.0 H43.0"/>
+    <path fill="none" stroke="#101315" stroke-width="10" d="M5.0 36.0 H39.0"/>
+    <g transform="translate(74,0)">
+      <path fill="none" stroke="#101315" stroke-width="10" d="M5.0 72 V5.0 H28 A15 15 0 0 1 28 35 H5.0"/>
+      <path d="M20 35 H32.54 L48 72 H35.46 Z"/>
+    </g>
+    <g transform="translate(140,0)"><path d="M0 72 L26.0 -2 L52 72 H42.00 L26.0 26.45 L10.00 72 Z"/></g>
+  </g>
+</svg>
