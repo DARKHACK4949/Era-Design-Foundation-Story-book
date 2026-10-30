@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="59 53.5 136 150.5">
+  <style>
+    /* A tab bar can be light or dark and the favicon has to survive both.
+       A dark mark on a dark tab bar all but disappears. */
+    :root { fill: #141416 }
+    @media (prefers-color-scheme: dark) { :root { fill: #F7F7F8 } }
+  </style>
+  <path d="M97 136.5L59 117V141.5L97 161.5L195 112.5V88L97 136.5Z"/>
+  <path d="M97 179L59 159.5V184L97 204L195 155V130.5L97 179Z"/>
+  <path d="M96.5 119L59 100L155 53.5L194.5 69L96.5 119Z"/>
+</svg>
