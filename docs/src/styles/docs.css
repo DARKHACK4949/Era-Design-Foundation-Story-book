@@ -205,23 +205,26 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   border-radius: var(--radius-radius-24);
   padding: var(--spacing-space-32);
 }
-/* The content panel was as tight at 1680 as at 900. */
-@media (min-width: 1200px) {
-  main.panel { padding: var(--spacing-space-48) var(--spacing-space-64); }
-}
-/* The scrolling column is the only thing in motion, so it is the only thing
- * that casts. The rails stay flat on the field. */
-@media (min-width: 901px) {
-  main.panel { box-shadow: 0 1px 2px var(--colors-alpha-black-8), 0 12px 32px -12px var(--colors-alpha-black-16); }
-}
 .panel--tight { padding: var(--spacing-space-20); }
 .panel--flush { padding: 0; overflow: hidden; }
 
 /* ------------------------------------------------------------------ layout */
+/* Two levels of navigation, both of them columns in this grid, so opening and
+ * closing them is one width change rather than panels flying over the page.
+ * Level one is the rail. Level two is the panel beside it. Both widths are
+ * custom properties, which is what lets eight combinations of rail, panel and
+ * contents list be four short rules instead of a table of them. */
 .layout {
+  --rail-w: 196px;
+  --flyout-w: 240px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   display: grid;
-  grid-template-columns: auto 232px minmax(0, 1fr);
-  gap: var(--spacing-space-16);
+  grid-template-columns: var(--rail-w) var(--flyout-w) minmax(0, 1fr);
+  /* Two gaps, not one. The rail and the panel beside it are one object in two
+   * halves and sit close together; the gap before the reading column is the
+   * one that has to be generous, because it is now the only thing separating
+   * the navigation from the text. */
+  gap: var(--spacing-space-8);
   /* Wider than it was. A 1280 cap left a third of a large screen empty, while
    * the reference sites run to about ninety per cent of the window. */
   max-inline-size: 1680px;
@@ -230,35 +233,54 @@ body[data-scrolled='true'] .chrome::after { opacity: 1; }
   padding: var(--spacing-space-16) var(--spacing-space-24) 0;
   align-items: start;
   padding-block-end: var(--spacing-space-64);
+  transition: grid-template-columns 260ms var(--ease-out);
 }
 .scroller { min-inline-size: 0; }
-.layout--wide { grid-template-columns: auto minmax(0, 1fr); }
+
+/* The wrapper around the two nav levels. On a wide screen it is not a box at
+ * all: its children are the grid's children, exactly as if it had never been
+ * written. It only becomes something on a phone. */
+.nav { display: contents; }
+.nav__grab, .navfab, .scrim { display: none; }
+
+/* The reading column is not a card. It was a raised panel with a shadow, which
+ * put a box around the one thing on the page that is not an object: the text
+ * you came to read. Spectrum lets its content sit straight on the field and
+ * carries the structure in the navigation beside it, which is why that page
+ * feels open and this one felt packed. The panels that are left are the ones
+ * that hold something, on the home page.
+ *
+ * With no box there is nothing to pad against, so the measure and the space
+ * around it come from the column itself. */
+main.content { padding-block-start: var(--spacing-space-8); }
+
+/* The grid's own gap is small, because the rail and the panel beside it are
+ * one object in two halves. The air before the reading column is set here
+ * instead, so the two distances can differ: tight inside the navigation, open
+ * between the navigation and the text. */
+@media (min-width: 901px) {
+  .scroller { padding-inline-start: var(--spacing-space-32); }
+  .toc { padding-inline-start: var(--spacing-space-24); }
+}
+@media (min-width: 1280px) {
+  .scroller { padding-inline-start: var(--spacing-space-56); }
+}
+
+html[data-rail='icons'] .layout { --rail-w: 64px; }
+/* With nothing open beside it the rail goes back to showing names, whatever
+ * width it was left at. The icons are only readable because the panel next to
+ * them is spelling the section out; on their own they are a column of shapes
+ * and a guess. */
+html[data-flyout=''] .layout { --flyout-w: 0px; --rail-w: 196px; }
+
 /* The contents list is the last column and the first thing to go: below 1200
  * there is not enough width for it without squeezing the measure. */
 @media (min-width: 1200px) {
-  .layout:has(.toc) { grid-template-columns: auto 232px minmax(0, 1fr) 210px; }
-  /* Four tracks, not three. The section list is still in the grid now that it
-     animates instead of being switched off, so collapsing means giving it a
-     zero width track rather than removing one. */
-  body[data-side='collapsed'] .layout:has(.toc) { grid-template-columns: auto 0px minmax(0, 1fr) 210px; }
+  .layout:has(.toc) { grid-template-columns: var(--rail-w) var(--flyout-w) minmax(0, 1fr) 210px; }
 }
-/* Collapsing the section list leaves the rail in place, which is the point of
- * having a rail at all. */
-/* Animated rather than switched off. display:none cannot be transitioned, so
- * the column width and the panel's own width carry the motion. */
-.layout, body[data-side='collapsed'] .layout { transition: grid-template-columns 240ms cubic-bezier(0.16, 1, 0.3, 1); }
-body[data-side='collapsed'] .layout { grid-template-columns: auto 0px minmax(0, 1fr); }
-body[data-side='collapsed'] .side {
-  padding-inline: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.side {
-  transition: opacity 180ms ease, padding 240ms cubic-bezier(0.16, 1, 0.3, 1);
-  overflow-x: hidden;
-}
+
 @media (prefers-reduced-motion: reduce) {
-  .layout, body[data-side='collapsed'] .layout, .side { transition: none; }
+  .layout { transition: none; }
 }
 
 @media (max-width: 900px) {
@@ -268,15 +290,13 @@ body[data-side='collapsed'] .side {
    * collapses. */
   body { block-size: auto; overflow: visible; display: block; }
   .chrome { position: sticky; }
-  .layout, .layout--wide, body[data-side='collapsed'] .layout {
+  .layout, .layout:has(.toc) {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--spacing-space-24);
     block-size: auto;
     padding-block-end: var(--spacing-space-64);
   }
-  .side, .rail, .toc { position: static; }
-  .side, .rail { display: none; }
-  .chrome__nav { display: none; }
+  .toc { display: none; }
 }
 
 /* On a phone the header's controls add up to 290px, which with the lockup and
@@ -290,22 +310,18 @@ body[data-side='collapsed'] .side {
   .chrome__tools a.icon-btn { display: none; }
 }
 
-/* -------------------------------------------------------------------- rail */
-/* The top level of the navigation, and the thing the section list collapses
- * into. Icons are drawn inline, not loaded from an icon font, so the rail is
- * never an empty box when a CDN is unreachable. */
+/* ------------------------------------------------------- level one, the rail */
+/* These are buttons. Pressing one opens the panel beside it and leaves the
+ * page where it is, so a section can be looked through without leaving what
+ * you are reading. Icons are drawn inline, not loaded from an icon font, so
+ * the rail is never a column of empty boxes when a CDN is unreachable. */
 .rail {
   position: sticky;
   inset-block-start: calc(var(--spacing-space-72) + var(--spacing-space-16));
   align-self: start;
-  /* Only scrolls inside itself when its own list is taller than the window,
-     which is the components section and nothing else. */
   max-block-size: calc(100dvh - var(--spacing-space-112));
-  /* The components list is longer than the window, so it has to scroll inside
-     itself to stay put. The scrollbar is hidden rather than styled: a second
-     bar running down the middle of the page is the thing that made this look
-     wrong, and the list is still scrollable by wheel, drag and keyboard. */
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: none;
   display: flex;
   flex-direction: column;
@@ -314,84 +330,169 @@ body[data-side='collapsed'] .side {
   background: var(--sem-bg-surface-raised);
   border-radius: var(--radius-radius-24);
 }
-.rail__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-8); }
-.rail__link {
-  display: grid;
-  place-items: center;
-  inline-size: var(--spacing-space-40);
-  block-size: var(--spacing-space-40);
+.rail::-webkit-scrollbar { inline-size: 0; block-size: 0; }
+.rail__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--spacing-space-4); }
+
+.rail__btn {
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-12);
+  min-block-size: var(--spacing-space-40);
+  padding: 0 var(--spacing-space-8);
+  border: 0;
+  background: none;
   border-radius: var(--radius-radius-12);
-  color: var(--sem-fg-tertiary);
-  text-decoration: none;
+  color: var(--sem-fg-secondary);
+  font: inherit;
+  font-size: var(--typography-text-sm-size);
+  text-align: start;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, transform 140ms var(--ease-out);
 }
-.rail__link:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
-.rail__link[aria-current] { color: var(--sem-fg-primary); background: var(--sem-state-selected); }
-/* The label is for screen readers and for the title tooltip, not for sighted
- * layout: the rail is icons only by design. */
+.rail__icon { flex: none; }
 .rail__label {
-  position: absolute;
-  inline-size: 1px; block-size: 1px;
-  margin: -1px; padding: 0; overflow: hidden;
-  clip-path: inset(50%); white-space: nowrap;
+  /* Fades out quicker than the column narrows and fades in a touch behind it.
+   * Exits are the system responding and should be quick; entrances are the
+   * thing arriving and can take the extra moment. */
+  opacity: 1;
+  transition: opacity 200ms var(--ease-out) 60ms;
 }
+html[data-rail='icons'] .rail__label { opacity: 0; transition-duration: 110ms; transition-delay: 0ms; }
+html[data-flyout=''] .rail__label { opacity: 1; }
+
+@media (hover: hover) and (pointer: fine) {
+  .rail__btn:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+}
+.rail__btn:active { transform: scale(0.97); }
+.rail__btn[aria-expanded='true'] { background: var(--sem-state-selected); color: var(--sem-fg-primary); }
+/* Where you actually are, which is not always the panel you have open. */
+.rail__btn[data-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
+
 .rail__toggle {
   /* Separated from the sections: it is a different kind of control, not a
    * fifth place to go. */
-  margin-block-start: var(--spacing-space-24);
+  margin-block-start: auto;
+  padding-block-start: var(--spacing-space-24);
   display: grid;
   place-items: center;
+  justify-self: start;
   inline-size: var(--spacing-space-40);
   block-size: var(--spacing-space-40);
-  padding: 0;
+  box-sizing: content-box;
   border: 0;
   border-radius: var(--radius-radius-12);
   background: none;
   color: var(--sem-fg-tertiary);
   cursor: pointer;
+  transition: color 140ms ease, transform 140ms var(--ease-out);
 }
-.rail__toggle:hover { background: var(--sem-state-hover); color: var(--sem-fg-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .rail__toggle:hover { color: var(--sem-fg-primary); }
+}
+.rail__toggle:active { transform: scale(0.97); }
 
-/* ----------------------------------------------------------- section list */
-.side {
+/* ---------------------------------------------------- level two, the panel */
+.flyout {
   position: sticky;
   inset-block-start: calc(var(--spacing-space-72) + var(--spacing-space-16));
   align-self: start;
-  /* Only scrolls inside itself when its own list is taller than the window,
-     which is the components section and nothing else. */
   max-block-size: calc(100dvh - var(--spacing-space-112));
-  /* The components list is longer than the window, so it has to scroll inside
-     itself to stay put. The scrollbar is hidden rather than styled: a second
-     bar running down the middle of the page is the thing that made this look
-     wrong, and the list is still scrollable by wheel, drag and keyboard. */
   overflow-y: auto;
+  overflow-x: hidden;
+  /* The scrollbar is hidden rather than styled: a second bar running down the
+     middle of the page is the thing that made this look wrong, and the list is
+     still scrollable by wheel, drag and keyboard. */
   scrollbar-width: none;
   font-size: var(--typography-text-sm-size);
-  padding: var(--spacing-space-20);
   background: var(--sem-bg-surface-raised);
   border-radius: var(--radius-radius-24);
+  /* No padding while closed, so the panel has no width of its own to keep the
+     column open with. */
+  padding: var(--spacing-space-20);
+  transition: padding 260ms var(--ease-out), opacity 160ms ease;
 }
-.side::-webkit-scrollbar { inline-size: 0; block-size: 0; }
-.side__group + .side__group { margin-block-start: var(--spacing-space-24); }
-.side__title {
+.flyout::-webkit-scrollbar { inline-size: 0; block-size: 0; }
+html[data-flyout=''] .flyout {
+  padding-inline: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flyout__head {
+  font-size: var(--typography-text-xs-size);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  color: var(--sem-fg-primary);
+  margin-block-end: var(--spacing-space-16);
+}
+.flyout__group + .flyout__group { margin-block-start: var(--spacing-space-16); }
+.flyout__title {
   font-size: var(--typography-text-xs-size);
   font-weight: var(--brand-typography-theme-font-weight-label);
   color: var(--sem-fg-tertiary);
   letter-spacing: 0.01em;
   margin-block-end: var(--spacing-space-8);
 }
-.side__list { list-style: none; margin: 0; padding: 0; }
-.side__link {
+.flyout__title--fold {
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+  min-block-size: var(--spacing-space-28);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--typography-text-xs-size);
+  font-weight: var(--brand-typography-theme-font-weight-label);
+  color: var(--sem-fg-tertiary);
+  text-align: start;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .flyout__title--fold:hover { color: var(--sem-fg-primary); }
+}
+.flyout__chev {
+  flex: none;
+  transition: transform 200ms var(--ease-out);
+}
+[data-expanded='true'] > .flyout__title--fold .flyout__chev { transform: rotate(90deg); }
+
+.flyout__list { list-style: none; margin: 0; padding: 0; }
+/* A collapsed group is laid out as a zero height row rather than switched off,
+ * so the open and close can actually move. display:none has nothing to
+ * animate. The row is on the wrapper, which holds one child, because 0fr only
+ * collapses the rows the template names. */
+[data-fold] > .flyout__wrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 240ms var(--ease-out), opacity 160ms ease;
+}
+[data-fold][data-expanded='false'] > .flyout__wrap {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+[data-fold] > .flyout__wrap > .flyout__list { overflow: hidden; min-block-size: 0; }
+
+.flyout__link {
   position: relative;
   display: block;
   padding: var(--spacing-space-4) 0 var(--spacing-space-4) var(--spacing-space-12);
   color: var(--sem-fg-secondary);
   text-decoration: none;
   border-radius: var(--brand-radius-scale-sm-4);
+  transition: color 140ms ease;
 }
-.side__link:hover { color: var(--sem-fg-primary); }
+@media (hover: hover) and (pointer: fine) {
+  .flyout__link:hover { color: var(--sem-fg-primary); }
+}
 /* An accent bar rather than a filled pill. Quieter, and it reads as a position
  * in a list rather than as a selected object. */
-.side__link[aria-current]::before {
+.flyout__link[aria-current]::before {
   content: '';
   position: absolute;
   inset-inline-start: 0;
@@ -400,7 +501,158 @@ body[data-side='collapsed'] .side {
   border-radius: var(--radius-radius-full);
   background: var(--sem-primary-bg);
 }
-.side__link[aria-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
+.flyout__link[aria-current] { color: var(--sem-fg-primary); font-weight: var(--brand-typography-theme-font-weight-label); }
+
+/* The panel's contents arrive just behind the column that carries them, in
+ * order, so it reads as one thing opening rather than a block appearing. The
+ * stagger is short on purpose: past about 30ms a step it stops being texture
+ * and starts being a wait. */
+.flyout__panel { animation: flyout-in 220ms var(--ease-out) both; }
+.flyout__panel li { animation: flyout-item 200ms var(--ease-out) both; animation-delay: calc(60ms + var(--i, 0) * 26ms); }
+@keyframes flyout-in { from { opacity: 0 } }
+@keyframes flyout-item { from { opacity: 0; transform: translateX(-6px) } }
+
+
+/* ----------------------------------------------------- the nav on a phone */
+/* Last, on purpose. These override the two column rules above and a stylesheet
+ * is read in order, so written any earlier every one of them would lose to the
+ * rule it is meant to replace.
+ *
+ * Stacked above the article, the two levels cost most of the first screen
+ * before a word of the page shows. So on a phone they are a sheet: the page
+ * starts at the top where it should, and the navigation comes up from the
+ * bottom when it is asked for, which is also where a thumb already is. */
+@media (max-width: 900px) {
+  .nav {
+    display: block;
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 60;
+    max-block-size: 82dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* The button stays put while the sheet is up, so the sheet keeps a lane
+       clear at the bottom rather than letting its last link sit underneath
+       it. */
+    padding: var(--spacing-space-8) var(--spacing-space-16) var(--spacing-space-96);
+    background: var(--sem-bg-surface-raised);
+    border-start-start-radius: var(--radius-radius-24);
+    border-start-end-radius: var(--radius-radius-24);
+    box-shadow: 0 -8px 40px -12px var(--colors-alpha-black-16);
+    transform: translateY(101%);
+    visibility: hidden;
+    /* The curve is the one iOS uses for sheets: it leaves quickly and lands
+       softly, which is what makes a panel feel like it has weight. Visibility
+       is held back until the slide is done so the sheet is out of the tab
+       order while it is away. */
+    transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 320ms;
+  }
+  html[data-sheet='open'] .nav {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1), visibility 0s;
+  }
+
+  .nav__grab {
+    display: block;
+    inline-size: var(--spacing-space-36);
+    block-size: var(--spacing-space-4);
+    margin: var(--spacing-space-4) auto var(--spacing-space-12);
+    border-radius: var(--radius-radius-full);
+    background: var(--sem-border-default);
+  }
+
+  .scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: var(--colors-alpha-black-16);
+    opacity: 0;
+    transition: opacity 240ms ease;
+  }
+  html[data-sheet='open'] .scrim { opacity: 1; }
+
+  .navfab {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    inset-block-end: var(--spacing-space-24);
+    inset-inline-end: var(--spacing-space-20);
+    z-index: 65;
+    inline-size: var(--spacing-space-56);
+    block-size: var(--spacing-space-56);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-radius-full);
+    background: var(--sem-fg-primary);
+    color: var(--sem-bg-canvas);
+    box-shadow: 0 2px 6px var(--colors-alpha-black-16), 0 12px 28px -8px var(--colors-alpha-black-16);
+    cursor: pointer;
+    transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .navfab:active { transform: scale(0.94); }
+  /* One button, two jobs. Open it and it is the way back out, which is where a
+     thumb already is and saves aiming at a scrim. */
+  .navfab > svg { grid-area: 1 / 1; transition: opacity 140ms ease, transform 200ms cubic-bezier(0.23, 1, 0.32, 1); }
+  .navfab__close { opacity: 0; transform: rotate(-45deg); }
+  html[data-sheet='open'] .navfab__open { opacity: 0; transform: rotate(45deg); }
+  html[data-sheet='open'] .navfab__close { opacity: 1; transform: none; }
+
+  /* Inside the sheet the rail is a row of chips across the top and the panel
+     sits under it, so both levels are reachable without leaving the sheet. */
+  .rail, .flyout { position: static; max-block-size: none; }
+  .rail {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-space-8);
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    background: none;
+    padding: 0 0 var(--spacing-space-12);
+  }
+  .rail__list {
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: var(--spacing-space-8);
+  }
+  .rail__btn {
+    inline-size: auto;
+    padding-inline: var(--spacing-space-16);
+    scroll-snap-align: start;
+    background: var(--sem-bg-surface-sunken);
+  }
+  .rail__btn[aria-expanded='true'] { background: var(--sem-state-selected); color: var(--sem-fg-primary); }
+  /* The squeeze is a two column idea. There is one column here, so the control
+     that drives it has nothing to say. */
+  .rail__toggle { display: none; }
+  html[data-rail='icons'] .rail__label { opacity: 1; }
+
+  .flyout {
+    padding: 0;
+    opacity: 1;
+    background: none;
+    border-radius: 0;
+  }
+  html[data-flyout=''] .flyout { opacity: 1; pointer-events: auto; padding: 0; }
+  /* With nothing open the sheet would be a row of chips over blank space, so
+     the section you are in is the one it opens on. */
+  html[data-flyout=''] .flyout__panel { display: none; }
+  .flyout__link { padding-block: var(--spacing-space-8); }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .nav { transition: visibility 0s; }
+  .scrim { transition: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flyout, .flyout__chev, [data-fold] > .flyout__wrap,
+  .rail__btn, .rail__label, .rail__toggle { transition: none; }
+  .flyout__panel, .flyout__panel li { animation: none; }
+}
 
 /* --------------------------------------------------------------- contents */
 .toc {
