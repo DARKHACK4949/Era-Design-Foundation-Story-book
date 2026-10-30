@@ -100,6 +100,12 @@ const BRANDS = [
     color: var(--sem-fg-secondary);
   }
   .pill__cta {
+    /* Never shrinks and never wraps. In a flex row the button was the thing
+       that gave way, so below 560 its own label broke across two lines inside
+       a pill built for one. A control whose label wraps reads as broken
+       before it reads as small. */
+    flex: none;
+    white-space: nowrap;
     padding: var(--spacing-space-4) var(--spacing-space-12);
     border-radius: var(--radius-radius-full);
     background: var(--sem-primary-bg);
@@ -108,6 +114,20 @@ const BRANDS = [
     font-weight: var(--brand-typography-theme-font-weight-label);
   }
   .pill__cta:hover { background: var(--sem-primary-bg-hover); color: var(--sem-primary-fg-on-bg); }
+
+  /* A pill is a one line shape. When the sentence no longer fits on one line
+     the shape has to change too, so it stacks and squares off rather than
+     growing into a tall lozenge. */
+  @media (max-width: 640px) {
+    .pill {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-space-12);
+      padding: var(--spacing-space-16);
+      border-radius: var(--radius-radius-24);
+      text-align: center;
+    }
+  }
 
   /* --------------------------------------------------------------- hero */
   /* No panel. The hero is the page field itself, so the panels below are the
@@ -131,8 +151,17 @@ const BRANDS = [
     display: flex; justify-content: center; gap: var(--spacing-space-12);
     margin-block-start: var(--spacing-space-32);
   }
+  /* Side by side the two of them need about 330, and a phone gives 342 minus
+     the gutters. They were squeezing each other until both labels broke in
+     half and the text pushed out through the ends of the pill. Stacked, each
+     one gets the width it needs. */
+  @media (max-width: 420px) {
+    .hero__cta { flex-direction: column; align-items: center; }
+  }
   .btn {
     display: inline-flex; align-items: center;
+    /* A pill is a one line shape and the label is what decides its width. */
+    white-space: nowrap;
     min-block-size: var(--spacing-space-40);
     padding-inline: var(--spacing-space-20);
     border-radius: var(--radius-radius-full);
