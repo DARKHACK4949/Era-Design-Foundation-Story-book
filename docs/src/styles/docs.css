@@ -570,6 +570,12 @@ html[data-flyout=''] .flyout {
     background: var(--sem-border-default);
   }
 
+  /* Closed, this covers the whole screen at opacity 0. display:block here
+     overrides the hidden attribute, so without the two lines below it is an
+     invisible sheet of glass over the page: the sheet still works because it
+     sits above this, and nothing else on the page can be clicked at all.
+     visibility also keeps it out of the accessibility tree, and is held back
+     until the fade finishes so the fade still runs. */
   .scrim {
     display: block;
     position: fixed;
@@ -577,9 +583,16 @@ html[data-flyout=''] .flyout {
     z-index: 55;
     background: var(--colors-alpha-black-16);
     opacity: 0;
-    transition: opacity 240ms ease;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 240ms ease, visibility 0s 240ms;
   }
-  html[data-sheet='open'] .scrim { opacity: 1; }
+  html[data-sheet='open'] .scrim {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 240ms ease, visibility 0s;
+  }
 
   .navfab {
     display: grid;

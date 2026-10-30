@@ -141,7 +141,7 @@ const ICONS: Record<string, string> = {
     <path d="M6 6 18 18 M18 6 6 18" />
   </svg>
 </button>
-<div class="scrim" data-sheet-close hidden></div>
+<div class="scrim" data-sheet-close></div>
 
 <script is:inline>
   (function () {
@@ -255,7 +255,6 @@ const ICONS: Record<string, string> = {
         fab.setAttribute('aria-expanded', String(open));
         fab.setAttribute('aria-label', open ? 'Close the navigation' : 'Open the navigation');
       }
-      if (scrim) scrim.hidden = !open;
       // The page behind a sheet should not scroll under it.
       document.body.style.overflow = open ? 'hidden' : '';
     }
